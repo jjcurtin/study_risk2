@@ -1,0 +1,77 @@
+---
+title: Predicting daily lapse risk using personal sensing and machine learning in a national sample of individuals with opioid use disorder
+author:
+  - name: Kendra Wyant 
+    corresponding: false
+    affiliations:
+      - Department of Psychology, University of Wisconsin-Madison
+  - name: John J. Curtin 
+    corresponding: true
+    email: jjcurtin@wisc.edu
+    affiliations:
+      - Department of Psychology, University of Wisconsin-Madison 
+financial-support: This research was supported by a grant from the National Institute on Drug Abuse (NIDA; R01 DA047315 to John J. Curtin).
+keywords:
+  - Substance use disorders
+  - Precision mental health 
+abstract: |
+  Enter abstract here. 
+date: last-modified
+number-sections: false 
+editor_options: 
+  chunk_output_type: console
+format:
+  html: default
+  docx: default
+  apaish-typst: 
+    documentmode: man
+citeproc: true
+bibliography: references.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
+---
+
+# Introduction
+
+
+# Methods
+
+## Transparency and Openness
+<!-- reference registered report?-->
+<!-- add transparency report to supplement if applicable-->
+We adhere to research transparency principles that are crucial for robust and replicable science. We reported how we determined the sample size, all data exclusions, all manipulations, and all study measures. We provide a transparency report in the supplement [@aczelConsensusbasedTransparencyChecklist2019]. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)), and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
+
+
+## Participants
+
+
+## Procedure
+
+
+## Measures
+
+
+### Individual Characteristics
+
+
+### Ecological Momentary Assessment
+
+
+## Geolocation Sensing
+
+
+## Data Analytic Strategy
+Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem [@kuhnTidymodelsCollectionPackages2020; @kuhnTidyposteriorBayesianAnalysis2022; @goodrichRstanarmBayesianApplied2023]. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing [@chtc].
+
+
+# Results
+
+
+
+
+# Discussion
+
+
+
+# References
+::: {#refs}
+:::
