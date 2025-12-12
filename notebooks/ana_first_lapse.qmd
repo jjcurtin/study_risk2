@@ -104,3 +104,39 @@ preds_combined |>
             max(prob_raw))
 ```
 
+### Calculate auROCs comparing first lapse to no lapse and not first lapse to no lapse
+
+First lapses
+```{r}
+auroc_first_lapse <- preds_combined |> 
+  filter(first_lapse == "Yes" | label == "No lapse") |> 
+  nest(.by = split_num, .key = "preds") |> 
+  mutate(auroc = map(preds, \(preds) roc_auc(preds, prob_raw, 
+                                             truth = label))) |> 
+  select(-preds) |> 
+  unnest(auroc) |> 
+  select(-c(.estimator, .metric)) |> 
+  rename(first_lapse = .estimate) 
+     
+auroc_not_first_lapse <- preds_combined |> 
+  filter(first_lapse == "No") |> 
+  nest(.by = split_num, .key = "preds") |> 
+  mutate(auroc = map(preds, \(preds) roc_auc(preds, prob_raw, 
+                                             truth = label))) |> 
+  select(-preds) |> 
+  unnest(auroc) |> 
+  select(-c(.estimator, .metric)) |> 
+  rename(not_first_lapse = .estimate) 
+
+aurocs <- auroc_first_lapse |> 
+  left_join(auroc_not_first_lapse, by = "split_num") |> 
+  arrange(split_num) |> 
+  glimpse()
+```
+
+
+```{r}
+round(median(aurocs$first_lapse), 2)
+round(median(aurocs$not_first_lapse), 2)
+```
+
