@@ -1,0 +1,120 @@
+---
+title: "Model evaluation"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+suppressPackageStartupMessages(library(tidyposterior))
+
+path_models <- format_path(str_c("risk2/models/combined"))
+
+```
+
+
+```{r}
+test_metrics_main <- read_csv(here::here(path_models, 
+                                    "best_config_xgboost_v7_kfold_dyn.csv"), 
+                              show_col_types = FALSE) |> 
+  select(split_num, "main" = roc_auc) |> 
+  arrange(split_num)
+
+test_metrics_baseline <- read_csv(here::here(path_models, 
+                                    "best_config_xgboost_v1_kfold_baseline.csv"), 
+                              show_col_types = FALSE) |> 
+  select(split_num, "baseline" = roc_auc) |> 
+  arrange(split_num)
+
+test_metrics <- test_metrics_main |> 
+  left_join(test_metrics_baseline, by = c("split_num")) |> 
+  mutate(fold_num = rep(1:5, 6),
+         repeat_num = c(rep(1, 5), rep(2, 5), rep(3, 5), 
+                        rep(4, 5), rep(5, 5), rep(6, 5))) |> 
+  select(-split_num) |> 
+  glimpse()
+```
+
+
+#### Model evaluation
+```{r}
+#| output: false
+
+# Repeated CV (id = repeat, id2 = fold within repeat)
+# with a common variance:  statistic ~ model + (model | id2/id)
+set.seed(101)
+pp <- test_metrics |> 
+  rename(id = fold_num,
+         id2 = repeat_num) |> 
+  perf_mod(formula = statistic ~ model + (1 | id2/id),
+         transform = tidyposterior::logit_trans,  # for skewed & bounded AUC
+         iter = 6000, chains = 4, adapt_delta = .99, # increased iteration from 2000 to fix divergence issues
+         family = gaussian, 
+)  
+
+```
+
+```{r}
+pp_tidy <- pp |> 
+  tidy(seed = 123) 
+
+q = c(.025, .5, .975)
+pp_perf_tibble <- pp_tidy |> 
+  group_by(model) |> 
+  summarize(pp_median = quantile(posterior, probs = q[2]),
+            pp_lower = quantile(posterior, probs = q[1]), 
+            pp_upper = quantile(posterior, probs = q[3])) |> 
+  mutate(model = factor(model, levels = c("main", "baseline"))) |> 
+  arrange(model) 
+
+pp_perf_tibble |> 
+  write_csv(here::here(path_models, "pp_perf_tibble_xgboost_v7.csv"))
+
+pp_tidy |> 
+  write_csv(here::here(path_models, "posteriors_xgboost_v7.csv"))
+
+pp_perf_tibble
+```
+
+
+
+### Model Comparison
+
+```{r}
+
+ci_baseline <- pp |>
+  contrast_models(list("main"),
+                  list("baseline")) |>
+  summary(size = 0) |>
+  mutate(probability = 1 - probability,
+         contrast = "main vs. baseline")
+
+ci_median_baseline <- pp |>
+  contrast_models(list("main"),
+                  list("baseline")) |>
+  group_by(contrast) |>
+  summarize(median = quantile(difference, .5))
+
+
+ci_baseline <- ci_baseline |>
+  left_join(ci_median_baseline, by = c("contrast")) |> 
+  mutate(probability = 1 - probability)
+
+ci_baseline |>
+  write_csv(here::here(path_models, "contrast_baseline.csv"))
+
+ci_baseline
+
+```

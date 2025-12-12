@@ -1,0 +1,102 @@
+---
+title: "Calculates performance metrics other than auROC"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+params:
+  study: "combined"
+  model: "all" 
+  version: "v2"
+editor_options: 
+  chunk_output_type: console
+---
+
+### Notes
+
+Calculates sensitivity, specificity, PPV, NPV, and balanced accuracy from local logi calibrated preds.
+
+### Set Up Environment
+
+```{r}
+study <- params$study
+model <- params$model
+version <- params$version
+```
+
+
+Packages, functions, and paths
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(tidymodels)
+options(conflicts.policy = "depends.ok")
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+path_shared <- format_path(str_c("risk2/data_processed/shared"))
+path_models <- format_path(str_c("risk2/models/", study))
+```
+
+
+### Load model predictions
+
+```{r}
+preds <- read_rds(here::here(path_models, str_c("preds_xgboost_kfold_6_x_5_", version, 
+                                                "_", model, ".rds")))
+```
+
+
+
+Function to get  other metrics at Youdens j - **Uses Logi calibration**
+```{r}
+get_metrics <- function(preds) {
+  
+  j_thres <- preds |>  
+    roc_curve(prob_logi, truth = label) |> 
+    mutate(j = sensitivity + specificity - 1) |>
+    slice_max(j, n = 1, with_ties = FALSE) |>   
+    pull(.threshold)
+  
+  split_num <- preds |> 
+    pull(split_num) |> 
+    head(1)  
+  
+  preds |>
+    mutate(
+      estimate = if_else(prob_logi > j_thres, "Lapse", "No lapse"),
+      estimate = factor(estimate, levels = c("Lapse", "No lapse"))
+    ) |>
+    conf_mat(truth = label, estimate = estimate) |>
+    summary() |>
+    select(-.estimator) |>
+    filter(.metric %in% c("sens", "spec", "ppv", "npv", "bal_accuracy"))   
+}
+```
+
+Calculate metrics
+```{r}
+splits <- preds |>  
+  nest(.by = split_num, .key = "preds") 
+
+metrics <- splits |>  
+  mutate(metrics = map(preds, get_metrics)) |>  
+  select(-preds) |>  
+  unnest(metrics)
+```
+
+Median metric stats
+```{r}
+metrics |> 
+  group_by(.metric) |> 
+  summarize(median = median(.estimate), IQR = IQR(.estimate))
+```
+
+

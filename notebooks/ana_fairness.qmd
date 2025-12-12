@@ -1,0 +1,169 @@
+---
+title: "Fairness analyses"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+
+```{r}
+#| message: false
+#| warning: false
+
+suppressPackageStartupMessages(library(tidymodels))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(tidyposterior))
+library(kableExtra, exclude = "group_rows")
+library(Rcpp, exclude = "populate")
+library(brms, exclude = c("ar", "mixture"))
+
+
+theme_set(theme_classic()) 
+```
+
+
+```{r }
+#| output: false
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+# CHTC support functions
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/chtc/static_files/fun_chtc.R?raw=true")
+```
+
+```{r}
+path_models <- format_path("risk2/models/combined")
+```
+
+
+### Read in Model Performance Metrics
+
+```{r}
+
+auroc_all <- read_csv(here::here(path_models, "fairness_auroc_xgboost_6_x_5_kfold_v7_dyn.csv"),
+                      show_col_types = FALSE) |> 
+  mutate(fold_num = rep(1:5, 6),
+         repeat_num = c(rep(1, 5), rep(2, 5), rep(3, 5), 
+                        rep(4, 5), rep(5, 5), rep(6, 5))) |>
+  select(-split_num)
+```
+
+
+
+### Get Median Posterior Probabilities and contrast analyses
+
+function
+```{r}
+calc_pp <- function (data, dem_var) {
+  
+  data <- 
+    if (dem_var == "gender") {
+    data |> 
+    select(id = repeat_num, id2 = fold_num, male, `not male`)
+  } else if (dem_var == "income") {
+    data |> 
+    select(id = repeat_num, id2 = fold_num, `above poverty`, `below poverty`)
+  } else if (dem_var == "race") {
+    data |> 
+    select(id = repeat_num, id2 = fold_num, `non-Hispanic White`, `Hispanic and/or not white`)
+  } else if (dem_var == "geography") {
+    data |> 
+    select(id = repeat_num, id2 = fold_num, `urban/suburban`, `small town/rural`)
+  } else if (dem_var == "education") {
+    data |> 
+    select(id = repeat_num, id2 = fold_num, `some college`, `high school or less`)
+  } else {
+    stop(dem_var, " not in data")
+  }
+  
+  
+  set.seed(101)
+  pp <- data |> 
+    perf_mod(formula = statistic ~ model + (1 | id2/id),
+             transform = tidyposterior::logit_trans,  
+             iter = 6000, chains = 4,  
+             adapt_delta = .99,
+             family = gaussian) 
+
+  pp_tidy <- pp |> 
+    tidy(seed = 123) 
+
+  q = c(.025, .5, .975)
+  ci <- pp_tidy |> 
+    group_by(model) |> 
+    summarize(pp_median = quantile(posterior, probs = q[2]),
+              pp_lower = quantile(posterior, probs = q[1]), 
+              pp_upper = quantile(posterior, probs = q[3]))  |> 
+    arrange(model)
+  
+  
+  contrast_lists <- 
+    if (dem_var == "gender") {
+    c(list("not male"), list("male"))
+  } else if (dem_var == "income") {
+    c(list("below poverty"), list("above poverty"))
+  } else if (dem_var == "race") {
+    c(list("Hispanic and/or not white"), list("non-Hispanic White"))
+  } else if (dem_var == "geography") {
+    c(list("small town/rural"), list("urban/suburban"))
+  } else if (dem_var == "education") {
+    c(list("high school or less"), list("some college"))
+  } else {
+    stop(dem_var, " not in data")
+  }
+      
+  ci_contrast <- pp |>
+    contrast_models(contrast_lists[1],  contrast_lists[2]) |> 
+    summary(size = 0) |> 
+    mutate(probability = 1 - probability)
+  
+  ci_median_contrast <- pp |> 
+    contrast_models(contrast_lists[1],  contrast_lists[2]) |>  
+    group_by(contrast) |> 
+    summarize(median = quantile(difference, .5)) |> 
+    mutate(contrast = str_remove(contrast, "\\."))
+
+
+ci_contrast <- ci_contrast |> 
+    left_join(ci_median_contrast, by = c("contrast")) |> 
+    select(contrast, probability, median, lower, upper) 
+  
+  list(pp = pp_tidy, ci = ci, ci_contrast = ci_contrast)
+}
+```
+
+
+Full model
+```{r}
+gender <- calc_pp(auroc_all, "gender") 
+income <- calc_pp(auroc_all, "income")
+race <- calc_pp(auroc_all, "race")
+geography <- calc_pp(auroc_all, "geography")
+education <- calc_pp(auroc_all, "education")
+```
+
+Bind all pp/contrast tibbles and save
+```{r}
+list(gender[[1]], income[[1]], race[[1]], geography[[1]], education[[1]]) |> 
+  bind_rows() |> 
+  write_csv(here::here(path_models, "posteriors_fairness_xgboost_full.csv"))
+
+list(gender[[2]], income[[2]], race[[2]], geography[[2]], education[[2]]) |> 
+  bind_rows() |> 
+  write_csv(here::here(path_models, "pp_fairness_xgboost_full.csv"))
+
+list(gender[[3]], income[[3]], race[[3]], geography[[3]], education[[3]]) |> 
+  bind_rows() |>
+  write_csv(here::here(path_models, "pp_fairness_xgboost_contrast_full.csv"))
+```
+
+
