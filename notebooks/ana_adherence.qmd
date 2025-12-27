@@ -201,7 +201,8 @@ Get all study days for each subid
 # function to map over
 get_study_days <- function(the_subid, study_dates) {
   study_start <- dates |>  filter(subid == the_subid) |>  pull(study_start)
-  study_end <- dates |>  filter(subid == the_subid) |> pull(study_end)
+  study_end <- dates |>  filter(subid == the_subid) |> mutate( study_end = pmin(study_end, ema_end, na.rm = TRUE)) |> 
+    pull(study_end)
   study_days <- tibble(subid = the_subid, study_day = seq(study_start, study_end - days(1), by = "day")) 
   return(study_days)
 }
@@ -241,6 +242,15 @@ mean_ema <- count_study_dates |>
   mutate(mean = n_total/prompt_total) |> 
   ungroup() |> 
   summarize(mean = mean(mean))
+
+
+count_study_dates |> 
+  group_by(subid) |> 
+  summarize(n_total = sum(n), prompt_total = sum(n_prompts)) |> 
+  mutate(mean = n_total/prompt_total) |> 
+  ungroup() |> 
+  summarize(min = min(mean),
+            max = max(mean))
 ```
 
 

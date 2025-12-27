@@ -10,11 +10,11 @@ format:
   html:
     embed-resources: true
 params:
-  study: "combined_alcohol"
+  study: "combined"
   version: "v7"
   cv: "kfold"
   algorithms: "xgboost"   # "all" or name of specific algorithm
-  model: "all" # all, diff or raw (for feature set)
+  model: "dyn_dem_oud" # all, diff or raw (for feature set)
 editor_options: 
   chunk_output_type: console
 ---

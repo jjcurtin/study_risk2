@@ -56,7 +56,7 @@ preds_all_raw <- probs |>
 # Methods
 
 <!--- Notes:
-N = 302 (required 2 known locations other than home, required at least 20 gps points per day on average)
+N = 301 (required 2 known locations other than home, required at least 20 gps points per day on average)
 - Window starts 6am in participants own timezone (derived from gps)
 - 39% subids have lapses
 - 89,211 labels (1.8% lapses) - n lapse days range 0-76, (total positive labels = 1,608)
@@ -68,6 +68,8 @@ N = 302 (required 2 known locations other than home, required at least 20 gps po
 ## Transparency and Openness
 We adhere to research transparency principles that are crucial for robust and replicable science. We reported how we determined the sample size, all data exclusions, all manipulations, and all study measures. Our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)), and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
 
+
+-TRIPOD+AI checklist [@collinsTRIPODAIStatementUpdated2024]
 
 ## Participants
 
@@ -105,6 +107,8 @@ We used a Bayesian hierarchical generalized linear model to estimate the posteri
 
 Using the same 30 held-out test sets, we calculated the median posterior probability and 95% Bayesian CI for auROC for each model separately by gender (not male vs. male), race/ethnicity (Hispanic and/or non-White vs. non-Hispanic White), income (below poverty line vs. above poverty line), geographic location (small town/rural vs. urban/suburban), and education (high school or less vs. some college). We conducted Bayesian group comparisons to assess the likelihood that each model performs differently by group.
 
+- following best practices for model reporting [@vancalsterEvaluationPerformanceMeasures2025]
+
 ### Calibration
 We calibrated our probabilities using Platt scaling. We calculated Brier scores to assess the accuracy of our raw and calibrated probabilities for our best model. Brier scores range from 0 (perfect accuracy) to 1 (perfect inaccuracy).
 
@@ -113,13 +117,13 @@ We calibrated our probabilities using Platt scaling. We calculated Brier scores 
 # Results
 
 ## Participants
-All participants provided at least one month of data. Median days on study across participants was 356 days (range 31 - 452 days). 83% of enrolled participants remained on study for at least six months. EMA adherence was high, on average participants completed 71% of daily EMA prompts. A breakdown of participant deomographics and opioid clinical characteristics is presented below.
+All participants provided at least one month of data. Median days on study across participants was 356 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). A breakdown of participant deomographics and opioid clinical characteristics is presented below.
 
 <!--add table here-->
 
 ## Performance
 
-The best model configuration was a down-sampled xgboost statistical algorithm that used only the dynamic feature set (i.e., features from EMA and geolocation). The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]).  
+The best model configuration was a down-sampled xgboost statistical algorithm that used only the dynamic feature set (i.e., features from EMA and geolocation). The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
 
 We compared our best model's performance to a baseline model that only used information gathered at baseline (demographics and individual differences in OUD characteristics) to evaluate the predictive value of adding dynamic features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
 
@@ -129,7 +133,7 @@ Our fairness subgroup comparisons revealed no evidence that performance meaningf
 
 
 ## Calibration
-Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-cal. 
+Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-cal. We provide histograms for the predicted probabilities of lapse for all observations separately by true outcome in the supplement.   
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
