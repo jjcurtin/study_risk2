@@ -42,7 +42,7 @@ path_models <- format_path(str_c("risk2/models/combined"))
 pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_xgboost_v7.csv"),
                     show_col_types = FALSE) 
 
-probs <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn.rds"))
+probs <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
 
 preds_all_raw <- probs |> 
   mutate(bins = cut(prob_raw, breaks = seq(0, 1, .1)), 
@@ -55,9 +55,17 @@ preds_all_raw <- probs |>
 
 # Methods
 
+<!--- Notes:
+N = 302 (required 2 known locations other than home, required at least 20 gps points per day on average)
+- Window starts 6am in participants own timezone (derived from gps)
+- 39% subids have lapses
+- 89,211 labels (1.8% lapses) - n lapse days range 0-76, (total positive labels = 1,608)
+- 6 x 5 kfold
+- Pre registered report
+- Considered model configurations with features from 3 different sources
+-->
+
 ## Transparency and Openness
-<!-- reference registered report-->
-<!-- add transparency report to supplement if applicable-->
 We adhere to research transparency principles that are crucial for robust and replicable science. We reported how we determined the sample size, all data exclusions, all manipulations, and all study measures. Our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)), and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
 
 
@@ -105,7 +113,9 @@ We calibrated our probabilities using Platt scaling. We calculated Brier scores 
 # Results
 
 ## Participants
+All participants provided at least one month of data. Median days on study across participants was 356 days (range 31 - 452 days). 83% of enrolled participants remained on study for at least six months. EMA adherence was high, on average participants completed 71% of daily EMA prompts. A breakdown of participant deomographics and opioid clinical characteristics is presented below.
 
+<!--add table here-->
 
 ## Performance
 
@@ -113,22 +123,27 @@ The best model configuration was a down-sampled xgboost statistical algorithm th
 
 We compared our best model's performance to a baseline model that only used information gathered at baseline (demographics and individual differences in OUD characteristics) to evaluate the predictive value of adding dynamic features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
 
-Our fairness subgroup comparisons revealed no evidence that performance meaningfully differed by education (probability = 0.51), weak evidence that performance differed by geographic location (probability = 0.73), and strong evidence that performance differed by gender, income, and race and ethnicity (probabilities > 0.99). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.92 - 0.94 (@fig-1).
+Our fairness subgroup comparisons revealed no evidence that performance meaningfully differed by geographic location (probability = 0.68), weak evidence that performance differed by education (probability = 0.83), and strong evidence that performance differed by gender, income, and race and ethnicity (probabilities > 0.99). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.91 - 0.94 (@fig-1). A table of fairness subgroup comparisons is available in the supplement.
 
 {{< embed notebooks/mak_figures.qmd#fig-1 >}}
 
 
 ## Calibration
-Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. 
+Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-cal. 
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
 ## Feature Importance
 
+<!-- Reference supplemental figures with all feature categories -->
+
 {{< embed notebooks/mak_figures.qmd#fig-3 >}}
 
-# Discussion
+{{< embed notebooks/mak_figures.qmd#fig-4 >}}
 
+# Discussion
+<!--Discussion notes:
+- don’t have people have over 65 important group to look at but not in our sample -->
 
 
 # References

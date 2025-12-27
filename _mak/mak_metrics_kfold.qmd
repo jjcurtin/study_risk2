@@ -10,7 +10,7 @@ format:
   html:
     embed-resources: true
 params:
-  study: "combined"
+  study: "combined_alcohol"
   version: "v7"
   cv: "kfold"
   algorithms: "xgboost"   # "all" or name of specific algorithm

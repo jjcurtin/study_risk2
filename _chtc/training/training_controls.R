@@ -6,12 +6,12 @@ library(dplyr)
 source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
 
 # SET GLOBAL PARAMETERS------
-study <- "combined"
+study <- "combined_alcohol"
 window <- "day"
 lead <- 0
 version <- "v7"
 algorithm <- "xgboost"
-batch <- "all"
+batch <- "ema_gps_dem"
 
 
 configs_per_job <- 10  # number of model configurations that will be fit/evaluated within each CHTC

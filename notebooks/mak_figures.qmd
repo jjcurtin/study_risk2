@@ -12,7 +12,7 @@ format:
 params:
   
   study: "combined"
-  model: "dyn" 
+  model: "dyn_dem_oud" 
   version: "v7"
 editor_options: 
   chunk_output_type: console
@@ -49,7 +49,7 @@ pp_all <- read_csv(here::here(path_models,
 pp_dem <- read_csv(here::here(path_models, 
                               "pp_fairness_xgboost_full.csv"),
                    show_col_types = FALSE)
-preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn.rds"))
+preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
 
 shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
                                            version, "_", model, ".rds")))
@@ -60,8 +60,8 @@ shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
 ### Fairness
 
 ```{r}
+#| label: fig-1
 #| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban or surburban geographic location, and some college education) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, small town or rural geographic location, and high school education or less) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
-#| fig-label: fig-1
 #| message: false
 #| code-fold: true
 
@@ -110,8 +110,6 @@ guides(color = guide_legend(nrow = 2, byrow = TRUE))
 
 ```{r}
 #| echo: false
-#| fig-label: fig-2
-#| fig-cap: "Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines."
 
 bin_width = 0.10
 
@@ -131,6 +129,12 @@ rug_data <- preds_all_raw |>
     rug_center = bin_width/2 + bin_width * (bins - 1),
     rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
   )
+```
+
+
+```{r}
+#| label: fig-2
+#| fig-cap: "Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines."
 
 preds_all_raw |> 
   bind_rows(preds_all_logi) |> 
@@ -174,7 +178,7 @@ preds_all_raw |>
 
 ### Feature Importance
 
-62 possible groups - filtering top 30
+top 30
 ```{r}
 #| code-fold: true
 
@@ -237,15 +241,14 @@ local_panel <- shaps_day_max |>
 
 
 ```{r}
-#| echo: false
-#| fig-label: fig-3
+#| label: fig-3
 #| fig-width: 8
 
 global_panel + local_panel
 ```
 
 
-Supplemental figure with all 62 groups
+Supplemental figure with all feature groups
 ```{r}
 #| code-fold: true
 
@@ -306,6 +309,8 @@ global_panel_all + local_panel_all
 
 Individual Shapley plots
 ```{r}
+#| label: fig-4
+#| fig-cap: "Feature importance partial dependence plots."
 #| message: false
 #| fig-width: 10
 #| fig-height: 14
@@ -324,7 +329,7 @@ shaps|>
   ggplot(aes(x = rfvalue, y = value)) +
   geom_point(alpha = .3) +
   geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
     title = "Top 30 SHAP Variable Relationships",
     x = "z-score raw feature score",

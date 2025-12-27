@@ -1,0 +1,4 @@
+- source: mak_figures.qmd
+  quarto-pub:
+    - id: f6132bf9-e5b3-45db-9d9b-4edbda54852d
+      url: https://kendra-wyant.quarto.pub/make-figures-b045

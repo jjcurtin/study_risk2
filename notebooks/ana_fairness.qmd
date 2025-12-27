@@ -49,7 +49,7 @@ path_models <- format_path("risk2/models/combined")
 
 ```{r}
 
-auroc_all <- read_csv(here::here(path_models, "fairness_auroc_xgboost_6_x_5_kfold_v7_dyn.csv"),
+auroc_all <- read_csv(here::here(path_models, "fairness_auroc_xgboost_6_x_5_kfold_v7_dyn_dem_oud.csv"),
                       show_col_types = FALSE) |> 
   mutate(fold_num = rep(1:5, 6),
          repeat_num = c(rep(1, 5), rep(2, 5), rep(3, 5), 

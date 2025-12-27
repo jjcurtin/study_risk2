@@ -12,7 +12,7 @@ format:
 params:
   
   study: "combined"
-  model: "dyn" 
+  model: "dyn_dem_oud" 
   version: "v7"
 editor_options: 
   chunk_output_type: console
