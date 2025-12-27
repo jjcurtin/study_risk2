@@ -119,12 +119,12 @@ We calibrated our probabilities using Platt scaling. We calculated Brier scores 
 # Results
 
 ## Participants
-Data were collected from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Our final analusis sample consisted of 301 participants. Ten participants were excluded due to unusually low adherence, 13 participants were excluded due to insufficient context data for gps points, 4 participants were excluded due to frequent lapses suggesting they no longer had a goal of abstinence, 8 participants were excluded due to suspected fraud and careless responding. A summary of participant demographic and clinical characteristics is presented in @tbl-1.
+Data were collected from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Our final analysis sample consisted of 301 participants. Ten participants were excluded due to unusually low adherence, 13 participants were excluded due to insufficient context data for geolocation points, 4 participants were excluded due to frequent lapses suggesting they no longer had a goal of abstinence, 8 participants were excluded due to careless responding. A summary of participant demographic and OUD characteristics is presented in @tbl-1.
 
-{{< embed notebooks/mak_figures.qmd#fig-1 >}}
+{{< embed notebooks/mak_tables.qmd#tbl-1 >}}
 
 ## Adherence and Labels
-Median days on study across participants was 356 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided on average <!--X gps points daily (range 20-X).--> 
+Median days on study across participants was 356 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided on average <!--X geolocation points daily (range 20-X).--> 
 
 Across participants we generated a total of 89,125 labels. Thirty-nine percent of participants reported an opioid lapse while on study (mean=5.34, range 0-76). This resulted in 1.80% of the labels positive for lapse (1,608/89,125 labels). 
 
@@ -140,7 +140,7 @@ Our fairness subgroup comparisons revealed no evidence that performance meaningf
 
 
 ## Calibration
-Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-cal. We provide histograms for the predicted probabilities of lapse for all observations separately by true outcome in the supplement.   
+Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. Histograms of predicted probabilities by true lapse outcome are available in the supplement.   
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
@@ -148,9 +148,8 @@ Our raw model predicted probabilities were generally well-calibrated (brier scor
 
 <!-- Reference supplemental figures with all feature categories -->
 
-{{< embed notebooks/mak_figures.qmd#fig-5 >}}
+{{< embed notebooks/mak_figures.qmd#fig-4 >}}
 
-{{< embed notebooks/mak_figures.qmd#fig-6 >}}
 
 # Discussion
 <!--Discussion notes:

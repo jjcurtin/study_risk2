@@ -65,7 +65,7 @@ div.csl-indent {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.docx"><i class="bi bi-file-word"></i>MS Word</a></li><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>Typst (apaish)</a></li></ul></div><div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="notebooks\mak_figures.embed-preview.html"><i class="bi bi-journal-code"></i>Make Figures</a></li></ul></div></div>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.docx"><i class="bi bi-file-word"></i>MS Word</a></li><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>Typst (apaish)</a></li></ul></div><div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="notebooks\mak_tables.embed-preview.html"><i class="bi bi-journal-code"></i>Make All Tables for Main Manuscript</a></li><li><a href="notebooks\mak_figures.embed-preview.html"><i class="bi bi-journal-code"></i>Make Figures</a></li></ul></div></div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -134,8 +134,6 @@ div.csl-indent {
 <!--- Notes:
 N = 301 (required 2 known locations other than home, required at least 20 gps points per day on average)
 - Window starts 6am in participants own timezone (derived from gps)
-- 39% subids have lapses
-- 89,211 labels (1.8% lapses) - n lapse days range 0-76, (total positive labels = 1,608)
 - 6 x 5 kfold
 - Pre registered report
 - Considered model configurations with features from 3 different sources
@@ -150,6 +148,7 @@ N = 301 (required 2 known locations other than home, required at least 20 gps po
 </section>
 <section id="procedure" class="level2">
 <h2 class="anchored" data-anchor-id="procedure">Procedure</h2>
+<p>All procedures were approved by the University of Wisconsin-Madison Institutional Review Board <!--(Study #2015-0780).--> All participants provided written informed consent.</p>
 </section>
 <section id="measures" class="level2">
 <h2 class="anchored" data-anchor-id="measures">Measures</h2>
@@ -170,10 +169,11 @@ N = 301 (required 2 known locations other than home, required at least 20 gps po
 <h3 class="anchored" data-anchor-id="model-selection">Model Selection</h3>
 <p>The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation. Folds were stratified by a between-subject measure of our outcome (no lapse vs.&nbsp;any lapse). Model configurations differed on:</p>
 <ol type="1">
-<li><p>Statistical algorithm (and hyperameter tuning)</p></li>
+<li><p>Statistical algorithm (and hyperparameter tuning)</p></li>
 <li><p>Feature set</p></li>
 <li><p>Resampling of minority outcome</p></li>
 </ol>
+<p>Features had missing values if the participant did not respond to the relevant EMA question during the associated scoring epoch. The proportion of missing values across features was low <!--(median = .02, range = 0 - .13)-->. We imputed missing data using median imputation for numeric features and mode imputation for nominal features. We selected coarse median/mode methods for handling missing data due to the computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). Importantly, our imputation calculations are done using only held-in data and can be applied to any new observation.</p>
 </section>
 <section id="model-evaluation" class="level3">
 <h3 class="anchored" data-anchor-id="model-evaluation">Model Evaluation</h3>
@@ -185,7 +185,7 @@ N = 301 (required 2 known locations other than home, required at least 20 gps po
 </section>
 <section id="calibration" class="level3">
 <h3 class="anchored" data-anchor-id="calibration">Calibration</h3>
-<p>We calibrated our probabilities using Platt scaling. We calculated Brier scores to assess the accuracy of our raw and calibrated probabilities for our best model. Brier scores range from 0 (perfect accuracy) to 1 (perfect inaccuracy).</p>
+<p>We calibrated our probabilities using Platt scaling. We calculated Brier scores to assess the accuracy of our raw and calibrated probabilities for our best model. Brier scores range from 0 (perfect accuracy) to 1 (perfect inaccuracy). We also provide calibration plots for the raw and calibrated probabilities.</p>
 </section>
 <section id="feature-importance" class="level3">
 <h3 class="anchored" data-anchor-id="feature-importance">Feature Importance</h3>
@@ -196,8 +196,469 @@ N = 301 (required 2 known locations other than home, required at least 20 gps po
 <h1>Results</h1>
 <section id="participants-1" class="level2">
 <h2 class="anchored" data-anchor-id="participants-1">Participants</h2>
-<p>All participants provided at least one month of data. Median days on study across participants was 356 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). A breakdown of participant deomographics and opioid clinical characteristics is presented below.</p>
-<!--add table here-->
+<p>Data were collected from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Our final analysis sample consisted of 301 participants. Ten participants were excluded due to unusually low adherence, 13 participants were excluded due to insufficient context data for geolocation points, 4 participants were excluded due to frequent lapses suggesting they no longer had a goal of abstinence, 8 participants were excluded due to careless responding. A summary of participant demographic and OUD characteristics is presented in <a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a>.</p>
+<div class="quarto-embed-nb-cell">
+<div class="cell">
+<div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Demographic and Clinical Characteristics
+</figcaption>
+<div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<table class="lightable-classic do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">N</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="7">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">18-21</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">22-25</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">2.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">26-35</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">35.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">36-45</td>
+<td style="text-align: right;">107</td>
+<td style="text-align: right;">35.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">46-55</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">19.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">56-65</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">4.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Over 65</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gender</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="4">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Man</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">53.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Woman</td>
+<td style="text-align: right;">134</td>
+<td style="text-align: right;">44.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Non-binary</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not listed above</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Orientation</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="5">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Straight, that is, not gay or lesbian</td>
+<td style="text-align: right;">238</td>
+<td style="text-align: right;">79.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Lesbian or gay</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Bisexual</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">13.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not sure</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not listed above</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Race and Ethnicity (select all that apply)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="7">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">American Indian/Alaskan Native</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">5.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Asian</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Black/African American</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">15.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Native Hawaiian/Other Pacific Islander</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">White/Caucasian</td>
+<td style="text-align: right;">237</td>
+<td style="text-align: right;">78.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hispanic, Latino, or Spanish origin</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">8.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not listed above</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Education</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="6">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">8th grade or less</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Some high school, but did not graduate</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">8.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">High school graduate or GED</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">31.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Some college or 2-year degree</td>
+<td style="text-align: right;">131</td>
+<td style="text-align: right;">43.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">4-year college graduate</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">10.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">More than 4-year or advanced degree</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Employment</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="6">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Disabled, not able to work</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">11.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Employed, working 1-39 hours per week</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">21.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Employed, working 40 or more hours per week</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">18.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not employed, NOT looking for work</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">10.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not employed, looking for work</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">36.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Retired</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Household Income</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="8">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Less than $25,000</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">56.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$25,000 - $34,999</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">13.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$35,000 - $49,999</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">12.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$50,000 - $74,999</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">9.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$75,000 - $99,999</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">4.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$100,000 - $149,999</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$150,000 - $199,999</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$200,000 or more</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Past Month Opioid Use</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">No</td>
+<td style="text-align: right;">202</td>
+<td style="text-align: right;">67.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Yes</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">32.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Past Month Detox or Residential Treatment</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">No</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">64.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Yes</td>
+<td style="text-align: right;">105</td>
+<td style="text-align: right;">34.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Past Month Psychiatric Medication</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">No</td>
+<td style="text-align: right;">154</td>
+<td style="text-align: right;">51.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Yes</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: right;">48.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Preferred Opioid</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="4">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Fentanyl</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">17.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Heroin</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">39.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Prescription opioid not for opioid treatment</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">31.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Medication for opioid treatment</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">9.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Preferred Route of Administration</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="5">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Injection</td>
+<td style="text-align: right;">103</td>
+<td style="text-align: right;">34.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Oral</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">18.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Smoke</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">17.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Sniff or snort</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">27.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Other</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lifetime History of Overdose</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="5">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Never</td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">41.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">1 time</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">13.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">2-3 times</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">23.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">4-5 times</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">8.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">More than 5 times</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">12.3</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><span style="font-style: italic;">Note: </span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup></sup> N = 301</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="notebooks\mak_tables.embed-preview.html#cell-tbl-1">Source: Make All Tables for Main Manuscript</a></div>
+</section>
+<section id="adherence-and-labels" class="level2">
+<h2 class="anchored" data-anchor-id="adherence-and-labels">Adherence and Labels</h2>
+<p>Median days on study across participants was 356 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided on average <!--X geolocation points daily (range 20-X).--></p>
+<p>Across participants we generated a total of 89,125 labels. Thirty-nine percent of participants reported an opioid lapse while on study (mean=5.34, range 0-76). This resulted in 1.80% of the labels positive for lapse (1,608/89,125 labels).</p>
 </section>
 <section id="performance" class="level2">
 <h2 class="anchored" data-anchor-id="performance">Performance</h2>
@@ -219,11 +680,11 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </div>
 </div>
 </div>
-<a class="quarto-notebook-link" id="nblink-1" href="notebooks\mak_figures.embed-preview.html#cell-fig-1">Source: Make Figures</a></div>
+<a class="quarto-notebook-link" id="nblink-2" href="notebooks\mak_figures.embed-preview.html#cell-fig-1">Source: Make Figures</a></div>
 </section>
 <section id="calibration-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-1">Calibration</h2>
-<p>Our raw model predicted probabilities were generally well-calibrated (brier score = 0.015). We attempted to improve calibration with Platt scaling but results were comparable (brier score = 0.015). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in <strong>?@fig-cal</strong>. We provide histograms for the predicted probabilities of lapse for all observations separately by true outcome in the supplement.</p>
+<p>Our raw model predicted probabilities were generally well-calibrated (brier score = 0.015). We attempted to improve calibration with Platt scaling but results were comparable (brier score = 0.015). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in <strong>?@fig-cal</strong>. Histograms of predicted probabilities by true lapse outcome are available in the supplement.</p>
 <div class="quarto-embed-nb-cell">
 <div id="cell-fig-2" class="cell">
 <div class="cell-output cell-output-display">
@@ -245,15 +706,15 @@ Figure&nbsp;2: Calibration plots of raw and calibrated lapse probabilities. Pred
 <h2 class="anchored" data-anchor-id="feature-importance-1">Feature Importance</h2>
 <!-- Reference supplemental figures with all feature categories -->
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-3" class="cell" data-fig-width="8">
+<div id="cell-fig-5" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
 <div class="cell-output cell-output-display">
-<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-5" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" id="fig-3" class="img-fluid figure-img">
+<div aria-describedby="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/notebooks-mak_figures-fig-5-output-1.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Raw feature importance partial dependence plots.
 </figcaption>
 </figure>
 </div>
@@ -261,15 +722,15 @@ Figure&nbsp;3
 </div>
 </div>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-4" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
+<div id="cell-fig-6" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
 <div class="cell-output cell-output-display">
-<div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-6" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" class="img-fluid figure-img">
+<div aria-describedby="fig-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/notebooks-mak_figures-fig-6-output-1.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Feature importance partial dependence plots.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Difference feature importance partial dependence plots.
 </figcaption>
 </figure>
 </div>
