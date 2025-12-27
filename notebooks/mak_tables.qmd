@@ -1,0 +1,298 @@
+---
+title: "Make All Tables for Main Manuscript"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+number-sections: true
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 4
+editor_options: 
+  chunk_output_type: console
+html-table-processing: none
+---
+
+```{r}
+#| message: false
+#| warning: false
+
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+library(kableExtra)
+library(janitor)
+
+path_shared <- format_path("risk2/data_processed/shared")
+
+options(knitr.kable.NA = '')
+```
+
+
+
+## Table 1 participant demographics
+
+Table 1 
+```{r}
+study_dates <- read_csv(file.path(path_shared, "study_dates_gps.csv"), 
+                        show_col_types = FALSE)
+
+intake <- read_csv(file.path(path_shared, "survey_intake.csv"), 
+                   show_col_types = FALSE) |>
+  filter(subid %in% study_dates$subid) 
+
+
+# Calcs to make df for table 1 (demographics and clinical characteristics)
+n_total <- nrow(study_dates)
+
+dem_age <-  intake |>
+  select(var = age) |>
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |> 
+  add_row(var = "Age", .before = 1)
+
+dem_gender <-  intake |>
+  select(var = gender) |>
+  filter(var != "Prefer not to say") |> 
+  mutate(var = factor(var, 
+                      levels = c("Man",
+                                 "Woman",
+                                 "Non-binary",
+                                 "Not listed above"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |> 
+  add_row(var = "Gender", .before = 1)
+
+dem_orientation <-  intake |>
+  select(var = orientation) |>
+  filter(!is.na(var)) |> 
+  mutate(var = factor(var, levels = c("Straight, that is, not gay or lesbian",
+                                      "Lesbian or gay",
+                                      "Bisexual",
+                                      "Not sure",
+                                      "Not listed above"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |> 
+  add_row(var = "Orientation", .before = 1)
+
+dem_race <- intake |>
+  select(starts_with("race_"), -race_other_text) |> 
+  pivot_longer(1:7, names_to = "var") |> 
+  mutate(var = case_match(var,
+                           "race_ai_an" ~ "American Indian/Alaskan Native",
+                           "race_asian" ~ "Asian",
+                           "race_black" ~ "Black/African American",
+                           "race_nat_hi" ~ "Native Hawaiian/Other Pacific Islander",
+                           "race_white" ~ "White/Caucasian",
+                           "race_hispanic" ~ "Hispanic, Latino, or Spanish origin",
+                           "race_other" ~ "Not listed above"),
+         var = factor(var,levels = c("American Indian/Alaskan Native",
+                                     "Asian",
+                                     "Black/African American",
+                                     "Native Hawaiian/Other Pacific Islander",
+                                     "White/Caucasian",
+                                     "Hispanic, Latino, or Spanish origin",
+                                     "Not listed above"))) |> 
+  group_by(var) |>
+  count(value) |> 
+  ungroup() |> 
+  filter(value == "yes") |> 
+  select(-value) |> 
+  mutate(perc = (n / n_total) * 100) |>
+  add_row(var = "Race and Ethnicity (select all that apply)", .before = 1)
+  
+
+dem_education <- intake |>
+  select(var = education) |>
+  filter(!is.na(var)) |> 
+  mutate(var = factor(var, 
+                      levels = c("8th grade or less",
+                                 "Some high school, but did not graduate",
+                                 "High school graduate or GED",
+                                 "Some college or 2-year degree",
+                                 "4-year college graduate",
+                                 "More than 4-year or advanced degree"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  add_row(var = "Education", .before = 1)
+
+dem_employment <- intake |>
+  select(var = employment) |>
+  filter(!is.na(var)) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  add_row(var = "Employment", .before = 1)
+
+dem_income <- intake |>
+  select(var = income) |>
+  filter(!is.na(var)) |> 
+  mutate(var = factor(var, 
+                      levels = c("Less than $25,000",
+                                 "$25,000 - $34, 999",
+                                 "$35,000 - $49,999",
+                                 "$50,000 - $74, 999",
+                                 "$75, 000 - $99, 999",
+                                 "$100,000 - $149,999",
+                                 "$150, 000 - $199,999",
+                                 "$200, 000 or more"),
+                      labels = c("Less than $25,000",
+                                 "$25,000 - $34,999",
+                                 "$35,000 - $49,999",
+                                 "$50,000 - $74,999",
+                                 "$75,000 - $99,999",
+                                 "$100,000 - $149,999",
+                                 "$150,000 - $199,999",
+                                 "$200,000 or more"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  add_row(var = "Household Income", .before = 1)
+
+
+dsm <- intake |>
+  summarise(mean = mean(dsm_c, na.rm = TRUE),
+            SD = sd(dsm_c, na.rm = TRUE),
+            min = min(dsm_c, na.rm = TRUE),
+            max = max(dsm_c, na.rm = TRUE)) |>
+  mutate(var = "DSM-5 OUD Symptom Count",
+        n = as.numeric(""),
+        perc = as.numeric("")) |>
+  select(var, n, perc, everything())
+
+past_month_opioid <- intake |>
+  select(var = whoassist_month_1_opioid) |>
+  mutate(var = factor(var, levels = c("no", "yes"),
+                      labels = c("No", "Yes"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  drop_na() |> 
+  add_row(var = "Past Month Opioid Use", .before = 1)
+
+past_month_detox <- intake |>
+  select(var = other_tx_2) |>
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  drop_na() |> 
+  add_row(var = "Past Month Detox or Residential Treatment", .before = 1)
+
+past_month_psych <- intake |>
+  select(var = other_tx_1) |>
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  drop_na() |> 
+  add_row(var = "Past Month Psychiatric Medication", .before = 1)
+
+opioid_preferred <- intake |>
+  select(var = whoassist_opioid_3) |>
+  mutate(var = factor(var,
+                      levels = c("Fentanyl (Sublimaze, Actiq, apache, goodfella, TNT)",
+                                 "Heroin (black tar, black pearl, black, china white, dope, white lady, smack, snow, speedball)",
+                                 "Prescription opioid not for opioid treatment (OxyContin, Vicodin, Percocet, Opana)",
+                                 "Medication for opioid treatment (e.g., Suboxone, Methadone, etc.)"),
+                      labels = c("Fentanyl",
+                                 "Heroin",
+                                 "Prescription opioid not for opioid treatment",
+                                 "Medication for opioid treatment"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  drop_na() |> 
+  add_row(var = "Preferred Opioid", .before = 1)
+
+roa_preferred <- intake |>
+  select(var = whoassist_opioid_4) |>
+  mutate(var = factor(var, 
+                      levels = c("Injection (IV, muscle, under skin)",
+                                 "Oral (swallow, chew)",
+                                 "Smoke (chase)",
+                                 "Sniff or snort",
+                                 "Other"),
+                      labels = c("Injection",
+                                 "Oral",
+                                 "Smoke",
+                                 "Sniff or snort",
+                                 "Other"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  drop_na() |> 
+  add_row(var = "Preferred Route of Administration", .before = 1)
+
+od <- intake |>
+  select(var = whoassist_life_overdose) |>
+  mutate(var = factor(var, 
+                      levels = c("No",
+                                 "1 time",
+                                 "2-3 times",
+                                 "4-5 times",
+                                 "More than 5 times"),
+                      labels = c("Never",
+                                 "1 time",
+                                 "2-3 times",
+                                 "4-5 times",
+                                 "More than 5 times"))) |> 
+  group_by(var) |>
+  summarise(n = n()) |>
+  mutate(perc = (n / n_total) * 100) |>
+  drop_na() |> 
+  add_row(var = "Lifetime History of Overdose", .before = 1)
+
+
+table_dem <- dem_age |> 
+  bind_rows(dem_gender) |> 
+  bind_rows(dem_orientation) |> 
+  bind_rows(dem_race) |> 
+  bind_rows(dem_education) |> 
+  bind_rows(dem_employment) |> 
+  bind_rows(dem_income) |> 
+  # bind_rows(dsm) |> 
+  bind_rows(past_month_opioid) |> 
+  bind_rows(past_month_detox) |> 
+  bind_rows(past_month_psych) |> 
+  bind_rows(opioid_preferred) |> 
+  bind_rows(roa_preferred) |> 
+  bind_rows(od) |> 
+  mutate(perc = round(perc, 1)) |> 
+  rename(` ` = var,
+         N = n,
+         `%` = perc)
+```
+
+```{r}
+#| label: tbl-1
+#| tbl-cap: "Demographic and Clinical Characteristics"
+
+footnote_table_dem_a <- "N = 301"
+
+
+table_dem |> 
+  knitr::kable() |> 
+  kable_classic() |> 
+  kableExtra::group_rows(start_row = 2, end_row = 8) |> 
+  kableExtra::group_rows(start_row = 10, end_row = 13) |> 
+  kableExtra::group_rows(start_row = 15, end_row = 19) |> 
+  kableExtra::group_rows(start_row = 21, end_row = 27) |> 
+  kableExtra::group_rows(start_row = 29, end_row = 34) |> 
+  kableExtra::group_rows(start_row = 36, end_row = 41) |> 
+  kableExtra::group_rows(start_row = 43, end_row = 50) |> 
+  kableExtra::group_rows(start_row = 52, end_row = 53) |> 
+  kableExtra::group_rows(start_row = 55, end_row = 56) |> 
+  kableExtra::group_rows(start_row = 58, end_row = 59) |> 
+  kableExtra::group_rows(start_row = 61, end_row = 64) |> 
+  kableExtra::group_rows(start_row = 66, end_row = 70) |> 
+  kableExtra::group_rows(start_row = 72, end_row = 76) |> 
+  kableExtra::footnote(general = c(footnote_table_dem_a), escape=FALSE)
+```
+
+
