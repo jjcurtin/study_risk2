@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kendra Wyant">
 <meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2025-12-12">
+<meta name="dcterms.date" content="2025-12-27">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
 <title>Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning</title>
@@ -28,6 +28,7 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -101,7 +102,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 12, 2025</p>
+      <p class="date">December 27, 2025</p>
     </div>
   </div>
   
@@ -131,7 +132,7 @@ div.csl-indent {
 <section id="methods" class="level1">
 <h1>Methods</h1>
 <!--- Notes:
-N = 302 (required 2 known locations other than home, required at least 20 gps points per day on average)
+N = 301 (required 2 known locations other than home, required at least 20 gps points per day on average)
 - Window starts 6am in participants own timezone (derived from gps)
 - 39% subids have lapses
 - 89,211 labels (1.8% lapses) - n lapse days range 0-76, (total positive labels = 1,608)
@@ -142,6 +143,7 @@ N = 302 (required 2 known locations other than home, required at least 20 gps po
 <section id="transparency-and-openness" class="level2">
 <h2 class="anchored" data-anchor-id="transparency-and-openness">Transparency and Openness</h2>
 <p>We adhere to research transparency principles that are crucial for robust and replicable science. We reported how we determined the sample size, all data exclusions, all manipulations, and all study measures. Our data, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>), and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).</p>
+<p>-TRIPOD+AI checklist <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span></p>
 </section>
 <section id="participants" class="level2">
 <h2 class="anchored" data-anchor-id="participants">Participants</h2>
@@ -163,7 +165,7 @@ N = 302 (required 2 known locations other than home, required at least 20 gps po
 </section>
 <section id="data-analytic-strategy" class="level2">
 <h2 class="anchored" data-anchor-id="data-analytic-strategy">Data Analytic Strategy</h2>
-<p>Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem <span class="citation" data-cites="kuhnTidymodelsCollectionPackages2020 kuhnTidyposteriorBayesianAnalysis2022 goodrichRstanarmBayesianApplied2023">(<a href="#ref-kuhnTidymodelsCollectionPackages2020" role="doc-biblioref"><strong>kuhnTidymodelsCollectionPackages2020?</strong></a>; <a href="#ref-kuhnTidyposteriorBayesianAnalysis2022" role="doc-biblioref"><strong>kuhnTidyposteriorBayesianAnalysis2022?</strong></a>; <a href="#ref-goodrichRstanarmBayesianApplied2023" role="doc-biblioref"><strong>goodrichRstanarmBayesianApplied2023?</strong></a>)</span>. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing <span class="citation" data-cites="chtc">(<a href="#ref-chtc" role="doc-biblioref"><strong>chtc?</strong></a>)</span>.</p>
+<p>Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem <span class="citation" data-cites="kuhnTidymodelsCollectionPackages2020 kuhnTidyposteriorBayesianAnalysis2022 goodrichRstanarmBayesianApplied2023">(<a href="#ref-goodrichRstanarmBayesianApplied2023" role="doc-biblioref">Goodrich et al., 2023</a>; <a href="#ref-kuhnTidyposteriorBayesianAnalysis2022" role="doc-biblioref">Kuhn, 2022</a>; <a href="#ref-kuhnTidymodelsCollectionPackages2020" role="doc-biblioref">Kuhn &amp; Wickham, 2020</a>)</span>. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing <span class="citation" data-cites="chtc">(<a href="#ref-chtc" role="doc-biblioref">Center for High Throughput Computing, 2006</a>)</span>.</p>
 <section id="model-selection" class="level3">
 <h3 class="anchored" data-anchor-id="model-selection">Model Selection</h3>
 <p>The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation. Folds were stratified by a between-subject measure of our outcome (no lapse vs.&nbsp;any lapse). Model configurations differed on:</p>
@@ -177,6 +179,9 @@ N = 302 (required 2 known locations other than home, required at least 20 gps po
 <h3 class="anchored" data-anchor-id="model-evaluation">Model Evaluation</h3>
 <p>We used a Bayesian hierarchical generalized linear model to estimate the posterior distribution and 95% credible intervals (CI) for the 30 held-out test sets for our best performing model. We used weakly informative, data-dependent priors to regularize and reduce overfitting. Random intercepts were included for repeat and fold (nested within repeat).</p>
 <p>Using the same 30 held-out test sets, we calculated the median posterior probability and 95% Bayesian CI for auROC for each model separately by gender (not male vs.&nbsp;male), race/ethnicity (Hispanic and/or non-White vs.&nbsp;non-Hispanic White), income (below poverty line vs.&nbsp;above poverty line), geographic location (small town/rural vs.&nbsp;urban/suburban), and education (high school or less vs.&nbsp;some college). We conducted Bayesian group comparisons to assess the likelihood that each model performs differently by group.</p>
+<ul>
+<li>following best practices for model reporting <span class="citation" data-cites="vancalsterEvaluationPerformanceMeasures2025">(<a href="#ref-vancalsterEvaluationPerformanceMeasures2025" role="doc-biblioref">Van Calster et al., 2025</a>)</span></li>
+</ul>
 </section>
 <section id="calibration" class="level3">
 <h3 class="anchored" data-anchor-id="calibration">Calibration</h3>
@@ -191,12 +196,14 @@ N = 302 (required 2 known locations other than home, required at least 20 gps po
 <h1>Results</h1>
 <section id="participants-1" class="level2">
 <h2 class="anchored" data-anchor-id="participants-1">Participants</h2>
+<p>All participants provided at least one month of data. Median days on study across participants was 356 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). A breakdown of participant deomographics and opioid clinical characteristics is presented below.</p>
+<!--add table here-->
 </section>
 <section id="performance" class="level2">
 <h2 class="anchored" data-anchor-id="performance">Performance</h2>
 <p>The best model configuration was a down-sampled xgboost statistical algorithm that used only the dynamic feature set (i.e., features from EMA and geolocation). The median posterior probability for the best model was 0.93, with narrow 95% CI ([0.92, 0.94]).</p>
 <p>We compared our best model’s performance to a baseline model that only used information gathered at baseline (demographics and individual differences in OUD characteristics) to evaluate the predictive value of adding dynamic features. The median posterior probability for the baseline model was 0.74 (95% CI [0.71, 0.77]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).</p>
-<p>Our fairness subgroup comparisons revealed no evidence that performance meaningfully differed by education (probability = 0.51), weak evidence that performance differed by geographic location (probability = 0.73), and strong evidence that performance differed by gender, income, and race and ethnicity (probabilities &gt; 0.99). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.92 - 0.94 (<a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>).</p>
+<p>Our fairness subgroup comparisons revealed no evidence that performance meaningfully differed by geographic location (probability = 0.68), weak evidence that performance differed by education (probability = 0.83), and strong evidence that performance differed by gender, income, and race and ethnicity (probabilities &gt; 0.99). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.91 - 0.94 (<a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>). A table of fairness subgroup comparisons is available in the supplement.</p>
 <div class="quarto-embed-nb-cell">
 <div id="cell-fig-1" class="cell" data-message="false">
 <div class="cell-output cell-output-display">
@@ -216,16 +223,16 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </section>
 <section id="calibration-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-1">Calibration</h2>
-<p>Our raw model predicted probabilities were generally well-calibrated (brier score = 0.015). We attempted to improve calibration with Platt scaling but results were comparable (brier score = 0.015). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in <a href="#fig-cal" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p>Our raw model predicted probabilities were generally well-calibrated (brier score = 0.015). We attempted to improve calibration with Platt scaling but results were comparable (brier score = 0.015). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in <strong>?@fig-cal</strong>. We provide histograms for the predicted probabilities of lapse for all observations separately by true outcome in the supplement.</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-cal" class="cell">
+<div id="cell-fig-2" class="cell">
 <div class="cell-output cell-output-display">
-<div id="fig-cal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-cal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="index_files/figure-html/notebooks-mak_figures-fig-cal-output-1.png" class="img-fluid figure-img">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines.
 </figcaption>
 </figure>
@@ -236,6 +243,7 @@ Figure&nbsp;2: Calibration plots of raw and calibrated lapse probabilities. Pred
 </section>
 <section id="feature-importance-1" class="level2">
 <h2 class="anchored" data-anchor-id="feature-importance-1">Feature Importance</h2>
+<!-- Reference supplemental figures with all feature categories -->
 <div class="quarto-embed-nb-cell">
 <div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="cell-output cell-output-display">
@@ -252,6 +260,22 @@ Figure&nbsp;3
 </div>
 </div>
 </div>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-4" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
+<div class="cell-output cell-output-display">
+<div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Feature importance partial dependence plots.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="discussion" class="level1">
@@ -261,8 +285,25 @@ Figure&nbsp;3
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
-<div id="refs" role="list">
-
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-chtc" class="csl-entry" role="listitem">
+Center for High Throughput Computing. (2006). <em>Center for high throughput computing</em>. Center for High Throughput Computing. <a href="https://doi.org/10.21231/GNT1-HW21">https://doi.org/10.21231/GNT1-HW21</a>
+</div>
+<div id="ref-collinsTRIPODAIStatementUpdated2024" class="csl-entry" role="listitem">
+Collins, G. S., Moons, K. G. M., Dhiman, P., Riley, R. D., Beam, A. L., Van Calster, B., Ghassemi, M., Liu, X., Reitsma, J. B., Van Smeden, M., Boulesteix, A.-L., Camaradou, J. C., Celi, L. A., Denaxas, S., Denniston, A. K., Glocker, B., Golub, R. M., Harvey, H., Heinze, G., … Logullo, P. (2024). <span>TRIPOD</span>+<span>AI</span> statement: Updated guidance for reporting clinical prediction models that use regression or machine learning methods. <em>BMJ</em>, <em>385</em>, e078378. <a href="https://doi.org/10.1136/bmj-2023-078378">https://doi.org/10.1136/bmj-2023-078378</a>
+</div>
+<div id="ref-goodrichRstanarmBayesianApplied2023" class="csl-entry" role="listitem">
+Goodrich, B., Gabry, J., Ali, I., &amp; Brilleman, S. (2023). <em>Rstanarm: <span>Bayesian Applied Regression Modeling</span> via <span>Stan</span></em>.
+</div>
+<div id="ref-kuhnTidyposteriorBayesianAnalysis2022" class="csl-entry" role="listitem">
+Kuhn, M. (2022). <em>Tidyposterior: <span>Bayesian Analysis</span> to <span>Compare Models</span> using <span>Resampling Statistics</span></em>.
+</div>
+<div id="ref-kuhnTidymodelsCollectionPackages2020" class="csl-entry" role="listitem">
+Kuhn, M., &amp; Wickham, H. (2020). <em>Tidymodels: A collection of packages for modeling and machine learning using tidyverse principles</em>.
+</div>
+<div id="ref-vancalsterEvaluationPerformanceMeasures2025" class="csl-entry" role="listitem">
+Van Calster, B., Collins, G. S., Vickers, A. J., Wynants, L., Kerr, K. F., Barreñada, L., Varoquaux, G., Singh, K., Moons, K. G., Hernandez-Boussard, T., Timmerman, D., McLernon, D. J., Van Smeden, M., &amp; Steyerberg, E. W. (2025). Evaluation of performance measures in predictive artificial intelligence models to support medical decisions: Overview and guidance. <em>The Lancet Digital Health</em>, 100916. <a href="https://doi.org/10.1016/j.landig.2025.100916">https://doi.org/10.1016/j.landig.2025.100916</a>
+</div>
 </div>
 </section>
 
