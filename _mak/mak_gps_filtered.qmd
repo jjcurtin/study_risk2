@@ -14,7 +14,7 @@ editor_options:
 
 ## Notes
 
-This script combines filters down raw gps data `gps.rds`to gps study sample. Preps for making enriched gps dataset.
+This script combines filters down raw gps data `gps.rds`to gps study sample. Preps for making enriched data.
 
 
 
@@ -62,6 +62,21 @@ gps <- gps |>
   ungroup()
 
 ```
+
+Average pointes
+```{r}
+gps_counts <- gps |> 
+  mutate(date = date( dttm_obs)) |> 
+  group_by(subid, date) |> 
+  count() |> 
+  group_by(subid) |> 
+  summarise(mean = mean(n))
+
+gps_counts |> 
+  summarise(mean_mean = mean(mean),
+            min = min(mean),
+            max = max(mean))
+
 
 
 ## Save GPS  
