@@ -1,0 +1,4 @@
+- source: index.qmd
+  quarto-pub:
+    - id: c756c65f-df72-4016-844d-48ca7ac86180
+      url: https://kendra-wyant.quarto.pub/dynamic-lapse-risk-prediction-in-a-national-sample-of-individuals-with-opioid-use-disorder-using-personal-sensing-and-machine-learning

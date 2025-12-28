@@ -42,7 +42,7 @@ path_models <- format_path(str_c("risk2/models/combined"))
 pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_xgboost_v7.csv"),
                     show_col_types = FALSE) 
 
-probs <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn.rds"))
+probs <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
 
 preds_all_raw <- probs |> 
   mutate(bins = cut(prob_raw, breaks = seq(0, 1, .1)), 
@@ -56,21 +56,24 @@ preds_all_raw <- probs |>
 # Methods
 
 ## Transparency and Openness
-<!-- reference registered report-->
-<!-- add transparency report to supplement if applicable-->
-We adhere to research transparency principles that are crucial for robust and replicable science. We reported how we determined the sample size, all data exclusions, all manipulations, and all study measures. Our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)), and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
+We adhere to research transparency principles that are crucial for robust and replicable science. Our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)), and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
 
+
+- TRIPOD+AI checklist [@collinsTRIPODAIStatementUpdated2024]
+- Pre registered report
 
 ## Participants
 
 
 ## Procedure
+All procedures were approved by the University of Wisconsin-Madison Institutional Review Board <!--(Study #2015-0780).--> All participants provided written informed consent.
+
 
 
 ## Measures
 
 
-### Individual Characteristics
+### Individual Differences
 
 
 ### Ecological Momentary Assessment
@@ -82,53 +85,86 @@ We adhere to research transparency principles that are crucial for robust and re
 ## Data Analytic Strategy
 Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem [@kuhnTidymodelsCollectionPackages2020; @kuhnTidyposteriorBayesianAnalysis2022; @goodrichRstanarmBayesianApplied2023]. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing [@chtc].
 
+### Feature Engineering
+Features were engineered from two types of data sources: 
+
+1. Static individual differences. 
+
+2. Dynamic sensing data.
+
+We imputed missing data using median imputation for numeric features and mode imputation for nominal features. We selected coarse median/mode methods for handling missing data due to the computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). Importantly, our imputation calculations are done using only held-in data and can be applied to any new observation.
+
+### Prediction Windows and Labels
+
+- Window starts 6am in participants own timezone (derived from gps)
+
 ### Model Selection
-The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation. Folds were stratified by a between-subject measure of our outcome (no lapse vs. any lapse). Model configurations differed on: 
+Our performance metric for model selection and evaluation was area under the Receiver Operating Characteristic curve (auROC).  <!--expand on choice? [@vancalsterEvaluationPerformanceMeasures2025]-->.
 
-1. Statistical algorithm (and hyperameter tuning)
+The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation. Folds were stratified by a between-subject measure of our outcome (no lapse vs. any lapse). 
 
-2. Feature set
+Model configurations differed on: 
 
-3. Resampling of minority outcome
+1. Statistical algorithm (and hyperparameter tuning)
+
+2. Resampling of minority outcome
+
+We repeated the above process to select a best baseline model that was limited to features derived from individual differences in demographics and OUD characteristics. 
 
 
 ### Model Evaluation
-We used a Bayesian hierarchical generalized linear model to estimate the posterior distribution and 95% credible intervals (CI) for the 30 held-out test sets for our best performing model. We used weakly informative, data-dependent priors to regularize and reduce overfitting. Random intercepts were included for repeat and fold (nested within repeat).
+We used a Bayesian hierarchical generalized linear model to estimate the posterior distribution and 95% credible intervals (CI) for auROC for the 30 held-out test sets for our best performing model. We used weakly informative, data-dependent priors to regularize and reduce overfitting. Random intercepts were included for repeat and fold (nested within repeat).
+
+- Model contrast
 
 Using the same 30 held-out test sets, we calculated the median posterior probability and 95% Bayesian CI for auROC for each model separately by gender (not male vs. male), race/ethnicity (Hispanic and/or non-White vs. non-Hispanic White), income (below poverty line vs. above poverty line), geographic location (small town/rural vs. urban/suburban), and education (high school or less vs. some college). We conducted Bayesian group comparisons to assess the likelihood that each model performs differently by group.
 
+
 ### Calibration
-We calibrated our probabilities using Platt scaling. We calculated Brier scores to assess the accuracy of our raw and calibrated probabilities for our best model. Brier scores range from 0 (perfect accuracy) to 1 (perfect inaccuracy).
+We calibrated our probabilities using Platt scaling. We calculated Brier scores to assess the accuracy of our raw and calibrated probabilities for our best model. Brier scores range from 0 (perfect accuracy) to 1 (perfect inaccuracy). We provide calibration plots for the raw and calibrated probabilities in the manuscript and histograms of predicted probabilities by true lapse outcome in the supplement.
 
 ### Feature Importance
 
 # Results
 
 ## Participants
+Data were collected from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Our final analysis sample consisted of 300 participants. Eleven participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 9 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to not residing in the United States, 10 participants were excluded due to evidence of careless responding. A summary of participant demographic and OUD characteristics is presented in @tbl-1.
+
+{{< embed notebooks/mak_tables.qmd#tbl-1 >}}
+
+## Adherence, Features, and Labels
+Mean days on study across participants was 298 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided on average 311 geolocation points daily (range 20-825). 
+
+Our final model consisted of 640 features. The proportion of missing values across features was low (mean=.03, range = 0-.12).<!--recheck--> Across participants we generated a total of 88,973 labels. Forty percent of participants reported an opioid lapse while on study (mean=5.73, range 0-117). This resulted in 1.93% of the labels positive for lapse (1,720/88,973 labels). 
 
 
 ## Performance
+The best model configuration used an xgboost statistical algorithm and up-sampled the minority class<!--recheck-->.^[The best model configuration used 1:4 upsampling of the minority class and the following hyperparameter values: learning rate = .1, tree depth = 1, mtry = 50]<!--added this footnote to follow TRIPOD-AI checklist--> The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
 
-The best model configuration was a down-sampled xgboost statistical algorithm that used only the dynamic feature set (i.e., features from EMA and geolocation). The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]).  
+We compared our best model's performance to a baseline model that only used information gathered at intake (i.e., individual differences in demographic and OUD characteristics) to evaluate the incremental predictive value of adding dynamic features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
 
-We compared our best model's performance to a baseline model that only used information gathered at baseline (demographics and individual differences in OUD characteristics) to evaluate the predictive value of adding dynamic features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
-
-Our fairness subgroup comparisons revealed no evidence that performance meaningfully differed by education (probability = 0.51), weak evidence that performance differed by geographic location (probability = 0.73), and strong evidence that performance differed by gender, income, and race and ethnicity (probabilities > 0.99). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.92 - 0.94 (@fig-1).
+Our fairness subgroup comparisons revealed no evidence that performance meaningfully differed by geographic location (probability = 0.68), weak evidence that performance differed by education (probability = 0.83), and strong evidence that performance differed by gender, income, and race and ethnicity (probabilities > 0.99). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.91 - 0.94 (@fig-1). A table of fairness subgroup comparisons is available in the supplement.
 
 {{< embed notebooks/mak_figures.qmd#fig-1 >}}
 
 
 ## Calibration
-Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. 
+Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. Histograms of predicted probabilities by true lapse outcome are available in the supplement.   
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
 ## Feature Importance
 
+For brevity, we are only displaying the top 30 features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.<!--number of categories-->
+
 {{< embed notebooks/mak_figures.qmd#fig-3 >}}
 
-# Discussion
+{{< embed notebooks/mak_figures.qmd#fig-4 >}}
 
+
+# Discussion
+<!--Discussion notes:
+- don’t have people have over 65 important group to look at but not in our sample -->
 
 
 # References

@@ -1,0 +1,271 @@
+---
+title: "Supplemental Material"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+params:
+  
+  study: "combined"
+  model: "dyn_dem_oud" 
+  version: "v7"
+editor_options: 
+  chunk_output_type: console
+---
+
+This file contains the supplemental materials for *Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning*. It includes all supplemental figures and tables.   
+```{r}
+#| include: false
+study <- params$study
+model <- params$model
+version <- params$version
+```
+
+
+```{r}
+#| include: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(tidymodels)
+library(patchwork)
+library(kableExtra)
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+path_shared <- format_path(str_c("risk2/data_processed/shared"))
+path_models <- format_path(str_c("risk2/models/", study))
+
+
+pp_dem <- read_csv(here::here(path_models, 
+                              "pp_fairness_xgboost_contrast_full.csv"),
+                   show_col_types = FALSE)
+
+preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
+
+
+shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
+                                           version, "_", model, ".rds")))
+```
+
+## Supplemental Figures
+
+### Figure S1: Predicted Probabilities by True Outcome
+```{r}
+#| code-fold: true
+
+base_rate <- preds |> count(label) |> reframe(base_rate = n/nrow(preds)) |> slice_head(n = 1)
+
+preds |> 
+  ggplot() +
+  geom_histogram(aes(x = prob_raw), color = "black", 
+                 fill = "light grey", bins = 40) +
+  facet_wrap(~ label, ncol = 1, scales = "free_y") +
+  geom_vline(xintercept = base_rate$base_rate, color = "dark red") +
+  labs(x = "Raw (uncalibrated) predicted probabilties") +
+  theme_classic() 
+```
+
+
+### Figure S2: Global Feature Importance for all Feature Categories
+
+```{r}
+#| code-fold: true
+
+shap_levels_all <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(mean_value) |> 
+  pull(variable_grp)
+
+n_obs <- max(shaps$id_obs)
+
+shaps_day_max <- shaps |>
+  group_by(id_obs) |>
+  slice_max(value) |> 
+  group_by(variable_grp) |> 
+  summarise(n = n(),
+            prop = n/n_obs) |> 
+  ungroup() 
+
+
+global_panel_all <- shaps |>
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels_all)) |> 
+  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
+  geom_bar(fill = "#240e31", 
+           stat = "identity", position = "dodge") +
+  labs(y = "Mean(|Shapley Value|)",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "right") +
+  coord_flip()
+
+
+local_panel_all <- shaps_day_max |> 
+  right_join(shaps |> ungroup() |> select(variable_grp) |> distinct(), 
+             by = "variable_grp") |> 
+  mutate(prop = if_else(is.na(prop), 0, prop)) |> 
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels_all)) |>
+  ggplot(mapping = aes(x = variable_grp, y = prop)) +
+  geom_bar(fill = "#046B52", 
+           stat = "identity", position = "dodge") +
+  labs(y = "Proportion of days as top feature",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "right") +
+  coord_flip()
+```
+
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 10
+
+global_panel_all + local_panel_all
+```
+
+
+### Figure S3: Individual Shapley Plots for all Feature Categories
+
+```{r}
+#| label: fig-2
+#| fig-cap: "Feature importance partial dependence plots."
+#| message: false
+#| fig-width: 10
+#| fig-height: 14
+#| code-fold: true
+
+shap_levels <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(desc(mean_value)) |> 
+  pull(variable_grp)
+
+shaps|>
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
+  labs(
+    title = "Top 30 SHAP Variable Relationships",
+    x = "z-score raw feature score",
+    y = "Shapley value"
+  ) +
+  theme_classic() +
+  theme(
+    strip.text = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+
+
+## Supplemental Tables
+
+### Table S1: Demographic Contrasts for all Models
+
+```{r}
+#| label: tbl-fairness
+#| tbl-cap: "Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was smaller or larger than 0 for fairness contrasts."
+#| code-fold: true
+
+footnote_table_fair <- "Median auROC differences less than 0 indicate the model, on average, performed worse for the disadvantaged group (not male, non-White and/or Hispanic, income below poverty line, small town/rural, high school or less) compared to the advantaged group (male, non-Hispanic White, income above poverty line, urban/suburban, some college). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is smaller or larger than 0 (i.e., the models are performing differently for fairness subgroups)."
+
+
+pp_sex <- pp_dem |> 
+  filter(contrast == "not male vs male") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(round(probability, 3))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(Median = median,
+         `Bayesian CI` = ci,
+         Probability = probability)
+
+pp_income <- pp_dem |> 
+  filter(contrast == "below poverty vs above poverty") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(1 - round(probability, 3))) |> 
+  select(contrast,median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_race <- pp_dem |> 
+  filter(contrast == "Hispanic and/or not white vs non-Hispanic White") |> 
+  mutate(contrast = "Hispanic and/or not White vs non-Hispanic White") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_race <- pp_dem |> 
+  filter(contrast == "Hispanic and/or not white vs non-Hispanic White") |> 
+  mutate(contrast = "Hispanic and/or not White vs non-Hispanic White") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_geography <- pp_dem |> 
+  filter(contrast == "small town/rural vs urban/suburban") |> 
+  mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_education <- pp_dem |> 
+  filter(contrast == "high school or less vs some college") |> 
+  mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+
+
+pp_sex |> 
+  bind_rows(pp_income) |> 
+  bind_rows(pp_race) |> 
+  bind_rows(pp_geography) |> 
+   bind_rows(pp_education) |> 
+  kbl() |> 
+  kable_classic()
+```
+
+
+
+
+

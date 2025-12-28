@@ -27,7 +27,7 @@ path_models <- format_path(str_c("risk2/models/combined"))
 
 ```{r}
 test_metrics_main <- read_csv(here::here(path_models, 
-                                    "best_config_xgboost_v7_kfold_dyn.csv"), 
+                                    "best_config_xgboost_v7_kfold_dyn_dem_oud.csv"), 
                               show_col_types = FALSE) |> 
   select(split_num, "main" = roc_auc) |> 
   arrange(split_num)

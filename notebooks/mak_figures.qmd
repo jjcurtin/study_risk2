@@ -12,7 +12,7 @@ format:
 params:
   
   study: "combined"
-  model: "dyn" 
+  model: "dyn_dem_oud" 
   version: "v7"
 editor_options: 
   chunk_output_type: console
@@ -35,6 +35,7 @@ version <- params$version
 library(tidyverse)
 library(tidymodels)
 library(patchwork)
+library(binom)
 
 devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
 
@@ -49,7 +50,7 @@ pp_all <- read_csv(here::here(path_models,
 pp_dem <- read_csv(here::here(path_models, 
                               "pp_fairness_xgboost_full.csv"),
                    show_col_types = FALSE)
-preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn.rds"))
+preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
 
 shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
                                            version, "_", model, ".rds")))
@@ -60,8 +61,8 @@ shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
 ### Fairness
 
 ```{r}
+#| label: fig-1
 #| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban or surburban geographic location, and some college education) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, small town or rural geographic location, and high school education or less) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
-#| fig-label: fig-1
 #| message: false
 #| code-fold: true
 
@@ -110,8 +111,6 @@ guides(color = guide_legend(nrow = 2, byrow = TRUE))
 
 ```{r}
 #| echo: false
-#| fig-label: fig-2
-#| fig-cap: "Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines."
 
 bin_width = 0.10
 
@@ -131,13 +130,20 @@ rug_data <- preds_all_raw |>
     rug_center = bin_width/2 + bin_width * (bins - 1),
     rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
   )
+```
+
+
+```{r}
+#| label: fig-2
+#| fig-cap: "Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines."
 
 preds_all_raw |> 
   bind_rows(preds_all_logi) |> 
   mutate(prob = factor(prob, levels = c("Raw (uncalibrated)", 
                                         "Platt calibration"))) |> 
   group_by(bins,  prob)  |> 
-  summarize(mean_lapse = mean(lapse), .groups = "drop") |> 
+  summarize(mean_lapse = mean(lapse),
+            .groups = "drop") |> 
   mutate(
     bins = as.numeric(bins),
     midpoints = bin_width/2 + bin_width * (bins - 1)
@@ -172,9 +178,292 @@ preds_all_raw |>
 ```
 
 
+raw calibration plot with 95% intervals 
+```{r}
+#| warning: false
+
+plot <- preds_all_raw |> 
+  group_by(bins)  |> 
+  dplyr::summarize(n = n(),
+                   events = sum(lapse),
+                   mean_lapse = events / n,
+                   ## 95% Wilson binomial CI
+                   lower = binom.confint(events, n, methods = "wilson")$lower,
+                   upper = binom.confint(events, n, methods = "wilson")$upper,
+                   .groups = "drop") |> 
+  mutate(
+    bins = as.numeric(bins),
+    midpoints = bin_width/2 + bin_width * (bins - 1)
+  )   
+
+# rug_data_0 <- preds_all_raw |> 
+#   filter(lapse == 0) |> 
+#   mutate(
+#     bins = as.numeric(bins),
+#     rug_center = bin_width/2 + bin_width * (bins - 1),
+#     rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
+#   )
+# 
+# rug_data_1 <- preds_all_raw |> 
+#   filter(lapse == 1) |> 
+#   mutate(
+#     bins = as.numeric(bins),
+#     rug_center = bin_width/2 + bin_width * (bins - 1),
+#     rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
+#   )
+  
+
+ggplot(plot, aes(x = midpoints, y = mean_lapse)) +
+  
+  ## Ideal line with legend entry
+  geom_abline(
+    aes(color = "Ideal", linetype = "Ideal"),
+    slope = 1, intercept = 0, linewidth = 0.6
+  ) +
+
+  ## CI bars around grouped observations
+  geom_errorbar(
+    aes(ymin = lower, ymax = upper),
+    width = 0,
+    linewidth = 0.6
+  ) +
+
+  ## Grouped observations as triangles
+  geom_point(
+    aes(shape = "Grouped observations"),
+    size = 2.2, stroke = 0.8, color = "black", fill = "white"
+  ) +
+  geom_line() +
+
+  ## Flexible calibration curve (loess) from INDIVIDUAL predictions
+  # geom_smooth(
+  #   data = preds_all_raw,
+  #   aes(x = prob_raw, y = lapse,
+  #       color = "Flexible calibration (loess)",
+  #       linetype = "Flexible calibration (loess)"),
+  #   method = "loess", span = 0.75, se = FALSE, linewidth = 0.8
+  # ) +
+
+  # ## Rugs: 1s on top, 0s on bottom (individual predictions)
+  # geom_rug(
+  #   data = rug_data_1,
+  #   inherit.aes = FALSE,
+  #   aes(x = rug_x), sides = "t", alpha = 0.35, linewidth = 0.25
+  # ) +
+  # geom_rug(
+  #   data = dplyr::filter(preds_all_raw, lapse == 0),
+  #   inherit.aes = FALSE,
+  #   aes(x = prob_raw), sides = "b", alpha = 0.35, linewidth = 0.25
+  # ) +
+  # 
+  # ## Small "1" / "0" labels near the right edge
+  # annotate("text", x = 0.995, y = 0.02,  label = "1", size = 3) +
+  # annotate("text", x = 0.995, y = -0.06, label = "0", size = 3) +
+
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = "Observed Lapse Probability",
+    color = NULL,
+    linetype = NULL
+  )+
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  # scale_color_manual(values = c("#240e31", "#046B52")) +
+  # scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic(base_size = 11) +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(size = 11),
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10),
+    axis.text = element_text(size = 10),
+    axis.title = element_text(face = "bold")
+  )
+```
+
+Correct interpretation:
+
+“There is substantial uncertainty in observed lapse rates at the highest predicted risk levels due to sparse data.”
+
+Or more plainly:
+
+- The model rarely assigns very high probabilities
+
+- When it does, there are too few cases to precisely estimate calibration
+
+- The CI is honestly reflecting that uncertainty
+
+This is a strength, not a weakness, of your plot.
+
+“Calibration was good across most of the predicted risk range; uncertainty increased at the highest risk levels due to sparse data, as reflected by wider confidence intervals.”
+
+
+
+### Decision Curve Analysis
+
+Absolute Net Benefit
+
+Definition: The raw net benefit in terms of true positives and false positives per patient (or per 100 patients).
+Why report it:
+
+It reflects the real-world clinical impact: how many unnecessary treatments are avoided and how many true cases are detected.
+Clinicians and decision-makers care about absolute numbers because they relate directly to patient outcomes and resource use.
+
+
+Example interpretation:
+
+Net benefit = 0.01 at threshold 0.02 means:
+For every 100 patients, using the model instead of treating all avoids 1 unnecessary treatment without missing any true cases.
+
+
+
+
+✅ Standardized Net Benefit
+
+Definition: Net benefit divided by prevalence (scaled to 0–1).
+Why report it:
+
+It allows fair comparison across models or populations with different prevalence.
+It shows how close the model is to the theoretical maximum benefit (perfect prediction).
+Useful for methodological readers and when prevalence is very low (like your case, 1.9%).
+
+
+Example interpretation:
+
+Standardized net benefit = 0.8 means the model achieves 80% of the maximum possible utility given the prevalence.
+
+
+
+
+Summary
+
+Absolute NB = practical, clinical relevance.
+Standardized NB = comparative, methodological insight.
+
+Most published DCA papers include both:
+
+Absolute NB for clinical interpretation.
+Standardized NB for model performance benchmarking.
+
+
+```{r}
+library(rmda)
+
+dc <- decision_curve(lapse ~ prob_raw,
+  data = preds_all_raw,
+  fitted.risk = TRUE,
+  # grid of decision thresholds to use:
+  thresholds = seq(0, .04, by = .01),
+  # do not calculate confidence intervals:
+  confidence.intervals = F
+)
+
+plot_decision_curve(
+  dc,
+  curve.names = c("Model"), # label for your model
+  cost.benefit.axis = TRUE,            # optional: add secondary axis
+  legend.position = "bottomleft",
+  standardize = FALSE                   # optional: standardize net benefit
+)
+
+plot_decision_curve(
+  dc,
+  curve.names = c("Model"), # label for your model
+  cost.benefit.axis = TRUE,            # optional: add secondary axis
+  legend.position = "bottomleft",
+  standardize = TRUE                   # optional: standardize net benefit
+)
+
+```
+
+Y-axis: Standardized Net Benefit (scaled by prevalence, so 1.0 ≈ perfect utility relative to prevalence).
+X-axis: High Risk Threshold (0.000–0.030), with Cost:Benefit ratios (1:100 to 1:40).
+Curves:
+
+Red line: Your model (prob_raw).
+Gray line: Treat All.
+Black line: Treat None (baseline at 0).
+
+
+Interpretation
+
+At threshold ≈ 0, the model achieves ~0.9 standardized net benefit, which is very high relative to prevalence.
+As threshold increases to 0.03, standardized net benefit declines to ~0.6 but remains well above Treat All and Treat None.
+Treat All drops sharply to zero around threshold 0.02, confirming that overtreatment becomes costly quickly.
+Treat None stays at zero (baseline).
+
+Key takeaway:
+Your model is clinically useful across the entire threshold range considered (0–0.03). Even though absolute net benefit was small (because prevalence is tiny), standardized net benefit shows the model captures most of the potential utility.
+
+
+
+
+```{r}
+# library(rmda)   # if not already loaded
+
+# 1) compute prevalence (choose ONE of the lines below)
+prev <- mean(preds_all_raw$lapse == 1, na.rm = TRUE)
+
+# 2) Extract the net benefit data from the DCA object
+#    Most rmda versions store it in `dca_obj$derived.data`.
+#    If in your version it's stored differently, run `str(dca_obj)` and update the column names accordingly.
+d <- dc$derived.data
+
+# Optional: inspect
+# head(d); str(d)
+
+# Expected columns (typical): threshold, net.benefit, model
+# If your model name is long, you can optionally relabel it:
+d$model <- recode(d$model,
+                  "Model (prob_raw)" = "Model",
+                  .default = d$model)
+
+# 3) Create standardized net benefit and build a tidy dataset for faceting
+plot_df <- bind_rows(
+  d %>% transmute(thresholds, nb = NB, model, metric = "Absolute Net Benefit"),
+  d %>% transmute(thresholds, nb = NB / prev, model, metric = "Standardized Net Benefit")
+)
+
+# 4) Optional: focus the x-range that is clinically relevant
+x_max <- 0.04    # set to 0.03 if you want the zoomed clinical view
+plot_df <- plot_df %>% filter(thresholds <= x_max)
+
+# 5) Helper to label the secondary x-axis (Cost:Benefit ratio)
+ratio_lab <- function(x) {
+  r <- x / (1 - x)             # cost:benefit ratio = pt / (1 - pt)
+  paste0("1:", number(r, accuracy = 1))
+}
+
+# 6) Build the side-by-side ggplot
+ggplot(plot_df, aes(x = thresholds, y = nb, color = model)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ metric, ncol = 2, scales = "free_y") +
+  scale_color_manual(values = c("Model" = "#D62728", "All" = "grey40", "None" = "black")) +
+  scale_x_continuous(
+    limits = c(0, x_max),
+    breaks = pretty(c(0, x_max), n = 6),
+    labels = label_number(accuracy = 0.01),
+  ) +
+  labs(
+    x = "High Risk Threshold",
+    y = "Net Benefit",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+
 ### Feature Importance
 
-62 possible groups - filtering top 30
+top 30
 ```{r}
 #| code-fold: true
 
@@ -237,75 +526,19 @@ local_panel <- shaps_day_max |>
 
 
 ```{r}
-#| echo: false
-#| fig-label: fig-3
+#| label: fig-3
 #| fig-width: 8
 
 global_panel + local_panel
 ```
 
 
-Supplemental figure with all 62 groups
+
+
+Individual Shapley plots (about 90 categories total)
 ```{r}
-#| code-fold: true
-
-shap_levels_all <- shaps |> 
-  group_by(variable_grp) |>
-  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
-  arrange(mean_value) |> 
-  pull(variable_grp)
-
-
-global_panel_all <- shaps |>
-  group_by(variable_grp) |>
-  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
-  mutate(variable_grp = factor(variable_grp, levels = shap_levels_all)) |> 
-  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
-  geom_bar(fill = "#240e31", 
-           stat = "identity", position = "dodge") +
-  labs(y = "Mean(|Shapley Value|)",
-       x = NULL,
-       fill = NULL) +
-  theme_classic() +
-  theme(axis.text=element_text(size=9.5),
-        legend.key.size = unit(0.25, "cm"),
-        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
-        legend.position = "right") +
-  coord_flip()
-
-
-local_panel_all <- shaps_day_max |> 
-  right_join(shaps |> ungroup() |> select(variable_grp) |> distinct(), 
-             by = "variable_grp") |> 
-  mutate(prop = if_else(is.na(prop), 0, prop)) |> 
-  mutate(variable_grp = factor(variable_grp, levels = shap_levels_all)) |>
-  ggplot(mapping = aes(x = variable_grp, y = prop)) +
-  geom_bar(fill = "#046B52", 
-           stat = "identity", position = "dodge") +
-  labs(y = "Proportion of days as top feature",
-       x = NULL,
-       fill = NULL) +
-  theme_classic() +
-  theme(axis.text=element_text(size=9.5),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        legend.key.size = unit(0.25, "cm"),
-        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
-        legend.position = "right") +
-  coord_flip()
-```
-
-
-```{r}
-#| echo: false
-#| fig-width: 8
-#| fig-height: 10
-
-global_panel_all + local_panel_all
-```
-
-Individual Shapley plots
-```{r}
+#| label: fig-4
+#| fig-cap: "Feature importance partial dependence plots."
 #| message: false
 #| fig-width: 10
 #| fig-height: 14
@@ -323,8 +556,8 @@ shaps|>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
   ggplot(aes(x = rfvalue, y = value)) +
   geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
     title = "Top 30 SHAP Variable Relationships",
     x = "z-score raw feature score",
@@ -338,9 +571,152 @@ shaps|>
 ```
 
 
+Individual Shapley plots by raw and diff
+```{r}
+#| label: fig-5
+#| fig-cap: "Raw feature importance partial dependence plots."
+#| message: false
+#| fig-width: 10
+#| fig-height: 14
+#| code-fold: true
+
+shap_levels <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(desc(mean_value)) |> 
+  slice_head(n = 30) |> 
+  filter(str_detect(variable_grp, "Raw") | str_detect(variable_grp, "demographic")) |>
+  pull(variable_grp)
+
+shaps|>
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
+  labs(
+    title = "Raw SHAP Variable Relationships",
+    x = "z-score raw feature score",
+    y = "Shapley value"
+  ) +
+  theme_classic() +
+  theme(
+    strip.text = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+
+```{r}
+#| label: fig-6
+#| fig-cap: "Difference feature importance partial dependence plots."
+#| message: false
+#| fig-width: 10
+#| fig-height: 14
+#| code-fold: true
+
+shap_levels <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(desc(mean_value)) |> 
+  slice_head(n = 30) |> 
+  filter(str_detect(variable_grp, "Diff")) |> 
+  pull(variable_grp)
+
+shaps|>
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
+  labs(
+    title = "Difference SHAP Variable Relationships",
+    x = "z-score raw feature score",
+    y = "Shapley value"
+  ) +
+  theme_classic() +
+  theme(
+    strip.text = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
 
 
 
+<!-- ## Tune GAM line -->
+
+<!-- - Thin Plate Regression Splines (bs = "tp") is default and usually best for continuous predictors. -->
+<!-- - Rule of thumb: k = min(20, length(unique(x))/4). -->
+
+<!-- ```{r} -->
+
+<!-- min(20, length(unique(subset(shaps, variable_grp == "Urge, Raw (EMA)")$rfvalue))/4) -->
+
+
+<!-- shaps|> -->
+<!--   filter(variable_grp == "Urge, Raw (EMA)") |> -->
+<!--   ggplot(aes(x = rfvalue, y = value)) + -->
+<!--   geom_point(alpha = .3) + -->
+<!--   geom_smooth(method = "gam", formula = y ~ s(x, k = 20, bs = "cs"), se = FALSE) + -->
+<!--   labs( -->
+<!--     x = "z-score raw feature score", -->
+<!--     y = "Shapley value" -->
+<!--   ) + -->
+<!--   theme_classic()  -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+<!-- shaps|> -->
+<!--   filter(variable_grp == "past_month_opioid_use_yes") |> -->
+<!--   ggplot(aes(x = rfvalue, y = value)) + -->
+<!--   geom_point(alpha = .3) + -->
+<!--   geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) + -->
+<!--   labs( -->
+<!--     x = "z-score raw feature score", -->
+<!--     y = "Shapley value" -->
+<!--   ) + -->
+<!--   theme_classic()  -->
+
+<!-- ``` -->
+
+
+
+
+<!-- ```{r} -->
+<!-- library(mgcv) -->
+
+<!-- df <- shaps|> -->
+<!--   filter(variable_grp == "Urge, Raw (EMA)")  -->
+
+
+<!-- # Quick sanity checks -->
+<!-- summary(df$rfvalue) -->
+<!-- summary(df$value) -->
+<!-- sum(is.na(df$rfvalue) | is.na(df$value)) -->
+
+
+<!-- # Baseline: thin plate regression spline, REML smoothing selection -->
+<!-- m1 <- gam( -->
+<!--   value ~ s(rfvalue, bs = "tp", k = 200),   -->
+<!--   data = df, -->
+<!--   method = "REML", -->
+<!--   select = TRUE,  # enable shrinkage: removes unnecessary wiggles -->
+<!--   gamma = 1.3     # extra penalty discourages overfitting; try 1.2–1.6 -->
+<!-- ) -->
+
+<!-- summary(m1) -->
+<!-- gam.check(m1)   # checks k adequacy & residuals -->
+
+<!-- ``` -->
+
+<!-- summary(m1): Look at edf (effective degrees of freedom) for s(x) → if edf is close to 1, trend is nearly linear; higher edf means more curvature. -->
+
+<!-- gam.check(m1): If the k-index is < ~1.05 with small p‑value, k may be too small → increase k (e.g., 30–40). If diagnostics look fine but the curve is too wiggly, either reduce k or increase gamma. -->
 
 
 

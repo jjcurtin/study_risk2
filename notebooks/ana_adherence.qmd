@@ -1,0 +1,286 @@
+---
+title: "EMA adherence" 
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+format: 
+  html: 
+    embed-resources: true
+    toc: true 
+    toc_depth: 4
+editor_options: 
+  chunk_output_type: console
+--- 
+
+
+
+Purpose: This file calculates overall weekly EMA adherence using EMA survey data (`survey_daily.csv`). 
+
+## Set up
+```{r}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+options(conflicts.policy = "depends.ok")
+library(tidyverse) 
+library(lubridate)
+library(skimr)
+library(DiagrammeR) # for flowchart
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+theme_set(theme_classic())
+
+path_shared <- format_path("risk2/data_processed/shared")
+```
+
+
+### Data
+
+```{r}
+study_dates <- read_csv(here::here(path_shared, "study_dates_gps.csv"),
+                        show_col_types = FALSE)
+ema <- read_csv(here::here(path_shared, "survey_daily.csv"),
+                show_col_types = FALSE) |> 
+  filter(subid %in% study_dates$subid)
+```
+
+
+
+
+### Disposition   
+
+```{r}
+dates <- study_dates |> 
+  mutate(study_days = pmin(study_end, ema_end, na.rm = TRUE) - study_start)
+```
+
+Days on study     
+
+`r nrow(study_dates)` participants started study/provided at least one month of EMA.   
+```{r}
+dates |> 
+  skimr::skim(study_days) |> 
+  skimr::yank("difftime")
+```
+
+
+
+Disposition of participants by month     
+
+```{r}
+#| code-fold: true
+#| 
+month_1 <- dates |> 
+  filter(study_days >= 28) 
+  nrow()
+
+month_2 <- dates |> 
+  filter(study_days >= 56)  |> 
+  nrow()
+
+month_3 <- dates |> 
+  filter(study_days >= 84)  |> 
+  nrow()
+
+month_4 <- dates |> 
+  filter(study_days >= 112)  |> 
+  nrow()
+
+
+month_5 <- dates |> 
+  filter(study_days >= 140)  |> 
+  nrow()
+
+month_6 <- dates |>
+  filter(study_days >= 168)  |> 
+  nrow()
+
+month_7 <- dates |>
+  filter(study_days >= 196)  |> 
+  nrow()
+
+month_8 <- dates |>
+  filter(study_days >= 224)  |> 
+  nrow()
+
+month_9 <- dates |>
+  filter(study_days >= 252)  |> 
+  nrow()
+
+month_10 <- dates |>
+  filter(study_days >= 280)  |> 
+  nrow()
+
+month_11 <- dates |>
+  filter(study_days >= 308) |> 
+  nrow()
+
+month_12 <- dates |>
+  filter(study_days >= 336) |> 
+  nrow()
+```
+
+
+
+```{r}
+#| code-fold: true
+
+DiagrammeR::grViz("
+  digraph {
+  
+  node [fontname = 'Arial', shape = rectangle, fixedsize = true, width = 1.7, height = .6]
+  a [label = '@@1']
+  b [label = '@@2']
+  c [label = '@@3']
+  d1 [label = '@@4']
+  e1 [label = '@@5']
+  f1 [label = '@@6']
+  g1 [label = '@@7']
+  h1 [label = '@@8']
+  i1 [label = '@@9']
+  j1 [label = '@@10']
+  k1 [label = '@@11']
+  l1 [label = '@@12']
+  
+
+  a -> b
+  b -> c
+  c -> d1 
+  d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+  }
+  
+  [1]: paste('Month 1\\n', 'N = ', month_1)
+  [2]: str_c('Month 2\\n', 'N = ', month_2) 
+  [3]: str_c('Month 3\\n', 'N = ', month_3)
+  [4]: str_c('Month 4\\n', 'N = ', month_4)
+  [5]: str_c('Month 5\\n', 'N = ', month_5)
+  [6]: str_c('Month 6\\n', 'N = ', month_6)
+  [7]: str_c('Month 7\\n', 'N = ', month_7)
+  [8]: str_c('Month 8\\n', 'N = ', month_8)
+  [9]: str_c('Month 9\\n', 'N = ', month_9)
+  [10]: str_c('Month 10\\n', 'N = ', month_10)
+  [11]: str_c('Month 11\\n', 'N = ', month_11)
+  [12]: str_c('Month 12\\n', 'N = ', month_12)
+  ", height = "1000px") 
+```
+
+Plot attrition by month
+```{r}
+#| label: fig-1
+#| fig-cap: "Study Attrition by Month"
+
+disposition <- tibble(n = c(month_1, month_2, month_3, month_4, month_5, month_6, 
+                            month_7, month_8, month_9, month_10, month_11, month_12),
+                      prop = n/month_1,
+                      month = 1:12)
+
+
+disposition |> 
+  group_by(month) |> 
+  ggplot(aes(x = month, y = prop)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_x_continuous(name = "Month", 
+                     breaks = seq(1, 12, 1)) +
+  scale_y_continuous(name = "Proportion of participants retained on study", 
+                     breaks = seq(0, 1, .1), 
+                     limits = c(0, 1)) +
+  labs(title = "Participant Attrition by month (N sample size = 302)") +
+  theme(legend.title = element_blank()) 
+```
+
+
+
+
+### Daily Survey Overall Adherence 
+
+Get all study days for each subid
+```{r}
+# function to map over
+get_study_days <- function(the_subid, study_dates) {
+  study_start <- dates |>  filter(subid == the_subid) |>  pull(study_start)
+  study_end <- dates |>  filter(subid == the_subid) |> mutate( study_end = pmin(study_end, ema_end, na.rm = TRUE)) |> 
+    pull(study_end)
+  study_days <- tibble(subid = the_subid, study_day = seq(study_start, study_end - days(1), by = "day")) 
+  return(study_days)
+}
+
+study_dates <- dates$subid |> 
+  map_dfr(~get_study_days(.x, dates))
+```
+
+
+Count surveys per study day (day starts at 6 am) 
+```{r}
+ema_count <- ema |>
+  mutate(study_day = if_else(hour(start_date) >= 6, 
+                        as_date(start_date),
+                        as_date(start_date) - days(1))) |> 
+  count(subid, study_day) 
+
+
+ema_count <- ema_count |> 
+  mutate(n = if_else(n > 1, 1, n))
+```
+
+Add counts to study dates
+```{r}
+count_study_dates <- study_dates |> 
+  left_join(ema_count, by = c("subid", "study_day")) |> 
+  mutate(n = if_else(is.na(n), 0, n)) |> 
+  mutate(n_prompts = 1) 
+```
+
+
+calculate mean adherence
+```{r}
+mean_ema <- count_study_dates |> 
+  group_by(subid) |> 
+  summarize(n_total = sum(n), prompt_total = sum(n_prompts)) |> 
+  mutate(mean = n_total/prompt_total) |> 
+  ungroup() |> 
+  summarize(mean = mean(mean))
+
+
+count_study_dates |> 
+  group_by(subid) |> 
+  summarize(n_total = sum(n), prompt_total = sum(n_prompts)) |> 
+  mutate(mean = n_total/prompt_total) |> 
+  ungroup() |> 
+  summarize(min = min(mean),
+            max = max(mean))
+```
+
+
+**On average participants (N = `r length(unique(study_dates$subid))`) completed `r round(mean_ema$mean, 2)` daily surveys each day they were on study. That is their overall adherence for a once daily EMA was `r round(mean_ema$mean, 2)*100`%.**    
+
+
+Hist of overall adherence by subid
+```{r}
+#| code-fold: true
+
+count_study_dates |> 
+  group_by(subid) |> 
+  summarise(n_total = sum(n),
+            n_prompts = sum(n_prompts)) |>  
+  mutate(adherence = n_total/n_prompts) |>
+  ggplot(aes(x = adherence)) +
+  geom_histogram(color = "black", fill = "light grey", binwidth = .1, center = .55) +
+  scale_x_continuous(breaks = c(0, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.0)) +
+  labs(y = "Frequency", x = "Proportion of daily survey's completed",
+       subtitle = "Daily Survey Adherence (N = 302)") +
+  geom_vline(aes(xintercept = mean_ema$mean), linewidth = .3) +
+  theme_classic()
+```
+
+```{r}
+count_study_dates |> 
+  group_by(subid) |> 
+  summarise(n_total = sum(n),
+            n_prompts = sum(n_prompts)) |>  
+  mutate(adherence = n_total/n_prompts) |>
+  filter(adherence < .3)
+```
+
