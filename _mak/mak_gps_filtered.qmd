@@ -14,7 +14,7 @@ editor_options:
 
 ## Notes
 
-This script combines filters down raw gps data `gps.rds`to gps study sample.
+This script combines filters down raw gps data `gps.rds`to gps study sample. Preps for making enriched gps dataset.
 
 
 
@@ -71,44 +71,5 @@ gps %>%
   vroom::vroom_write(here::here(path_raw, "data_clean/gps/gps_filtered.csv.xz"), delim = ",")
 ```
 
-
-## EDA
-25,949,356 gps points from 299 subids
-```{r}
-gps_counts <- gps |> 
-  mutate(date = date( dttm_obs)) |> 
-  group_by(subid, date) |> 
-  count() |> 
-  group_by(subid) |> 
-  summarise(mean = mean(n))
-
-gps_counts |> 
-  summarise(mean_mean = mean(mean),
-            min = min(mean),
-            max = max(mean))
-
-
-gps_counts |> 
-  ggplot(aes(x = mean)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-
-gps_counts |> 
-  filter(mean < 200) |> 
-  ggplot(aes(x = mean)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-
-gps_counts |> 
-  filter(mean < 50) |> 
-  ggplot(aes(x = mean)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-
-
-
-```
-
-Use 20 points per day as cut
 
 
