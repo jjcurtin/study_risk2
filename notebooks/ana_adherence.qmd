@@ -62,6 +62,8 @@ Days on study
 dates |> 
   skimr::skim(study_days) |> 
   skimr::yank("difftime")
+
+mean(dates$study_days)
 ```
 
 

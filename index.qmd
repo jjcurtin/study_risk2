@@ -128,18 +128,18 @@ We calibrated our probabilities using Platt scaling. We calculated Brier scores 
 # Results
 
 ## Participants
-Data were collected from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Our final analysis sample consisted of 300 participants. Eleven participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 9 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to not residing in the United States, 10 participants were excluded due to evidence of careless responding. A summary of participant demographic and OUD characteristics is presented in @tbl-1.
+Data were collected from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Our final analysis sample consisted of 300 participants. Eleven participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to not residing in the United States, 10 participants were excluded due to evidence of careless responding. A summary of participant demographic and OUD characteristics is presented in @tbl-1.
 
 {{< embed notebooks/mak_tables.qmd#tbl-1 >}}
 
 ## Adherence, Features, and Labels
-Mean days on study across participants was 298 days (range 32-395 days). 83% of participants remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided on average 311 geolocation points daily (range 20-825). 
+Mean days on study across participants was 298 days (range 32-395 days). 83% of participants (250/300) remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided, on average, 313 daily geolocation points (range 20-825). 
 
-Our final model consisted of 640 features. The proportion of missing values across features was low (mean=.03, range = 0-.12).<!--recheck--> Across participants we generated a total of 88,973 labels. Forty percent of participants reported an opioid lapse while on study (mean=5.73, range 0-117). This resulted in 1.93% of the labels positive for lapse (1,720/88,973 labels). 
+Our final feature set consisted of 640 features<!--recheck-->. The proportion of missing values across features was low (mean=.03, range = 0-.12).<!--recheck--> Across participants we generated a total of 88,973 day-level labels. Forty percent of participants reported an opioid lapse while on study (mean=5.73, range 0-117). This resulted in 1.93% of the labels positive for lapse (1,720/88,973 labels). 
 
 
 ## Performance
-The best model configuration used an xgboost statistical algorithm and up-sampled the minority class<!--recheck-->.^[The best model configuration used 1:4 upsampling of the minority class and the following hyperparameter values: learning rate = .1, tree depth = 1, mtry = 50]<!--added this footnote to follow TRIPOD-AI checklist--> The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
+The best model configuration used an xgboost statistical algorithm and up-sampled the minority class<!--recheck-->.^[The best model configuration used 1:4 upsampling of the minority class and the following hyperparameter values: learning rate = .1, tree depth = 1, mtry = 50.]<!--added this footnote to follow TRIPOD-AI checklist--> The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
 
 We compared our best model's performance to a baseline model that only used information gathered at intake (i.e., individual differences in demographic and OUD characteristics) to evaluate the incremental predictive value of adding dynamic features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
 
@@ -164,7 +164,10 @@ For brevity, we are only displaying the top 30 features, as defined by the 30 la
 
 # Discussion
 <!--Discussion notes:
-- don’t have people have over 65 important group to look at but not in our sample -->
+- don’t have people have over 65 important group to look at but not in our sample
+
+- acknowledge that discrimination and calibration don't equate to clinical utilility. Decision analysis tools, such as net benefit curves could be used to quantify clinical benefit at relevant probability thresholds. Our model is designed to not be used to make decisions about whether or not to treat but to provide model feedback to individuals each day to help them monitor their risk for lapse. Therefore the decision has already been made to always treat. Should these models be used to inform when to deploy more cost-intensive interventions (e.g., communicating risk level to a therapist to initiate contact) these analyses will be important next steps.
+-->
 
 
 # References
