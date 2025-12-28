@@ -73,57 +73,42 @@ gps %>%
 
 
 ## EDA
-
+25,949,356 gps points from 299 subids
 ```{r}
 gps_counts <- gps |> 
-  mutate(date = date(time)) |> 
+  mutate(date = date( dttm_obs)) |> 
   group_by(subid, date) |> 
-  count()
-
-
-gps_counts |> 
-  ggplot(aes(x = n)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-
-gps_counts |> 
-  filter(n < 1000) |> 
-  ggplot(aes(x = n)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-
-gps_counts |> 
-  filter(n < 100) |> 
-  ggplot(aes(x = n)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-
-
-gps_counts |> 
-  filter(n < 50) |> 
-  ggplot(aes(x = n)) +
-  geom_histogram(bins = 50) +
-  theme_classic()
-```
-
-Use 25 points per day as cut? 18 subids would be removed
-```{r}
-gps_subid <- gps |> 
+  count() |> 
   group_by(subid) |> 
-  count()
+  summarise(mean = mean(n))
 
-gps_subid <- gps_subid |> 
-  left_join(study_dates |> 
-              mutate(days_on_study = as.numeric(date(ema_end) - study_start)) |> 
-              select(subid, days_on_study), by = "subid") |> 
-  mutate(gps_per_day = n/days_on_study)
+gps_counts |> 
+  summarise(mean_mean = mean(mean),
+            min = min(mean),
+            max = max(mean))
 
-gps_subid |> 
-  filter(gps_per_day < 25) |> 
-  nrow()
 
-gps_subid |> 
-  filter(gps_per_day < 25) |> 
-  pull(subid)
+gps_counts |> 
+  ggplot(aes(x = mean)) +
+  geom_histogram(bins = 50) +
+  theme_classic()
+
+gps_counts |> 
+  filter(mean < 200) |> 
+  ggplot(aes(x = mean)) +
+  geom_histogram(bins = 50) +
+  theme_classic()
+
+gps_counts |> 
+  filter(mean < 50) |> 
+  ggplot(aes(x = mean)) +
+  geom_histogram(bins = 50) +
+  theme_classic()
+
+
+
 ```
+
+Use 20 points per day as cut
+
 

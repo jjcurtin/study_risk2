@@ -14,7 +14,7 @@ params:
   version: "v7"
   cv: "kfold"
   algorithm: "xgboost"
-  model: "all" # all or raw - UPDATE FILTER IF FITTING RAW
+  model: "dyn_dem_oud" # all or raw - UPDATE FILTER IF FITTING RAW
 editor_options: 
   chunk_output_type: console
 ---
