@@ -14,7 +14,7 @@ params:
   version: "v7"
   cv: "kfold"
   algorithm: "xgboost"
-  model: "all" # all or raw - UPDATE FILTER IF FITTING RAW
+  model: "dyn_dem_oud" # all or raw - UPDATE FILTER IF FITTING RAW
 editor_options: 
   chunk_output_type: console
 ---
@@ -351,9 +351,29 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.r"),
                                 "Missed MOUD, Raw (EMA)", 
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "drug") & 
+         variable_grp = if_else(str_detect(variable_grp, "drug_alcohol")  & 
                                   str_detect(variable_grp, "l0.r"),
-                                "Other drug use, Raw (EMA)", 
+                                "Alcohol use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_cannabis")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Cannabis use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_stimulant")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Stimulant use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_sedative")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Sedative use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_inhalant")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Inhalant use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_halluc")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Hallucinogen use, Raw (EMA)", 
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "age"),
                                 "Age (demographic)",
@@ -517,9 +537,29 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.d"),
                                 "Missed MOUD, Diff (EMA)", 
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "drug")  & 
+         variable_grp = if_else(str_detect(variable_grp, "drug_alcohol")  & 
                                   str_detect(variable_grp, "l0.d"),
-                                "Other drug use, Diff (EMA)", 
+                                "Alcohol use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_cannabis")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Cannabis use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_stimulant")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Stimulant use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_sedative")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Sedative use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_inhalant")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Inhalant use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_halluc")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Hallucinogen use, Diff (EMA)", 
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "var_location")  & 
                                   str_detect(variable_grp, "dvar_"),
@@ -599,8 +639,34 @@ shaps_out_grp <- shaps_out |>
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "label_day"), 
                                 "Day (label)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable, "med_"),
+                                "MOUD efficacy, Raw (baseline)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable, "od_hx"),
+                                "Overdose history, Raw (baseline)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable, "preferred_opioid"),
+                                "Preferred opioid, Raw (baseline)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable, "preferred_roa"),
+                                "Preferred ROA, Raw (baseline)",
                                 variable_grp)) |> 
-  mutate(variable_grp = factor(variable_grp)) |> 
+  # rename other baseline features
+  mutate(variable_grp = case_match(variable_grp,
+                                  "counseling_freq" ~ "Counseling frequency, Raw (baseline)",
+                                  "self_help_meetings_freq" ~ "Self-help meeting frequency, Raw (baseline)",
+                                  "dsm_c"  ~ "DSM-5 OUD symptom count, Raw (baseline)",
+                                  "past_month_opioid_use_yes" ~ "Past month opioid use, Raw (baseline)",
+                                  "past_month_detox_or_residential_Yes" ~ "Past month residential treatment, Raw (baseline)",
+                                  "past_month_psych_med_yes" ~ "Past month psychiatric medication, Raw (baseline)",
+                                  "recovery_1_satisfaction" ~ "Recovery satisfaction, Raw (baseline)",
+                                  "recovery_2_motivation" ~ "Recovery motivation, Raw (baseline)",
+                                  "recovery_3_confidence" ~ "Recovery confidence, Raw (baseline)",
+                                  "recovery_4_avoid_other_drugs_Yes" ~ "Avoiding other drugs, Raw (baseline)",
+                                  
+                                  .default = variable_grp),
+         variable_grp = factor(variable_grp)) |> 
   group_by(id_obs, variable_grp) |> 
   summarize(value = sum(value),
             rfvalue = mean(rfvalue))
