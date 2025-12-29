@@ -56,18 +56,24 @@ preds_all_raw <- probs |>
 # Methods
 
 ## Transparency and Openness
-We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study's protocol as a pre-registered report prior to data collection [@moshontzProspectivePredictionLapses2021]. <!--acknowledge deviations-->
+We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this project's protocol as a pre-registered report during the initial enrollment of pilot participants [@moshontzProspectivePredictionLapses2021]. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines [@collinsTRIPODAIStatementUpdated2024]. A TRIPOD+AI checklist is made available in this manuscripts supplemental materials. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)) and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
 
-Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines for reporting clinical prediction models [@collinsTRIPODAIStatementUpdated2024]. A TRIPOD+AI checklist is available in this manuscripts supplemental materials.
+For transparency, we document changes made to the pre-registered report as follows: 
 
-Finally, our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)) and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
+1. Our candidate models considered features derived from a subset of self-report measures administered at intake, daily EMA, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app-usage data, monthly self-report surveys, and a subset of intake measures. These decisions were informed from other personal sensing work our group has done with alcohol use disorder, technological limitations, and considerations made around balancing the need for a diverse array of features to capture the complex nature of lapse and prioritizing interpretable features for intervention and low burden on the individual providing the data. 
 
+In our work with alcohol use disorder we have found that EMA and geolocation sensing provide moderate to excellent predictive signal [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--claire gps paper-->]. Cellular communications, however, have fallen short of these thresholds [<!--meta paper-->]. Moreover, we were only able to collect cellular communication sensing data from individuals with Android phones due to Apple's strict regulation of app access to communications. Thus, inclusion of these features would result in a model that could only be deployed within an android operating system. Daily video check-ins were not collected from all participants due to technical issues within the A-CHESS app and were therefore excluded. Additionally, app usage data proved to be sparse and unusable. Our app was a research version of a digital therapeutic not optimized to promote continued engagement throughout the study. Self-report measures can dramatically increase burden on the individual providing data. Our monthly surveys were lengthy (20-30 minutes) and in our work with alcohol use disorder we have found no incremental predictive value above sensing data for including these measures. Individual differences in severity of use and stability of recovery at the time of intake has, however, emerged as offering some predictive signal<!--meta paper-->. We also include key demographics that have been shown to be related to substance use treatment access and outcomes.<!--explain why important to add to model. add cites-->
+
+2. In our protocol we proposed to use repeated cross-validation for model selection and a single held-out test set for model evaluation. Despite nearly achieving our goal number of particpants recruited (N=451/480), the number of participants with usable data for our analyses was much lower (N=300). We eliminated the held-out test set to make the most efficient use of our sample (i.e., maximizing the amount of data used for training and evaluation). We believe 6 repeats of cross-validation is sufficient to mitigate concerns of optimization bias and yield generalizable estimates of model performance in new data. 
 
 ## Participants
 
 
 ## Procedure
 All procedures were approved by the University of Wisconsin-Madison Institutional Review Board (Study #2019-0656). All participants provided written<!--verbal?--> informed consent.
+
+
+## A-CHESS
 
 ## Measures
 
@@ -78,7 +84,7 @@ All procedures were approved by the University of Wisconsin-Madison Institutiona
 ### Ecological Momentary Assessment
 
 
-## Geolocation Sensing
+### Geolocation Sensing
 
 
 ## Data Analytic Strategy
@@ -135,7 +141,7 @@ We calibrated our probabilities using Platt scaling. We calculated Brier scores 
 # Results
 
 ## Participants
-We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Eleven participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 300 participants. Participant demographic and OUD characteristics is presented in @tbl-1.
+We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these, 11 participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 300 participants. Participant demographic and OUD characteristics is presented in @tbl-1.
 
 {{< embed notebooks/mak_tables.qmd#tbl-1 >}}
 
