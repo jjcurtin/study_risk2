@@ -81,6 +81,10 @@ Participants completed three video or phone visits over approximately 12 months.
 ## Measures
 
 ### Individual Differences
+We collected self-report information about demographics (age, gender, orientation, race, ethnicity, education, and income). Zip codes from participants' reported home addresses were matched to Rural-Urban Commuting Area (RUCA) codes to identify whether individuals resided in rural or urban areas [@RuralUrbanCommutingArea]. We followed guidelines from the United States Health Resources and Services Administration and define urban as an area where the primary commuting flow is within a metropolitan core of 50,000 or more people (RUCA code = 1) and rural as anything not urban (RUCA codes 2-10)[@HowWeDefine].   
+
+We also collected information about OUD history to characterize OUD severity and recovery stability, including self-reported DSM-5 OUD symptoms, recovery satisfaction, motivation, and confidence, whether they intended to avoid using other drugs, perceived efficacy of their MOUD medication, past month opioid use, past month residential treatment for OUD, past month receipt of psychiatric medication, frequency of counseling sessions and self-help meetings in the past month, preferred opioid, preferred route of administration, and lifetime history of overdose. As part of the aims of the parent project, we collected many other trait and state measures throughout the study. A complete list of all measures can be found on our study’s OSF page [https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview).
+
 
 
 ### Ecological Momentary Assessment
@@ -132,7 +136,9 @@ We used a Bayesian hierarchical generalized linear model to estimate the posteri
 
 - Model contrast
 
-Using the same 30 held-out test sets, we calculated the median posterior probability and 95% Bayesian CI for auROC for each model separately by gender (not male vs. male), race/ethnicity (Hispanic and/or non-White vs. non-Hispanic White), income (below poverty line vs. above poverty line), geographic location (small town/rural vs. urban/suburban), and education (high school or less vs. some college). We conducted Bayesian group comparisons to assess the likelihood that each model performs differently by group.
+Using the same 30 held-out test sets, we calculated the median posterior probability and 95% Bayesian CI for auROC for each model separately by gender (not male vs. male), race/ethnicity (Hispanic and/or non-White vs. non-Hispanic White), income (below poverty line vs. above poverty line), geographic location (rural vs. urban), and education (high school or less vs. some college). We conducted Bayesian group comparisons to assess the likelihood that each model performs differently by group.
+
+- Gender, race/ethnicity, education, income, and geographic location are used for our fariness subgroup analyses. As defined above we defined urban as RUCA code of 1 and rural as RUCA codes 2-10. Given that there is not a clear consensus on delineating urban vs. rural, however, we also report a fairness model comparison for urban as RUCA codes 1-2 and urban as RUCA coddes 3-10 in the supplement.
 
 
 ### Calibration
@@ -162,6 +168,7 @@ Our fairness subgroup comparisons revealed no evidence that performance meaningf
 
 {{< embed notebooks/mak_figures.qmd#fig-1 >}}
 
+<!--update fig to use rural vs. urban labels-->
 
 ## Calibration
 Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. Histograms of predicted probabilities by true lapse outcome are available in the supplement.   
