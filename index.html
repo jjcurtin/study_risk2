@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kendra Wyant">
 <meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2025-12-28">
+<meta name="dcterms.date" content="2025-12-29">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
 <title>Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning</title>
@@ -102,7 +102,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 28, 2025</p>
+      <p class="date">December 29, 2025</p>
     </div>
   </div>
   
@@ -133,9 +133,12 @@ div.csl-indent {
 <h1>Methods</h1>
 <section id="transparency-and-openness" class="level2">
 <h2 class="anchored" data-anchor-id="transparency-and-openness">Transparency and Openness</h2>
-<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study’s protocol as a pre-registered report prior to data collection <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. <!--acknowledge deviations--></p>
-<p>Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines for reporting clinical prediction models <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is available in this manuscripts supplemental materials.</p>
-<p>Finally, our data, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).</p>
+<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this project’s protocol as a pre-registered report during the initial enrollment of pilot participants <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is made available in this manuscripts supplemental materials. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).<!--add all of this to osf--></p>
+<p>For transparency, we document changes made to the pre-registered report as follows:</p>
+<ol type="1">
+<li><p>Feature sets. Our candidate models included features derived from a subset of intake self-report measures, daily EMA, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by prior personal sensing work on alcohol use disorder by our group, technological constraints, and the need to balance feature diversity for capturing lapse complexity and minimizing participant burden. In our alcohol use disorder research, EMA and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) <span class="citation" data-cites="wyantMachineLearningModels2024 wyantForecastingRiskAlcoholunderreview">(<a href="#ref-wyantMachineLearningModels2024" role="doc-biblioref">Wyant et al., 2024</a>; <a href="#ref-wyantForecastingRiskAlcoholunderreview" role="doc-biblioref">Wyant et al., under review</a>, <!--Cite claire gps paper-->)</span>. Cellular communication sensing, however, has fallen short of these thresholds [<!--meta paper-->]. Moreover, due to Apple’s strict restrictions on app access to communications, these data could only be collected from Android users. Thus, inclusion of these features would result in a model that could only be deployed within an android operating system. Daily video check-ins were only collected from the first handful of participants due to technical issues in the A-CHESS app. App usage data were sparse and unusable. This is likely due to us using a research version of the A-CHESS app not optimized for sustained engagement. Self-report measures can dramatically increase burden on the individual providing data. Monthly surveys were lengthy (20–30 minutes) and, based on prior work with alcohol use disorder, add no incremental predictive value beyond sensing data. However, individual differences in severity of use and stability of recovery at the time of intake have shown predictive signal [ndividual differences in severity of use and stability of recovery at the time of intake has]. We also retained key demographic variables known to influence treatment access and clinical outcomes<!--explain why important to add to model. add cites-->.</p></li>
+<li><p>Our protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was lower (N = 300). To maximize data use, we eliminated the held-out test set and relied on repeated cross-validation. We believe 6 repeats of cross-validation sufficiently mitigate optimization bias and provide generalizable performance estimates<!--citation-->.</p></li>
+</ol>
 </section>
 <section id="participants" class="level2">
 <h2 class="anchored" data-anchor-id="participants">Participants</h2>
@@ -143,6 +146,9 @@ div.csl-indent {
 <section id="procedure" class="level2">
 <h2 class="anchored" data-anchor-id="procedure">Procedure</h2>
 <p>All procedures were approved by the University of Wisconsin-Madison Institutional Review Board (Study #2019-0656). All participants provided written<!--verbal?--> informed consent.</p>
+</section>
+<section id="a-chess" class="level2">
+<h2 class="anchored" data-anchor-id="a-chess">A-CHESS</h2>
 </section>
 <section id="measures" class="level2">
 <h2 class="anchored" data-anchor-id="measures">Measures</h2>
@@ -152,9 +158,9 @@ div.csl-indent {
 <section id="ecological-momentary-assessment" class="level3">
 <h3 class="anchored" data-anchor-id="ecological-momentary-assessment">Ecological Momentary Assessment</h3>
 </section>
+<section id="geolocation-sensing" class="level3">
+<h3 class="anchored" data-anchor-id="geolocation-sensing">Geolocation Sensing</h3>
 </section>
-<section id="geolocation-sensing" class="level2">
-<h2 class="anchored" data-anchor-id="geolocation-sensing">Geolocation Sensing</h2>
 </section>
 <section id="data-analytic-strategy" class="level2">
 <h2 class="anchored" data-anchor-id="data-analytic-strategy">Data Analytic Strategy</h2>
@@ -212,7 +218,7 @@ div.csl-indent {
 <h1>Results</h1>
 <section id="participants-1" class="level2">
 <h2 class="anchored" data-anchor-id="participants-1">Participants</h2>
-<p>We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Eleven participants were excluded due to unusually low adherence<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, 13 participants were excluded due to insufficient context data for geolocation points<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 300 participants. Participant demographic and OUD characteristics is presented in <a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a>.</p>
+<p>We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these, 11 participants were excluded due to unusually low adherence<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, 13 participants were excluded due to insufficient context data for geolocation points<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 300 participants. Participant demographic and OUD characteristics is presented in <a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a>.</p>
 <div class="quarto-embed-nb-cell">
 <div class="cell">
 <div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
@@ -703,7 +709,7 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 <td style="text-align: right;"></td>
 </tr>
 <tr class="even">
-<td style="text-align: left; padding: 0;"><sup></sup> N = 299</td>
+<td style="text-align: left; padding: 0;"><sup></sup> N = 300</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 </tr>
@@ -832,6 +838,12 @@ Moshontz, H., Colmenares, A. J., Fronk, G. E., Sant’Ana, S. J., Wyant, K., Wan
 </div>
 <div id="ref-vandewieleOverlyOptimisticPrediction2021" class="csl-entry" role="listitem">
 Vandewiele, G., Dehaene, I., Kovács, G., Sterckx, L., Janssens, O., Ongenae, F., De Backere, F., De Turck, F., Roelens, K., Decruyenaere, J., Van Hoecke, S., &amp; Demeester, T. (2021). Overly optimistic prediction results on imbalanced data: A case study of flaws and benefits when applying over-sampling. <em>Artificial Intelligence in Medicine</em>, <em>111</em>, 101987. <a href="https://doi.org/10.1016/j.artmed.2020.101987">https://doi.org/10.1016/j.artmed.2020.101987</a>
+</div>
+<div id="ref-wyantForecastingRiskAlcoholunderreview" class="csl-entry" role="listitem">
+Wyant, K., Fronk, G. E., Yu, C., Punturieri, C. E., &amp; Curtin, J. J. (under review). <em>Forecasting <span>Risk</span> of <span>Alcohol Lapse</span> up to <span>Two Weeks</span> in <span>Advance</span> using <span class="nocase">Time-lagged Machine Learning Models</span></em>.
+</div>
+<div id="ref-wyantMachineLearningModels2024" class="csl-entry" role="listitem">
+Wyant, K., Sant’Ana, S. J. K., Fronk, G., &amp; Curtin, J. J. (2024). Machine learning models for temporally precise lapse prediction in alcohol use disorder. <em>Psychopathology and Clinical Science</em>. <a href="https://doi.org/10.31234/osf.io/cgsf7">https://doi.org/10.31234/osf.io/cgsf7</a>
 </div>
 </div>
 </section>

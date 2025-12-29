@@ -310,7 +310,7 @@ table_dem <- dem_age |>
 #| label: tbl-1
 #| tbl-cap: "Demographic and Clinical Characteristics"
 
-footnote_table_dem_a <- "N = 299"
+footnote_table_dem_a <- "N = 300"
 
 
 table_dem |> 
