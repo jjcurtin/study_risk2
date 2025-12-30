@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kendra Wyant">
 <meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2025-12-29">
+<meta name="dcterms.date" content="2025-12-30">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
 <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -102,7 +102,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 29, 2025</p>
+      <p class="date">December 30, 2025</p>
     </div>
   </div>
   
@@ -133,7 +133,8 @@ div.csl-indent {
 <h1>Methods</h1>
 <section id="transparency-and-openness" class="level2">
 <h2 class="anchored" data-anchor-id="transparency-and-openness">Transparency and Openness</h2>
-<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study’s protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is available in the supplement. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).<!--data needs to be added to osf--></p>
+<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study’s protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is available in the supplement. Finally, our features, labels, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).</p>
+<!--We could probably put this part below in the supplement-->
 <p>For transparency, we documented the changes made to the registered report below:</p>
 <section id="sensing-data-streams" class="level3">
 <h3 class="anchored" data-anchor-id="sensing-data-streams">Sensing Data Streams</h3>
@@ -173,7 +174,7 @@ div.csl-indent {
 </section>
 <section id="ecological-momentary-assessment" class="level3">
 <h3 class="anchored" data-anchor-id="ecological-momentary-assessment">Ecological Momentary Assessment</h3>
-<p>Participants completed a brief (1-2 minute) EMA each day on study through the STAR app. The EMA became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the assessment. Each EMA had 16-items that asked participants to report the date and time of any recent opioid use for nonmedical reasons not yet reported. These reports served as the primary outcome for the lapse risk prediction model. Participants also reported any other drugs that they had used in the past 24 hours by selecting all that apply from a list of substance categories. Other items asked about mood, pain, sleep quality, urges to use opioids, risky situations, stressful and pleasant events, and MOUD adherence in the past 24 hours. The EMA concluded with 2 forward-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for nonmedical reasons over the next week.</p>
+<p>Participants completed a brief (1-2 minute) EMA each day on study through the STAR app. The EMA became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the assessment. Each EMA had 16-items that asked participants to report the date and time of any recent opioid use for nonmedical reasons not yet reported. These reports served as the primary outcome for the lapse risk prediction model. Participants also reported any other drugs that they had used in the past 24 hours by selecting all that apply from a list of substance categories. Other items asked about mood, pain, sleep quality, urges to use opioids, risky situations, stressful and pleasant events, and MOUD adherence in the past 24 hours. The EMA concluded with 2 future-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for nonmedical reasons over the next week.</p>
 </section>
 <section id="geolocation-sensing" class="level3">
 <h3 class="anchored" data-anchor-id="geolocation-sensing">Geolocation Sensing</h3>
@@ -185,28 +186,32 @@ div.csl-indent {
 <p>Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem <span class="citation" data-cites="kuhnTidymodelsCollectionPackages2020 kuhnTidyposteriorBayesianAnalysis2022 goodrichRstanarmBayesianApplied2023">(<a href="#ref-goodrichRstanarmBayesianApplied2023" role="doc-biblioref">Goodrich et al., 2023</a>; <a href="#ref-kuhnTidyposteriorBayesianAnalysis2022" role="doc-biblioref">Kuhn, 2022</a>; <a href="#ref-kuhnTidymodelsCollectionPackages2020" role="doc-biblioref">Kuhn &amp; Wickham, 2020</a>)</span>. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing <span class="citation" data-cites="chtc">(<a href="#ref-chtc" role="doc-biblioref">Center for High Throughput Computing, 2006</a>)</span>.</p>
 <section id="feature-engineering" class="level3">
 <h3 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h3>
-<p>Features were engineered from two types of data:</p>
+<p>Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions.</p>
+<p>Features were engineered from three sources:</p>
 <ol type="1">
-<li><p>Static individual differences in demographic and OUD characteristics.</p></li>
-<li><p>Dynamic EMA and geolocation sensing data.</p></li>
+<li><p><em>The start of the prediction window.</em> We created dummy-coded features for day of the week.</p></li>
+<li><p><em>Static individual differences in demographic and OUD characteristics.</em> For demographics, we created ordinal features for age, education, and income based on predefined response ranges (see <a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a>), an ordinal feature for RUCA code associated with home address (range 1-10), and dummy coded features for gender (male vs.&nbsp;not male) and race and ethnicity (non-Hispanic White vs.&nbsp;Hispanic and/or not White). For OUD characteristics we created ordinal features for recovery satisfaction, recovery motivation, recovery confidence, MOUD side effects experienced, perceived efficacy of MOUD medication, and likelihood of continuing MOUD (ranges 0-4), ordinal features for frequency of counseling sessions and self-help meetings attended in the past month (ranges 0-3), a quantitative feature for number of self-reported DSM-5 OUD symptoms, an ordinal feature for lifetime history of overdose (range 0-4), and dummy coded features for past month opioid use (yes vs.&nbsp;no), past month detox or residential treatment (yes vs.&nbsp;no), past month psychiatric medication (yes vs.&nbsp;no), preferred opioid (fentanyl vs.&nbsp;heroin vs.&nbsp;prescription opioid not for opioid treatment vs.&nbsp;medication for opioid treatment), and preferred route of administration (injection vs.&nbsp;oral vs.&nbsp;smoke vs.&nbsp;sniff/snort vs.&nbsp;other).</p></li>
+<li><p><em>Dynamic EMA and geolocation sensing data.</em></p></li>
 </ol>
 <ul>
+<li>EMA scoring epochs: 48, 72, 168</li>
 <li>geolocation - within 50 meters of a known location</li>
 </ul>
-<p>We imputed missing data using median imputation for numeric features and mode imputation for nominal features. We selected coarse median/mode methods for handling missing data due to the computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). Importantly, our imputation calculations are done using only held-in data and can be applied to any new observation. <!--Notes from Ross on proposal about handling missing data: 
+<p>All features (categories 1-3 above) were included in our main model. We also fit a baseline model that excluded the dynamic EMA and geolocation features (category 3) to assess the incremental predictive value of these sensing features.</p>
+<p>Other feature engineering steps included imputing missing values (median imputation for numeric features and mode imputation for nominal features), dummy coding nominal features, normalizing features to have a mean of zero and standard deviation of 1, bringing outlying values (|z-score| &gt; 5) to the fence, and removing zero and near-zero variance features as determined from held-in data. We selected coarse median/mode methods for handling missing data due to the low rates of missing values and computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). A sample feature engineering script (i.e., tidymodels recipe) containing all feature engineering steps is available on our OSF study page.</p>
+<!--Notes from Ross on proposal about handling missing data: 
 - Could always include a separate coding for missing (e.g., -99), which could be informative in and of itself
 - Otherwise, true imputation would be better using mice - computationally very simple — defaults are linear models
---></p>
+-->
 </section>
-<section id="prediction-windows-and-labels" class="level3">
-<h3 class="anchored" data-anchor-id="prediction-windows-and-labels">Prediction Windows and Labels</h3>
-<ul>
-<li>Window starts 6am in participants own timezone (derived from gps)</li>
-</ul>
+<section id="lapse-labels" class="level3">
+<h3 class="anchored" data-anchor-id="lapse-labels">Lapse Labels</h3>
+<p>Prediction windows started at 6:00am in participants’ local timezones and ended at 5:59am the next day. This window start time was selected to match a typical wake-sleep cycle as opposed to midnight-to-midnight calendar day. For each participant the first prediction window began at 6:00am on their second day of participation and rolled forward day-by-day until their participation ended (i.e., the last prediction window ended at 5:59am on the day of their last recorded EMA).</p>
+<p>Participants reported lapses on the first EMA item. If participants responded “yes” to the question “Have you used any opioids for non-medical reasons that you have not yet reported?”, they were prompted to select the day(s) and time(s) of the lapse(s). Times were reported in 6-hour increments (12:00am–5:59am, 6:00am–11:59am, 12:00pm–5:59pm, 6:00pm–11:59pm). These responses were used to label each prediction window as lapse or no lapse. For example, if a participant reported a lapse on December 12 from 12:00am-5:59am the prediction window spanning 6:00am on December 11 through 5:59am on December 12 was labeled as a lapse.</p>
 </section>
 <section id="model-selection" class="level3">
 <h3 class="anchored" data-anchor-id="model-selection">Model Selection</h3>
-<p>Our performance metric for model selection and evaluation was area under the Receiver Operating Characteristic curve (auROC). <!--expand on choice? [@vancalsterEvaluationPerformanceMeasures2025]-->.</p>
+<p>Our performance metric for model selection and evaluation was area under the Receiver Operating Characteristic curve (auROC). <!--define and expand on choice? [@vancalsterEvaluationPerformanceMeasures2025]-->.</p>
 <p>The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation.<!--cite and define grouped cross validation--> Folds were stratified by a between-subject measure of our outcome (no lapse vs.&nbsp;any lapse).</p>
 <p>Model configurations differed on:</p>
 <ol type="1">
@@ -774,7 +779,7 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </section>
 <section id="calibration-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-1">Calibration</h2>
-<p>Our raw model predicted probabilities were generally well-calibrated (brier score = 0.015). We attempted to improve calibration with Platt scaling but results were comparable (brier score = 0.015). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>. Histograms of predicted probabilities by true lapse outcome are available in the supplement.</p>
+<p>Our raw model predicted probabilities were generally well-calibrated (brier score = 0.015) indicating that predicted probabilities generally matched the true observed lapse rates. We attempted to improve calibration with Platt scaling but results were comparable (brier score = 0.015). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>. Histograms of predicted probabilities by true lapse outcome are available in the supplement.</p>
 <div class="quarto-embed-nb-cell">
 <div id="cell-fig-2" class="cell">
 <div class="cell-output cell-output-display">
