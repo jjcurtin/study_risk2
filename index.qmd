@@ -70,7 +70,7 @@ Our candidate models included features derived from a subset of intake self-repo
 3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to not include all measures. Monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, individual differences in severity of use and stability of recovery at the time of intake have demonstrated some predictive signal. Key demographic variables known to influence OUD treatment access and clinical outcomes are also important to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables. See Measures section for a comprehensive list of all retained self-report items.
 
 ### Resampling Method
-Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was much lower (N = 300). To maximize data use, we eliminated the held-out test set and increased repetitions in our cross-validation to mitigate optimization bias and provide generalizable performance estimates.
+Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was much lower (N = 300). To maximize data use, we eliminated the held-out test set and relied on repetitions in our cross-validation to mitigate optimization bias and provide generalizable performance estimates (i.e., 6 repeats of 5-fold cross-validation to generate 30 held-out test sets).
 
 ## Participants
 We recruited 451 participants in early recovery from opioid use disorder from across the United States. We recruited through national digital advertising and collaborations with treatment providers at MOUD clinics. Our recruitment strategy was designed to create a diverse sample with respect to demographics (gender, age, race, and ethnicity), and geographic location (urban and rural). We required participants:
@@ -119,20 +119,12 @@ All features (sets 1-3 above) were included in our main model. We also fit a bas
 
 Other feature engineering steps performed during cross-validation included imputing missing values (median imputation for numeric features and mode imputation for nominal features), dummy coding nominal features, normalizing features to have a mean of zero and standard deviation of 1, bringing outlying values (|z-score| > 5) to the fence, and removing zero and near-zero variance features as determined from held-in data. We selected coarse median/mode methods for handling missing data due to the low rates of missing values and computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). A sample feature engineering script (i.e., tidymodels recipe) containing all feature engineering steps is available on our OSF study page.
 
-<!--Notes from Ross on proposal about handling missing data: 
-- Could always include a separate coding for missing (e.g., -99), which could be informative in and of itself
-- Otherwise, true imputation would be better using mice - computationally very simple — defaults are linear models
--->
-
 ### Lapse Labels
 Prediction windows started at 6:00am in participants' local timezones and ended at 5:59am the next day. This window start time was selected to match a typical wake-sleep cycle as opposed to midnight-to-midnight calendar day. For each participant the first prediction window began at 6:00am on their second day of participation and rolled forward day-by-day until their participation ended (i.e., the last prediction window ended at 5:59am on the day of their last recorded EMA). 
 
 Participants reported lapses on the first EMA item. If participants responded "yes" to the question "Have you used any opioids for non-medical reasons that you have not yet reported?", they were prompted to select the day(s) and time(s) of the lapse(s). Times were reported in 6-hour increments (12:00am–5:59am, 6:00am–11:59am, 12:00pm–5:59pm, 6:00pm–11:59pm). These responses were used to label each prediction window as lapse or no lapse. For example, if a participant reported a lapse on December 12 from 12:00am-5:59am the prediction window spanning 6:00am on December 11 through 5:59am on December 12 was labeled as a lapse.
 
-### Model Selection
-Our performance metric for model selection and evaluation was area under the Receiver Operating Characteristic curve (auROC).  <!--define and expand on choice? [@vancalsterEvaluationPerformanceMeasures2025]-->.
-
-The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation.<!--cite and define grouped cross validation--> Folds were stratified by a between-subject measure of our outcome (no lapse vs. any lapse). 
+### Model Configurations
 
 Model configurations differed on: 
 
@@ -140,10 +132,17 @@ Model configurations differed on:
 
 2. Resampling of minority outcome. All resampling was exclusively done with only held-in training data to prevent biasing performance estimates [@vandewieleOverlyOptimisticPrediction2021]. 
 
-We repeated the above process to select a best baseline model that was limited to features derived from individual differences in demographics and OUD characteristics. 
+3. Baseline vs. dynamic feature sets
+
+The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation. Grouped cross-validation assigns all data from a participant as either held-in or held-out to avoid bias introduced when predicting a participant’s data from their own data. Folds were stratified by a between-subject measure of our outcome (no lapse vs. any lapse). 
 
 
 ### Model Evaluation
+We evaluate the best model’s probability predictions across three domains: discrimination, calibration, and overall performance. We follow best recommendations for reporting measures and plots to characterize these performance domains [@vancalsterEvaluationPerformanceMeasures2025]. Classification and clinical utility are two other important domains for evaluating a model intended to make or inform a decision (e.g., whether to send a support message to an individual). In our scenario there is no decision to be made. Hypothetically, every day an individual would receive a message regardless of lapse risk, equivalent to a treat all condition. Therefore, we have constrained our evaluation to focus on the probability estimates for evaluating performance. 
+
+#### auROC and Model Comparisons
+Our performance metric for model selection and evaluation was the area under the receiver operating characteristic curve (auROC). auROC represents the probability that the model will assign a higher predicted probability to a randomly selected positive case (lapse) compared to a randomly selected negative case (no lapse). auROC is an aggregate measure of discrimination across all possible decision thresholds. This is important because optimal thresholds depend on the setting, outcome prevalence, and the relative costs of misclassification, and should be addressed separately (e.g., with a decision curve analysis).
+
 We used a Bayesian hierarchical generalized linear model to estimate the posterior distribution and 95% credible intervals (CI) for auROC for the 30 held-out test sets for our best performing model. We used weakly informative, data-dependent priors to regularize and reduce overfitting. Random intercepts were included for repeat and fold (nested within repeat).
 
 - Model contrast
@@ -153,8 +152,8 @@ Using the same 30 held-out test sets, we calculated the median posterior probabi
 - Gender, race/ethnicity, education, income, and geographic location are used for our fariness subgroup analyses. As defined above we defined urban as RUCA code of 1 and rural as RUCA codes 2-10. Given that there is not a clear consensus on delineating urban vs. rural, however, we also report a fairness model comparison for urban as RUCA codes 1-2 and urban as RUCA coddes 3-10 in the supplement.
 
 
-### Calibration
-We calibrated our probabilities using Platt scaling. We calculated Brier scores to assess the accuracy of our raw and calibrated probabilities for our best model. Brier scores range from 0 (perfect accuracy) to 1 (perfect inaccuracy). We provide calibration plots for the raw and calibrated probabilities in the manuscript and histograms of predicted probabilities by true lapse outcome in the supplement.
+#### Calibration and Overall Performance
+Calibration is an indicator of how well a model's predicted probabilities correspond to the true observed outcomes. For example, a well-calibrated model that assigns a 30% lapse risk prediction should observe lapses in approximately 30% of such cases. We used Platt scaling to calibrate our raw probabilities [@plattProbabilisticOutputsSupport1999]. We provided a calibration plot of the raw and calibrated probabilities. To characterize overall performance we reported Brier scores, which range from 0 (perfect accuracy) to 1 (perfect inaccuracy), for the raw and calibrated probabilities. We also provided histograms of risk probability distributions by true lapse outcome.
 
 ### Feature Importance
 
@@ -171,7 +170,7 @@ Mean days on study across participants was 298 days (range 32-395 days). 83% of 
 Our final feature set consisted of 640 features<!--recheck-->. The proportion of missing values across features was low (mean=.03, range = 0-.12).<!--recheck--> Across participants we generated a total of 88,973 day-level labels.<!--summarize number of observations and participants in training data--> Forty percent of participants (119/300) reported an opioid lapse while on study (mean=5.73, range 0-117). This resulted in 1.93% of the labels positive for lapse (1,720/88,973 labels). 
 
 
-## Performance
+## auROC and Model Comparisons
 The best model configuration used an xgboost statistical algorithm and up-sampled the minority class<!--recheck-->.^[The best model configuration used 1:4 upsampling of the minority class and the following hyperparameter values: learning rate = .1, tree depth = 1, mtry = 50.]<!--added this footnote to follow TRIPOD-AI checklist--> The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
 
 We compared our best model's performance to a baseline model that only used information gathered at intake (i.e., individual differences in demographic and OUD characteristics) to evaluate the incremental predictive value of adding dynamic features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
@@ -182,7 +181,7 @@ Our fairness subgroup comparisons revealed no evidence that performance meaningf
 
 <!--update fig to use rural vs. urban labels-->
 
-## Calibration
+## Calibration and Overall Performance
 Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`) indicating that predicted probabilities generally matched the true observed lapse rates. We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. Histograms of predicted probabilities by true lapse outcome are available in the supplement.   
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
