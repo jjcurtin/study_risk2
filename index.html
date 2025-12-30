@@ -11,7 +11,7 @@
 <meta name="dcterms.date" content="2025-12-29">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
-<title>Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning</title>
+<title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,7 +70,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning</h1>
+<h1 class="title">Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</h1>
 </div>
 
 
@@ -133,7 +133,7 @@ div.csl-indent {
 <h1>Methods</h1>
 <section id="transparency-and-openness" class="level2">
 <h2 class="anchored" data-anchor-id="transparency-and-openness">Transparency and Openness</h2>
-<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study’s protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is available in the supplement. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).<!--add all of this to osf--></p>
+<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study’s protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is available in the supplement. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>).<!--data needs to be added to osf--></p>
 <p>For transparency, we documented the changes made to the registered report below:</p>
 <section id="sensing-data-streams" class="level3">
 <h3 class="anchored" data-anchor-id="sensing-data-streams">Sensing Data Streams</h3>
@@ -168,8 +168,8 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="measures">Measures</h2>
 <section id="individual-differences" class="level3">
 <h3 class="anchored" data-anchor-id="individual-differences">Individual Differences</h3>
-<p>We collected self-report information about demographics (age, gender, orientation, race, ethnicity, education, and income). Zip codes from participants’ reported home addresses were matched to Rural-Urban Commuting Area (RUCA) codes to identify whether individuals resided in rural or urban areas <span class="citation" data-cites="RuralUrbanCommutingArea">(<a href="#ref-RuralUrbanCommutingArea" role="doc-biblioref"><em>Rural-<span>Urban Commuting Area Codes</span> - <span>Users</span>’ <span>Guide</span> <span>Economic Research Service</span></em>, n.d.</a>)</span>. We followed guidelines from the United States Health Resources and Services Administration and define urban as an area where the primary commuting flow is within a metropolitan core of 50,000 or more people (RUCA code = 1) and rural as anything not urban (RUCA codes 2-10)<span class="citation" data-cites="HowWeDefine">(<a href="#ref-HowWeDefine" role="doc-biblioref"><em>How <span>We Define Rural</span> <span>HRSA</span></em>, n.d.</a>)</span>.</p>
-<p>We also collected information about OUD history to characterize OUD severity and recovery stability, including self-reported DSM-5 OUD symptoms, recovery satisfaction, motivation, and confidence, whether they intended to avoid using other drugs, perceived efficacy of their MOUD medication, past month opioid use, past month residential treatment for OUD, past month receipt of psychiatric medication, frequency of counseling sessions and self-help meetings in the past month, preferred opioid, preferred route of administration, and lifetime history of overdose. As part of the aims of the parent project, we collected many other trait and state measures throughout the study. A complete list of all measures can be found in our registered report <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>.</p>
+<p>We collected self-report information about demographics (age, gender, orientation, race, ethnicity, education, and income). Zip codes from participants’ reported home addresses were matched to Rural-Urban Commuting Area (RUCA) codes to identify whether individuals resided in rural or urban areas <!--cite[@RuralUrbanCommutingArea]-->. We followed guidelines from the United States Health Resources and Services Administration and define urban as an area where the primary commuting flow is within a metropolitan core of 50,000 or more people (RUCA code = 1) and rural as anything not urban (RUCA codes 2-10)<!--cite [@HowWeDefine]-->.</p>
+<p>We also collected information about OUD history to characterize OUD severity and recovery stability, including self-reported Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition OUD symptoms <span class="citation" data-cites="americanpsychiatricassociationDiagnosticStatisticalManual2022">(<a href="#ref-americanpsychiatricassociationDiagnosticStatisticalManual2022" role="doc-biblioref">American Psychiatric Association, 2022</a>)</span>, recovery satisfaction, motivation, and confidence, whether they intended to avoid using other drugs, perceived efficacy and likelihood of adhering to their MOUD medication <span class="citation" data-cites="moriskyConcurrentPredictiveValidity1986">(<a href="#ref-moriskyConcurrentPredictiveValidity1986" role="doc-biblioref">Morisky et al., 1986</a>)</span>, past month opioid use, past month residential treatment for OUD, past month receipt of psychiatric medication, frequency of counseling sessions and self-help meetings in the past month, preferred opioid, preferred route of administration, and lifetime history of overdose. As part of the aims of the parent project, we collected many other trait and state measures throughout the study. A complete list of all measures can be found in our registered report <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>.</p>
 </section>
 <section id="ecological-momentary-assessment" class="level3">
 <h3 class="anchored" data-anchor-id="ecological-momentary-assessment">Ecological Momentary Assessment</h3>
@@ -840,6 +840,9 @@ Figure&nbsp;4: Feature importance partial dependence plots.
 <section id="references" class="level1">
 <h1>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-americanpsychiatricassociationDiagnosticStatisticalManual2022" class="csl-entry" role="listitem">
+American Psychiatric Association. (2022). <em>Diagnostic and statistical manual of mental disorders : <span>DSM-5-TR</span></em>. 5th edition, text revision. Washington, DC : American Psychiatric Association Publishing, 2022.
+</div>
 <div id="ref-chtc" class="csl-entry" role="listitem">
 Center for High Throughput Computing. (2006). <em>Center for high throughput computing</em>. Center for High Throughput Computing. <a href="https://doi.org/10.21231/GNT1-HW21">https://doi.org/10.21231/GNT1-HW21</a>
 </div>
@@ -849,20 +852,17 @@ Collins, G. S., Moons, K. G. M., Dhiman, P., Riley, R. D., Beam, A. L., Van Cals
 <div id="ref-goodrichRstanarmBayesianApplied2023" class="csl-entry" role="listitem">
 Goodrich, B., Gabry, J., Ali, I., &amp; Brilleman, S. (2023). <em>Rstanarm: <span>Bayesian Applied Regression Modeling</span> via <span>Stan</span></em>.
 </div>
-<div id="ref-HowWeDefine" class="csl-entry" role="listitem">
-<em>How <span>We Define Rural</span> <span>HRSA</span></em>. (n.d.). https://www.hrsa.gov/rural-health/about-us/what-is-rural.
-</div>
 <div id="ref-kuhnTidyposteriorBayesianAnalysis2022" class="csl-entry" role="listitem">
 Kuhn, M. (2022). <em>Tidyposterior: <span>Bayesian Analysis</span> to <span>Compare Models</span> using <span>Resampling Statistics</span></em>.
 </div>
 <div id="ref-kuhnTidymodelsCollectionPackages2020" class="csl-entry" role="listitem">
 Kuhn, M., &amp; Wickham, H. (2020). <em>Tidymodels: A collection of packages for modeling and machine learning using tidyverse principles</em>.
 </div>
+<div id="ref-moriskyConcurrentPredictiveValidity1986" class="csl-entry" role="listitem">
+Morisky, D. E., Green, L. W., &amp; Levine, D. M. (1986). Concurrent and predictive validity of a self-reported measure of medication adherence. <em>Medical Care</em>, <em>24</em>(1), 67–74. <a href="https://doi.org/10.1097/00005650-198601000-00007">https://doi.org/10.1097/00005650-198601000-00007</a>
+</div>
 <div id="ref-moshontzProspectivePredictionLapses2021" class="csl-entry" role="listitem">
 Moshontz, H., Colmenares, A. J., Fronk, G. E., Sant’Ana, S. J., Wyant, K., Wanta, S. E., Maus, A., Jr, D. H. G., Shah, D., &amp; Curtin, J. J. (2021). Prospective <span>Prediction</span> of <span>Lapses</span> in <span>Opioid Use Disorder</span>: <span>Protocol</span> for a <span>Personal Sensing Study</span>. <em>JMIR Research Protocols</em>, <em>10</em>(12), e29563. <a href="https://doi.org/10.2196/29563">https://doi.org/10.2196/29563</a>
-</div>
-<div id="ref-RuralUrbanCommutingArea" class="csl-entry" role="listitem">
-<em>Rural-<span>Urban Commuting Area Codes</span> - <span>Users</span>’ <span>Guide</span> <span>Economic Research Service</span></em>. (n.d.). https://www.ers.usda.gov/data-products/rural-urban-commuting-area-codes/users-guide.
 </div>
 <div id="ref-vandewieleOverlyOptimisticPrediction2021" class="csl-entry" role="listitem">
 Vandewiele, G., Dehaene, I., Kovács, G., Sterckx, L., Janssens, O., Ongenae, F., De Backere, F., De Turck, F., Roelens, K., Decruyenaere, J., Van Hoecke, S., &amp; Demeester, T. (2021). Overly optimistic prediction results on imbalanced data: A case study of flaws and benefits when applying over-sampling. <em>Artificial Intelligence in Medicine</em>, <em>111</em>, 101987. <a href="https://doi.org/10.1016/j.artmed.2020.101987">https://doi.org/10.1016/j.artmed.2020.101987</a>

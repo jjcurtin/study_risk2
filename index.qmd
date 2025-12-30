@@ -1,5 +1,5 @@
 ---
-title: Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning
+title: Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder
 author:
   - name: Kendra Wyant 
     corresponding: false
@@ -56,8 +56,9 @@ preds_all_raw <- probs |>
 # Methods
 
 ## Transparency and Openness
-We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study's protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants [@moshontzProspectivePredictionLapses2021]. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines [@collinsTRIPODAIStatementUpdated2024]. A TRIPOD+AI checklist is available in the supplement. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)) and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).<!--data needs to be added to osf-->
+We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study's protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants [@moshontzProspectivePredictionLapses2021]. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines [@collinsTRIPODAIStatementUpdated2024]. A TRIPOD+AI checklist is available in the supplement. Finally, our data, questionnaires, and other study materials are publicly available on our OSF page ([https://osf.io/zvm7s/overview](https://osf.io/zvm7s/overview)) and our annotated analysis scripts and results are publicly available on our study website ([https://jjcurtin.github.io/study_risk2/](https://jjcurtin.github.io/study_risk2/)).
 
+<!--We could probably put this part below in the supplement-->
 For transparency, we documented the changes made to the registered report below: 
 
 ### Sensing Data Streams 
@@ -93,7 +94,7 @@ We collected self-report information about demographics (age, gender, orientatio
 We also collected information about OUD history to characterize OUD severity and recovery stability, including self-reported Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition OUD symptoms [@americanpsychiatricassociationDiagnosticStatisticalManual2022], recovery satisfaction, motivation, and confidence, whether they intended to avoid using other drugs, perceived efficacy and likelihood of adhering to their MOUD medication [@moriskyConcurrentPredictiveValidity1986], past month opioid use, past month residential treatment for OUD, past month receipt of psychiatric medication, frequency of counseling sessions and self-help meetings in the past month, preferred opioid, preferred route of administration, and lifetime history of overdose. As part of the aims of the parent project, we collected many other trait and state measures throughout the study. A complete list of all measures can be found in our registered report [@moshontzProspectivePredictionLapses2021].
 
 ### Ecological Momentary Assessment
-Participants completed a brief (1-2 minute) EMA each day on study through the STAR app. The EMA became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the assessment. Each EMA had 16-items that asked participants to report the date and time of any recent opioid use for nonmedical reasons not yet reported. These reports served as the primary outcome for the lapse risk prediction model. Participants also reported any other drugs that they had used in the past 24 hours by selecting all that apply from a list of substance categories. Other items asked about mood, pain, sleep quality, urges to use opioids, risky situations, stressful and pleasant events, and MOUD adherence in the past 24 hours. The EMA concluded with 2 forward-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for nonmedical reasons over the next week.
+Participants completed a brief (1-2 minute) EMA each day on study through the STAR app. The EMA became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the assessment. Each EMA had 16-items that asked participants to report the date and time of any recent opioid use for nonmedical reasons not yet reported. These reports served as the primary outcome for the lapse risk prediction model. Participants also reported any other drugs that they had used in the past 24 hours by selecting all that apply from a list of substance categories. Other items asked about mood, pain, sleep quality, urges to use opioids, risky situations, stressful and pleasant events, and MOUD adherence in the past 24 hours. The EMA concluded with 2 future-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for nonmedical reasons over the next week.
 
 ### Geolocation Sensing
 The STAR app passively recorded participants’ time-stamped geolocations (i.e., latitude and longitude) every 1.5-15 minutes, depending on their movement. We augmented the geolocation data with self-reported subjective contexts. On each monthly survey we asked a set of 6 questions about frequently visited locations (i.e., spending more than 3 minutes at a location 2 or more times in a month) from the previous month. Participants were asked to describe the type of place, what they typically do there, the general frequency of pleasant and unpleasant experiences associated with the place, and the extent to which spending time there supports or undermines their recovery. 
@@ -110,6 +111,7 @@ Features were engineered from two types of data:
 
 - geolocation - within 50 meters of a known location
 
+- also label day
 
 
 We imputed missing data using median imputation for numeric features and mode imputation for nominal features. We selected coarse median/mode methods for handling missing data due to the computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). Importantly, our imputation calculations are done using only held-in data and can be applied to any new observation.
@@ -118,12 +120,13 @@ We imputed missing data using median imputation for numeric features and mode im
 - Otherwise, true imputation would be better using mice - computationally very simple — defaults are linear models
 -->
 
-### Prediction Windows and Labels
+### Lapse Labels
+Prediction windows started at 6:00am in participants' local timezones and ended at 5:59am the next day. This window start time was selected to match a typical wake-sleep cycle as opposed to midnight-to-midnight calendar day. For each participant the first prediction window began at 6:00am on their second day of participation and rolled forward day-by-day until their participation ended (i.e., the last prediction window ended at 5:59am on the day of their last recorded EMA). 
 
-- Window starts 6am in participants own timezone (derived from gps)
+Participants reported lapses on the first EMA item. If participants responded "yes" to the question "Have you used any opioids for non-medical reasons that you have not yet reported?", they were prompted to select the day(s) and time(s) of the lapse(s). Times were reported in 6-hour increments (12:00am–5:59am, 6:00am–11:59am, 12:00pm–5:59pm, 6:00pm–11:59pm). These responses were used to label each prediction window as lapse or no lapse. For example, if a participant reported a lapse on December 12 from 12:00am-5:59am the prediction window spanning 6:00am on December 11 through 5:59am on December 12 was labeled as a lapse.
 
 ### Model Selection
-Our performance metric for model selection and evaluation was area under the Receiver Operating Characteristic curve (auROC).  <!--expand on choice? [@vancalsterEvaluationPerformanceMeasures2025]-->.
+Our performance metric for model selection and evaluation was area under the Receiver Operating Characteristic curve (auROC).  <!--define and expand on choice? [@vancalsterEvaluationPerformanceMeasures2025]-->.
 
 The best model configuration was selected using 6 repeats of participant-grouped 5-fold cross-validation.<!--cite and define grouped cross validation--> Folds were stratified by a between-subject measure of our outcome (no lapse vs. any lapse). 
 
@@ -176,7 +179,7 @@ Our fairness subgroup comparisons revealed no evidence that performance meaningf
 <!--update fig to use rural vs. urban labels-->
 
 ## Calibration
-Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. Histograms of predicted probabilities by true lapse outcome are available in the supplement.   
+Our raw model predicted probabilities were generally well-calibrated (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`) indicating that predicted probabilities generally matched the true observed lapse rates. We attempted to improve calibration with Platt scaling but results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Calibration plots for the raw uncalibrated probabilities and calibrated probabilities with Platt scaline are presented in @fig-2. Histograms of predicted probabilities by true lapse outcome are available in the supplement.   
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
