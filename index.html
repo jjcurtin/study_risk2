@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kendra Wyant">
 <meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2025-12-30">
+<meta name="dcterms.date" content="2025-12-31">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
 <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -102,7 +102,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 30, 2025</p>
+      <p class="date">December 31, 2025</p>
     </div>
   </div>
   
@@ -174,7 +174,7 @@ div.csl-indent {
 </section>
 <section id="ecological-momentary-assessment" class="level3">
 <h3 class="anchored" data-anchor-id="ecological-momentary-assessment">Ecological Momentary Assessment</h3>
-<p>Participants completed a brief (1-2 minute) EMA each day on study through the STAR app. The EMA became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the assessment. Each EMA had 16-items that asked participants to report the date and time of any recent opioid use for nonmedical reasons not yet reported. These reports served as the primary outcome for the lapse risk prediction model. Participants also reported any other drugs that they had used in the past 24 hours by selecting all that apply from a list of substance categories. Other items asked about mood, pain, sleep quality, urges to use opioids, risky situations, stressful and pleasant events, and MOUD adherence in the past 24 hours. The EMA concluded with 2 future-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for nonmedical reasons over the next week. The full EMA questionnaire is available in the supplement.<!--need to add--></p>
+<p>Participants completed a brief (1-2 minute) EMA each day on study through the STAR app. The EMA became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the assessment. Each EMA had 16-items that asked participants to report the date and time of any recent opioid use for nonmedical reasons not yet reported. These reports served as the primary outcome for the lapse risk prediction model. Participants also reported any other drugs that they had used in the past 24 hours (in a select all that apply format) and whether they took their MOUD as prescribed. Next, participants rated the maximum intensity of recent (i.e., since last EMA) experiences of pain, craving, risky situations, stressful events, and pleasant events. Next, participants rated their sleep and how depressed, angry, anxious, relaxed, and happy they have felt in the past 24 hours. Lastly, participants responded to 2 future-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for nonmedical reasons over the next week. The full EMA questionnaire is available in the supplement.<!--need to add--></p>
 </section>
 <section id="geolocation-sensing" class="level3">
 <h3 class="anchored" data-anchor-id="geolocation-sensing">Geolocation Sensing</h3>
@@ -223,6 +223,8 @@ div.csl-indent {
 </section>
 <section id="feature-importance" class="level3">
 <h3 class="anchored" data-anchor-id="feature-importance">Feature Importance</h3>
+<p>Feature importance values provide insight into the features that have the most influence on the model’s predictions. For every prediction, we can extract feature importance values providing actionable insight into intervenable targets for lapse risk (i.e., for a specific individal at a specific moment). We calculated raw Shapley values for each observation in the held-out test sets <span class="citation" data-cites="lundbergUnifiedApproachInterpreting2017">(<a href="#ref-lundbergUnifiedApproachInterpreting2017" role="doc-biblioref">Lundberg &amp; Lee, 2017</a>)</span>. The magnitude of the raw Shapley value indicates how much the feature score for that observation adjusted the prediction (in log-odds units) relative to the mean prediction across all observations. Positive Shapley values indicate that the feature score increased the prediction for that observation and negative values indicate that the feature score decreased the prediction. In other words, higher Shapley values suggest the feature increases lapse risk and lower values suggest the feature decreases lapse risk. Shapley values are inherently additive. For any observation, Shapley values can be summed to create a total adjustment score for the predicted value. We created feature categories by collapsing features that differed only by scoring epoch and/or dummy-coded level into a single feature category. We plotted raw Shapley values and feature categories as partial dependence plots to illustrate these feature-risk relationships.</p>
+<p>Feature importance values can also be aggregated across all participants and all observations to provide a relative rank ordering of the most important features. We calculated overall feature importance in two ways. First, we used a traditional approach in which we calculated the mean absolute Shapley value for each feature category across all observations. This approach summarizes overall feature importance by averaging the magnitude of each feature’s contribution. However, it can be skewed toward features that exhibit infrequent but very large Shapley values, potentially overstating the importance of features that are strongly associated with the outcome, but only come up in a small subset of observations. The second way we calculated feature importance was by calculating the proportion of observations in which each feature category had the highest Shapley value. This approach summarizes how frequently a feature category is influential across observations (i.e., considering both magnitude and prevalence). We provided a plot of the relative ranking of feature categories by their overall feature importance using these two methods.</p>
 </section>
 </section>
 </section>
@@ -847,6 +849,9 @@ Kuhn, M. (2022). <em>Tidyposterior: <span>Bayesian Analysis</span> to <span>Comp
 </div>
 <div id="ref-kuhnTidymodelsCollectionPackages2020" class="csl-entry" role="listitem">
 Kuhn, M., &amp; Wickham, H. (2020). <em>Tidymodels: A collection of packages for modeling and machine learning using tidyverse principles</em>.
+</div>
+<div id="ref-lundbergUnifiedApproachInterpreting2017" class="csl-entry" role="listitem">
+Lundberg, S. M., &amp; Lee, S.-I. (2017). A unified approach to interpreting model predictions. <em>Proceedings of the 31st <span>International Conference</span> on <span>Neural Information Processing Systems</span></em>, 4768–4777.
 </div>
 <div id="ref-moriskyConcurrentPredictiveValidity1986" class="csl-entry" role="listitem">
 Morisky, D. E., Green, L. W., &amp; Levine, D. M. (1986). Concurrent and predictive validity of a self-reported measure of medication adherence. <em>Medical Care</em>, <em>24</em>(1), 67–74. <a href="https://doi.org/10.1097/00005650-198601000-00007">https://doi.org/10.1097/00005650-198601000-00007</a>
