@@ -54,6 +54,8 @@ preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_
 
 shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
                                            version, "_", model, ".rds")))
+
+options(scipen = 999)
 ```
 
 
@@ -62,7 +64,7 @@ shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
 
 ```{r}
 #| label: fig-1
-#| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban or surburban geographic location, and some college education) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, small town or rural geographic location, and high school education or less) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
+#| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban location, and some college education) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, rural location, and high school education or less) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
 #| message: false
 #| code-fold: true
 
@@ -83,8 +85,8 @@ pp_dem |>
                                          "below poverty",
                                          "small town/rural",
                                          "high school or less"), 
-                            "Disadvantaged (not male, Hispanic and/or not White, below poverty, small town/rural, high school or less)",
-                            "Advantaged (male, non-Hispanic White, above poverty, urban/suburban, some college)"),
+                            "Disadvantaged (not male, Hispanic and/or not White, below poverty, rural, high school or less)",
+                            "Advantaged (male, non-Hispanic White, above poverty, urban, some college)"),
          fairness = factor(fairness),
          group = factor(group, levels = c("Gender", "Race",
                                                 "Income", "Geography", "Education"))) |>  
@@ -98,7 +100,6 @@ pp_dem |>
        color = NULL) +
   theme_classic() +
   theme(legend.position = "bottom",
-        legend.text = element_text(size = 7),
         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1)) +
   scale_color_manual(values = c("#240e31", "#046B52")) +
   geom_hline(yintercept = subset(pp_all, model == "main")$pp_median, linetype = "dashed",  color = "grey") +
@@ -135,7 +136,8 @@ rug_data <- preds_all_raw |>
 
 ```{r}
 #| label: fig-2
-#| fig-cap: "A. Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines. The rug plot along the x-axis depicts observation frequency in each bin. B. Histograms of raw (uncalibrated) risk probability distributions by true lapse outcome."
+#| fig-cap: "The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plot along the x-axis depicts observation frequency in each bin. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome."
+#| fig-width: 8
 
 cal <- preds_all_raw |> 
   bind_rows(preds_all_logi) |> 
@@ -166,15 +168,11 @@ cal <- preds_all_raw |>
   coord_cartesian(clip = "off") +
   scale_color_manual(values = c("#240e31", "#046B52")) +
   scale_linetype_manual(values = c("solid", "twodash")) +
-  theme_classic(base_size = 11) +
-  theme(
-    legend.position = "bottom",
-    strip.text = element_text(size = 11),
-    legend.title = element_text(face = "bold"),
-    legend.text = element_text(size = 10),
-    axis.text = element_text(size = 10),
-    axis.title = element_text(face = "bold")
-  )
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "bottom") 
 
 
 hist <- preds |> 
@@ -182,8 +180,11 @@ hist <- preds |>
   geom_histogram(aes(x = prob_raw), color = "black", 
                  fill = "light grey", bins = 40) +
   facet_wrap(~ label, ncol = 1, scales = "free_y") +
-  labs(x = "Raw (uncalibrated) predicted probabilties") +
-  theme_classic() 
+  labs(x = "Raw (uncalibrated) probabilties",
+       y = NULL) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1))
 
 cal + hist
 ```
