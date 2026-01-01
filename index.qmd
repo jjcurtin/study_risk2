@@ -151,18 +151,18 @@ Feature importance values can also be aggregated across all participants and all
 # Results
 
 ## Participants
-We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these, 11 participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 299 participants. Participant demographic and OUD characteristics is presented in @tbl-1.
+We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these, 11 participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 11 participants were excluded due to evidence of careless responding on EMAs and/or no longer having a goal of abstinence. Our final analysis sample consisted of 299 participants. Participant demographic and OUD characteristics is presented in @tbl-1.
 
 {{< embed notebooks/mak_tables.qmd#tbl-1 >}}
 
 ## Adherence, Features, and Labels
-Mean days on study across participants was 297 days (range 32-395 days). 83% of participants (249/299) remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided, on average, 313 daily geolocation points (range 20-825). 
+Mean days on study across participants was 297 days (range 32-395 days). 83% of participants (249/299) remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided, on average, 311 daily geolocation points (range 20-825). 
 
-Our final feature set consisted of 640 features<!--recheck-->. The proportion of missing values across features was low (mean=.02, range = 0-.11). Across participants we generated a total of 88,607 day-level labels.<!--summarize number of observations and participants in training data across splits--> Forty percent of participants (119/299) reported an opioid lapse while on study (mean=5.36, range 0-76). This resulted in 1.81% of the labels positive for lapse (1,603/88,607 labels). 
+Our final feature set consisted of 667 features. The proportion of missing values across features was low (mean=.02, range = 0-.11). Across participants we generated a total of 88,607 day-level labels. Training sets (N=30) had, on average, 70886 labels (range 69025-73129) from 239 participants (range 239-240). Forty percent of participants (119/299) reported an opioid lapse while on study (mean=5.36, range 0-76). This resulted in 1.81% of the labels positive for lapse (1,603/88,607 labels). We stratified the data on a variable of whether someone lapsed on study to ensure our imbalanced outcome was evenly split over folds (mean=.018, range =.016-.020).
 
 
 ## auROC and Model Comparisons
-The best full model configuration used an xgboost statistical algorithm and up-sampled the minority class<!--recheck-->.^[The best model configuration used 1:4 upsampling of the minority class and the following hyperparameter values: learning rate = .1, tree depth = 1, mtry = 50.]<!--added this footnote to follow TRIPOD-AI checklist--> The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
+The best full model configuration used an xgboost statistical algorithm and up-sampled the minority class<!--recheck-->.^[The best model configuration used 1:4 upsampling of the minority class and the following hyperparameter values: learning rate = .1, tree depth = 1, mtry = 50.]<!--recheck--> The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). 
 
 We compared our best model's performance to a baseline model that only used day of week and demographic and OUD characteristic features to evaluate the incremental predictive value of adding the dynamic EMA and geolocation sensing features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
 
@@ -178,7 +178,7 @@ The full model produced well-calibrated raw probabilities (brier score = `r roun
 
 ## Feature Importance
 
-For brevity, we are only displaying the top 30 features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.<!--number of categories-->
+For brevity, we are only displaying the top 30 features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.<!--mention total number of categories-->
 
 {{< embed notebooks/mak_figures.qmd#fig-3 >}}
 
