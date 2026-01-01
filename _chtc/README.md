@@ -24,4 +24,4 @@ V6 = V5 without normalization
 
 V7 = Add back in fence to V5, add opioid baseline feats, add day of week back in. Updated filtering of subs based on at least 20 gps points per day on avergae (final N = 302)
 
-V8 = final sample (N = 300)
+V8 = final sample (N = 299) - require 20% EMAs

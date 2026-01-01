@@ -9,7 +9,7 @@ source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true
 study <- "combined"
 window <- "day"
 lead <- 0
-version <- "v7"
+version <- "v8"
 algorithm <- "xgboost"
 batch <- "dyn_dem_oud"
 

@@ -70,7 +70,7 @@ Our candidate models included features derived from a subset of intake self-repo
 3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to not include all measures. Monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, individual differences in severity of use and stability of recovery at the time of intake have demonstrated some predictive signal. Key demographic variables known to influence OUD treatment access and clinical outcomes are also important to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables. See Measures section for a comprehensive list of all retained self-report items.
 
 ### Resampling Method
-Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was much lower (N = 300). To maximize data use, we eliminated the held-out test set and relied on repetitions in our cross-validation to mitigate optimization bias and provide generalizable performance estimates (i.e., 6 repeats of 5-fold cross-validation to generate 30 held-out test sets).
+Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was much lower (N = 299). To maximize data use, we eliminated the held-out test set and relied on repetitions in our cross-validation to mitigate optimization bias and provide generalizable performance estimates (i.e., 6 repeats of 5-fold cross-validation to generate 30 held-out test sets).
 
 ## Participants
 We recruited 451 participants in early recovery from opioid use disorder from across the United States. We recruited through national digital advertising and collaborations with treatment providers at MOUD clinics. Our recruitment strategy was designed to create a diverse sample with respect to demographics (gender, age, race, and ethnicity), and geographic location (urban and rural). We required participants:
@@ -103,7 +103,7 @@ The STAR app passively recorded participants’ time-stamped geolocations (i.e.,
 Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem [@kuhnTidymodelsCollectionPackages2020; @kuhnTidyposteriorBayesianAnalysis2022; @goodrichRstanarmBayesianApplied2023]. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing [@chtc].
 
 ### Feature Engineering
-Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. Features were engineered from three sources: 
+Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. We caclulated a total of 793 features from three data sources: 
 
 1. *The prediction window.* We created dummy-coded features for day of the week for the start of the prediction window.
 
@@ -151,14 +151,14 @@ Feature importance values can also be aggregated across all participants and all
 # Results
 
 ## Participants
-We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these, 11 participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 300 participants. Participant demographic and OUD characteristics is presented in @tbl-1.
+We recruited 451 participants across 47 states in the United States from April 2021 through December 2024. A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these, 11 participants were excluded due to unusually low adherence^[One participant completed only 3 EMA prompts over 88 days and 10 participants had fewer than 20 geolocation points per day on average.], 13 participants were excluded due to insufficient context data for geolocation points^[We required participants have at least two contextualized locations other than their home.], 1 participant was excluded due to geolocation data indicating they were not residing in the United States, 10 participants were excluded due to evidence of careless responding on EMAs. Our final analysis sample consisted of 299 participants. Participant demographic and OUD characteristics is presented in @tbl-1.
 
 {{< embed notebooks/mak_tables.qmd#tbl-1 >}}
 
 ## Adherence, Features, and Labels
-Mean days on study across participants was 298 days (range 32-395 days). 83% of participants (250/300) remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided, on average, 313 daily geolocation points (range 20-825). 
+Mean days on study across participants was 297 days (range 32-395 days). 83% of participants (249/299) remained on study for at least six months. EMA adherence was high. On average participants completed 73% of the daily EMA prompts (range 24-100%). Participants provided, on average, 313 daily geolocation points (range 20-825). 
 
-Our final feature set consisted of 640 features<!--recheck-->. The proportion of missing values across features was low (mean=.03, range = 0-.12).<!--recheck--> Across participants we generated a total of 88,973 day-level labels.<!--summarize number of observations and participants in training data--> Forty percent of participants (119/300) reported an opioid lapse while on study (mean=5.73, range 0-117). This resulted in 1.93% of the labels positive for lapse (1,720/88,973 labels). 
+Our final feature set consisted of 640 features<!--recheck-->. The proportion of missing values across features was low (mean=.02, range = 0-.11). Across participants we generated a total of 88,607 day-level labels.<!--summarize number of observations and participants in training data across splits--> Forty percent of participants (119/299) reported an opioid lapse while on study (mean=5.36, range 0-76). This resulted in 1.81% of the labels positive for lapse (1,603/88,607 labels). 
 
 
 ## auROC and Model Comparisons

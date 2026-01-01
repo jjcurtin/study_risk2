@@ -11,7 +11,7 @@ format:
     embed-resources: true
 params:
   study: "combined"
-  version: "v7"
+  version: "v8"
   cv: "kfold"
   algorithms: "xgboost"   # "all" or name of specific algorithm
   model: "dyn_dem_oud" # all, diff or raw (for feature set)
