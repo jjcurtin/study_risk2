@@ -225,18 +225,61 @@ Now thinking forward to the next week…
 
 Thank you! You have now completed the daily update.
 
-
-
 ## Data Exclusions
 
+A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these we excluded 37 participants' data from our analyses for the following reasons:
+
+1 participant was excluded due to geolocation data indicating they were not residing in the United States. 
+
+- During eda on EMA utc_offset it was determined they had modal UTC offset of 60 (+5 hours). This puts them in either Islamabad, Ekaterinburg, Karachi, or Tashkent.
+
+7 participants were excluded due to evidence of careless responding on daily surveys. They all reported over 200 lapses while on study and had the highest number of duplicate lapse reports (accounting for 1177/1285 duplicate lapses). These subids also account for 62/66 lapses that started after the survey start time, but before survey complete time. This could mean they were stopping the survey to use opioids or could be potentially careless or inaccurate reporting. They also account for 64/107 missing lapse dates and times after responding yes to "Have you used any opioids for non-medical reasons that you have not yet reported?". A more precise description by participant is listed below.
+
+- subid 1312 reported 1099 lapses over 359 days. Also reported 418 duplicate lapses not included in 1099 count. 
+
+- subid 1427 reported 854 lapses over 364 days. Also reported 388 duplicate lapses not included in 854 count. They had 13 lapses that started after the survey start time (but before survey completion).
+
+- subid 1132 reported 769 lapses over 360 days. Also reported 129 duplicate lapses not included in 769 count. They also had 27 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". They had 8 lapses that started after the survey start time (but before survey completion).
+
+- subid 1216 reported 680 lapses over 401 days. Also reported 96 duplicate lapses not included in 680 count.
+
+- subid 1172 reported 420 lapses over 367 days. Also reported 60 duplicates not included in 420 count. They also had 37 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". 
+
+- subid 1379 reported 383 lapses over 265 days. They had 14 lapses that started after the survey start time (but before survey completion).
+
+- subid 1101 reported 235 lapses over 144 days. Also reported 62 duplicate lapses not included in 235 count.
 
 
+11 participants were excluded due to unusually low adherence. 
 
+- 1 participant completed only 3 daily survey prompts over 88 days. All remaining subids have at least > 20% EMA adherence.
+
+- 2 participants had no gps data.
+
+- 8 participants had fewer than 20 geolocation points per day on average.
+
+
+13 participants were excluded due to insufficient context data for geolocation points. We required participants have at least two contextualized locations other than their home. 
+
+- one participant had no context data for any locations
+
+- 12 participants did not have at least 2 known locations outside their home. Many only had home address reported and we do not gather follow-up context information about the home.
+
+
+4 participant was excluded due to no longer having a goal of abstinence. 
+
+- subid 1435 reported 141 lapses over 330 days. They reported at least one lapse on 119 days (equivalent to roughly 4/11 months on study). 
+
+- subid 1195 reported 275 lapses over 173 days.
+
+- subid 1257 reported 258 lapses over 364 days. 
+
+- subid 1330 reported 243 lapses over 355 days.
 
 
 ## Supplemental Figures
 
-### Figure S2: Global Feature Importance for all Feature Categories
+### Figure S1: Global Feature Importance for all Feature Categories
 
 ```{r}
 #| code-fold: true
@@ -307,7 +350,7 @@ global_panel_all + local_panel_all
 ```
 
 
-### Figure S3: Individual Shapley Plots for all Feature Categories
+### Figure S2: Individual Shapley Plots for all Feature Categories
 
 ```{r}
 #| label: fig-2
