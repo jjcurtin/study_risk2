@@ -13,7 +13,7 @@ params:
   
   study: "combined"
   model: "dyn_dem_oud" 
-  version: "v7"
+  version: "v8"
 editor_options: 
   chunk_output_type: console
 ---
@@ -47,31 +47,194 @@ pp_dem <- read_csv(here::here(path_models,
                               "pp_fairness_xgboost_contrast_full.csv"),
                    show_col_types = FALSE)
 
-preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
+preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v8_dyn_dem_oud.rds"))
 
 
 shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
                                            version, "_", model, ".rds")))
 ```
 
+
+## Protocol Deviations
+
+We published this study's protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants. The registered report can be found at [https://www.researchprotocols.org/2021/12/e29563/](https://www.researchprotocols.org/2021/12/e29563/). For transparency, we documented changes made to the registered report below: 
+
+### Sensing Data Streams  
+<!--return to this section after decision is made to remove OUD id vars-->
+Our candidate models included features derived from a subset of intake self-report measures, daily surveys, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by (1) our group's personal sensing work with alcohol use disorder, (2) technological constraints, and (3) the desire to balance feature diversity for capturing lapse complexity and minimizing participant burden and computational cost. 
+
+1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds<!--meta paper-->. Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
+    
+2. We discontinued collecting daily video check-ins about 6 months into the 2.5 year data collection due to technical issues and App usage data (beyond the required study tasks) were generally sparse and inconsistent across participants. 
+
+3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to not include all measures. Monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, individual differences in severity of use and stability of recovery at the time of intake have demonstrated some predictive signal. Key demographic variables known to influence OUD treatment access and clinical outcomes are also important to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables. See Measures section in manuscript for a comprehensive list of all retained self-report items.
+
+### Resampling Method
+Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was substantially lower (N = 299). To maximize data use, we used nested cross-validation (6 repeats of 5-fold cross-validation on the outer loop and 2 repeats of 5-fold cross-validation on the inner loop). This resampling method still removes optimization bias by separating model selection and evaluation. Specifically, nested cross-validation embeds an inner cross-validation loop for model selection within an outer cross-validation loop for model evaluation. This approach makes more efficient use of data in that each observation contributes to model training and model evaluation during the cross-validation process. Moreover, final estimates are averaged over 30 test sets leading to less variance in the estimate compared to a single test set. 
+
+
+
+## Daily Survey
+
+This survey asks about your recent drug use, medication assisted treatment, mood, and daily experiences. Several questions ask about using drugs "for non-medical reasons" which means using drugs to feel intoxicated or high. It is possible to use a drug you are prescribed for non-medical reasons, for example, by taking more than prescribed.
+
+1. Have you used any opioids for non-medical reasons that you have not yet reported?
+
+    - No 
+    - Yes 
+
+    Please select the time(s) that you have not yet reported when you used opioids for non-medical reasons: [Display if Q1 is Yes]
+
+    [TIME PICKER, MULTI-SELECT]
+
+
+
+Thinking about the past 24 hours…
+
+2. Which of these drugs have you used for non-medical reasons? Select all that apply.
+
+    - Alcohol
+    - Cannabis (marijuana, pot, grass, hash, K2, spice, etc.)
+    - Stimulants (cocaine, meth, speed, ecstasy, molly, Adderall, etc.)
+    - Inhalants (nitrous, glue, petrol, paint thinner, etc.)
+    - Sedatives or sleeping pills (Valium, Serepax, Rohypnol, etc.)
+    - Hallucinogens (LSD, acid, mushrooms, PCP, special K, etc.)
+    - None of the above
+
+
+3. Did you take your daily medication for opioid use (e.g., Suboxone, Methadone, Buprenorphine, etc.). as prescribed?
+
+    - Yes
+    - No, I missed a dose
+    - No, I am using a monthly medication (e.g., Vivitrol)
+    - No, I am no longer prescribed medication for opioid use
+
+
+Thinking about the past 24 hours…
+
+4. Think about the worst pain you experienced. How painful was it?
+
+    - No pain 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+5. Think about the greatest urge you had to use opioids. How strong was it?
+
+    - No urge
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+6. Think about the riskiest situation you experienced (people, places, or things that interfere with your recovery). How risky was it?
+
+    - No risky situation
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+7. Think of the biggest hassle or most stressful event you experienced. How stressful was it?
+
+    - No hassle/stressful event
+    - Mildly
+    - Moderately 
+    - Considerably
+    - Extremely
+
+8. Think of the most pleasant or positive event you experienced. How pleasant was it?
+
+    - No pleasant/positive event
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+
+Thinking about the past 24 hours…
+
+9. How did you sleep?
+
+    - Very badly
+    - Badly
+    - Neutral
+    - Well
+    - Very well
+
+10. How depressed have you felt?
+
+    - Not at all
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+11. How angry have you felt?
+
+    - Not at all
+    - Mildly
+    - Moderately 
+    - Considerably
+    - Extremely
+
+12. How anxious have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+13. How relaxed have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+14. How happy have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+Now thinking forward to the next week…
+
+15. How motivated are you to completely avoid using opioids for non-medical reasons?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+16. How confident are you in your ability to completely avoid using opioids for non-medical reasons?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+Thank you! You have now completed the daily update.
+
+
+
+## Data Exclusions
+
+
+
+
+
+
 ## Supplemental Figures
-
-### Figure S1: Predicted Probabilities by True Outcome
-```{r}
-#| code-fold: true
-
-base_rate <- preds |> count(label) |> reframe(base_rate = n/nrow(preds)) |> slice_head(n = 1)
-
-preds |> 
-  ggplot() +
-  geom_histogram(aes(x = prob_raw), color = "black", 
-                 fill = "light grey", bins = 40) +
-  facet_wrap(~ label, ncol = 1, scales = "free_y") +
-  geom_vline(xintercept = base_rate$base_rate, color = "dark red") +
-  labs(x = "Raw (uncalibrated) predicted probabilties") +
-  theme_classic() 
-```
-
 
 ### Figure S2: Global Feature Importance for all Feature Categories
 
@@ -182,7 +345,10 @@ shaps|>
 
 ## Supplemental Tables
 
-### Table S1: Demographic Contrasts for all Models
+### Table S1: Simple k-fold Performance by Statistical Algorithm
+
+
+### Table S2: Demographic Contrasts for all Models
 
 ```{r}
 #| label: tbl-fairness

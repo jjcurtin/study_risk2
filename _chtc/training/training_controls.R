@@ -11,7 +11,7 @@ window <- "day"
 lead <- 0
 version <- "v8"
 algorithm <- "xgboost"
-batch <- "dyn_dem_oud"
+batch <- "dem_oud"
 
 
 configs_per_job <- 10  # number of model configurations that will be fit/evaluated within each CHTC

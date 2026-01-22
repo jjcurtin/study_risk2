@@ -13,7 +13,7 @@ params:
   
   study: "combined"
   model: "dyn_dem_oud" 
-  version: "v7"
+  version: "v8"
 editor_options: 
   chunk_output_type: console
 ---
@@ -44,13 +44,13 @@ path_models <- format_path(str_c("risk2/models/", study))
 
 
 pp_all <- read_csv(here::here(path_models, 
-                              "pp_perf_tibble_xgboost_v7.csv"),
+                              "pp_perf_tibble_xgboost_v8.csv"),
                    show_col_types = FALSE) 
 
 pp_dem <- read_csv(here::here(path_models, 
                               "pp_fairness_xgboost_full.csv"),
                    show_col_types = FALSE)
-preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
+preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v8_dyn_dem_oud.rds"))
 
 shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
                                            version, "_", model, ".rds")))

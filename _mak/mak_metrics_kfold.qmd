@@ -14,7 +14,7 @@ params:
   version: "v8"
   cv: "kfold"
   algorithms: "xgboost"   # "all" or name of specific algorithm
-  model: "dyn_dem_oud" # all, diff or raw (for feature set)
+  model: "dem_oud" # all, diff or raw (for feature set)
 editor_options: 
   chunk_output_type: console
 ---
@@ -237,7 +237,7 @@ results_all |>
          hp1 == best_config$hp1,
          hp2 == best_config$hp2,
          is.na(hp3) | hp3 == best_config$hp3,
-         resample == best_config$resample) |> 
+         resample == best_config$resample) |>  
   ggplot(aes(x = roc_auc)) +
   geom_histogram(bins = 10, fill = "light grey", color = "black")
 ```
