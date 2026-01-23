@@ -277,6 +277,7 @@ A total of 336 participants were eligible, consented, and remained on study for 
 - subid 1330 reported 243 lapses over 355 days.
 
 
+
 ## Supplemental Figures
 
 ### Figure S1: Global Feature Importance for all Feature Categories
@@ -473,7 +474,6 @@ pp_sex |>
   kbl() |> 
   kable_classic()
 ```
-
 
 
 
