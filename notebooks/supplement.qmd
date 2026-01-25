@@ -60,14 +60,13 @@ shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
 We published this study's protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants. The registered report can be found at [https://www.researchprotocols.org/2021/12/e29563/](https://www.researchprotocols.org/2021/12/e29563/). For transparency, we documented changes made to the registered report below: 
 
 ### Sensing Data Streams  
-<!--return to this section after decision is made to remove OUD id vars-->
 Our candidate models included features derived from a subset of intake self-report measures, daily surveys, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by (1) our group's personal sensing work with alcohol use disorder, (2) technological constraints, and (3) the desire to balance feature diversity for capturing lapse complexity and minimizing participant burden and computational cost. 
 
-1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds<!--meta paper-->. Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
+1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
     
 2. We discontinued collecting daily video check-ins about 6 months into the 2.5 year data collection due to technical issues and App usage data (beyond the required study tasks) were generally sparse and inconsistent across participants. 
 
-3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to not include all measures. Monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, individual differences in severity of use and stability of recovery at the time of intake have demonstrated some predictive signal. Key demographic variables known to influence OUD treatment access and clinical outcomes are also important to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables. See Measures section in manuscript for a comprehensive list of all retained self-report items.
+3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to generally not include self-report measures. Intake and monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, we did include a subset of key demographic variables reported at intake (gender, race/ethnicity, income, sexual orientation, and geographic location). We selected these variables based on evidence of influencing OUD treatment access and clinical outcomes or carrying general societal stigma to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables.
 
 ### Resampling Method
 Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was substantially lower (N = 299). To maximize data use, we used nested cross-validation (6 repeats of 5-fold cross-validation on the outer loop and 2 repeats of 5-fold cross-validation on the inner loop). This resampling method still removes optimization bias by separating model selection and evaluation. Specifically, nested cross-validation embeds an inner cross-validation loop for model selection within an outer cross-validation loop for model evaluation. This approach makes more efficient use of data in that each observation contributes to model training and model evaluation during the cross-validation process. Moreover, final estimates are averaged over 30 test sets leading to less variance in the estimate compared to a single test set. 
@@ -227,54 +226,40 @@ Thank you! You have now completed the daily update.
 
 ## Data Exclusions
 
-A total of 336 participants were eligible, consented, and remained on study for at least one month. Of these we excluded 37 participants' data from our analyses for the following reasons:
-
-1 participant was excluded due to geolocation data indicating they were not residing in the United States. 
-
-- During eda on EMA utc_offset it was determined they had modal UTC offset of 60 (+5 hours). This puts them in either Islamabad, Ekaterinburg, Karachi, or Tashkent.
-
-7 participants were excluded due to evidence of careless responding on daily surveys. They all reported over 200 lapses while on study and had the highest number of duplicate lapse reports (accounting for 1177/1285 duplicate lapses). These subids also account for 62/66 lapses that started after the survey start time, but before survey complete time. This could mean they were stopping the survey to use opioids or could be potentially careless or inaccurate reporting. They also account for 64/107 missing lapse dates and times after responding yes to "Have you used any opioids for non-medical reasons that you have not yet reported?". A more precise description by participant is listed below.
-
-- subid 1312 reported 1099 lapses over 359 days. Also reported 418 duplicate lapses not included in 1099 count. 
-
-- subid 1427 reported 854 lapses over 364 days. Also reported 388 duplicate lapses not included in 854 count. They had 13 lapses that started after the survey start time (but before survey completion).
-
-- subid 1132 reported 769 lapses over 360 days. Also reported 129 duplicate lapses not included in 769 count. They also had 27 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". They had 8 lapses that started after the survey start time (but before survey completion).
-
-- subid 1216 reported 680 lapses over 401 days. Also reported 96 duplicate lapses not included in 680 count.
-
-- subid 1172 reported 420 lapses over 367 days. Also reported 60 duplicates not included in 420 count. They also had 37 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". 
-
-- subid 1379 reported 383 lapses over 265 days. They had 14 lapses that started after the survey start time (but before survey completion).
-
-- subid 1101 reported 235 lapses over 144 days. Also reported 62 duplicate lapses not included in 235 count.
+A total of 334 participants were eligible, consented, and remained on study for at least one month. Of these we excluded 21 participants' data from our analyses for the following reasons:
 
 
-11 participants were excluded due to unusually low adherence. 
+1. 7 participants were excluded due to evidence of careless responding on daily surveys. They all reported over 200 lapses while on study and had the highest number of duplicate lapse reports (accounting for 1177/1285 duplicate lapses). These subids also account for 62/66 lapses that started after the survey start time, but before survey complete time. This could mean they were stopping the survey to use opioids or could be potentially careless or inaccurate reporting. They also account for 64/107 missing lapse dates and times after responding yes to "Have you used any opioids for non-medical reasons that you have not yet reported?". A more precise description by participant is listed below.
 
-- 1 participant completed only 3 daily survey prompts over 88 days. All remaining subids have at least > 20% EMA adherence.
+    - subid 1312 reported 1099 lapses over 359 days. Also reported 418 duplicate lapses not included in 1099 count. 
 
-- 2 participants had no gps data.
+    - subid 1427 reported 854 lapses over 364 days. Also reported 388 duplicate lapses not included in 854 count. They had 13 lapses that started after the survey start time (but before survey completion).
 
-- 8 participants had fewer than 20 geolocation points per day on average.
+    - subid 1132 reported 769 lapses over 360 days. Also reported 129 duplicate lapses not included in 769 count. They also had 27 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". They had 8 lapses that started after the survey start time (but before survey completion).
+
+    - subid 1216 reported 680 lapses over 401 days. Also reported 96 duplicate lapses not included in 680 count.
+
+    - subid 1172 reported 420 lapses over 367 days. Also reported 60 duplicates not included in 420 count. They also had 37 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". 
+
+    - subid 1379 reported 383 lapses over 265 days. They had 14 lapses that started after the survey start time (but before survey completion).
+
+    - subid 1101 reported 235 lapses over 144 days. Also reported 62 duplicate lapses not included in 235 count.
 
 
-13 participants were excluded due to insufficient context data for geolocation points. We required participants have at least two contextualized locations other than their home. 
+2. 10 participants were excluded due to unusually low geolocation sensing adherence. 
 
-- one participant had no context data for any locations
+    - 3 participants had no gps data.
 
-- 12 participants did not have at least 2 known locations outside their home. Many only had home address reported and we do not gather follow-up context information about the home.
+    - 7 participants had fewer than 20 geolocation points per day on average.
 
 
-4 participant was excluded due to no longer having a goal of abstinence. 
+3. 14 participants were excluded due to insufficient context data for geolocation points. We required participants have at least two contextualized locations other than their home. 
 
-- subid 1435 reported 141 lapses over 330 days. They reported at least one lapse on 119 days (equivalent to roughly 4/11 months on study). 
+    - 2 participants had no context data for any locations
 
-- subid 1195 reported 275 lapses over 173 days.
+    - 12 participants did not have at least 2 known locations outside their home. Many only had home address reported and we do not gather follow-up context information about the home.
 
-- subid 1257 reported 258 lapses over 364 days. 
 
-- subid 1330 reported 243 lapses over 355 days.
 
 
 
