@@ -224,6 +224,74 @@ Now thinking forward to the next week…
 
 Thank you! You have now completed the daily update.
 
+
+## Monthly Geolocation Context Questions
+
+The next questions ask you about the places you have gone more than once or spent the night at in the past month.
+
+Our automated system has identified these places using the data you share with us. The system is not perfect; it may have identified places that you have not been. You will be able to tell us if the system has made an error.
+
+You visited the place shown below, near [*address*], several times in the past month. Recently, you visited this place on [*date*]. 
+
+[display on map]
+
+1. Which of the following best describes this place?
+
+    - My home [If selected, skip to end of survey]
+    - Someone else’s home
+    - A shelter, group home, hotel, or other temporary place I stayed [If selected, skip to end of survey] 
+    - A restaurant, business, public place, or other non-residential place  
+    - I do not recognize this location or was just passing by [If selected, skip to end of survey]
+
+2. What do you do at this place? Select all that apply.
+
+    – Work 
+    – Take classes 
+    – Religious or spiritual activities 
+    – Volunteer or do community service 
+    – Exercise or play sports 
+    – Spend time with friends 
+    – Spend time with family 
+    – Socialize with new people 
+    – Relax 
+    – Drink alcohol 
+    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group) 
+    - Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.) 
+    – Get physical health care 
+    – None of the above
+
+3. In general, how often is going to this place pleasant?
+
+    - Never 
+    - Rarely 
+    - Sometimes 
+    - Most of the time 
+    - Always
+
+4. In general, how often is going to this place unpleasant?
+
+    - Never 
+    - Rarely 
+    - Sometimes
+    - Most of the time 
+    - Always
+
+5. In general, how much does going to this place help your recovery from opioids?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+6. In general, how much does going to this place harm your recovery from opioids?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
 ## Data Exclusions
 
 A total of 334 participants were eligible, consented, and remained on study for at least one month. Of these we excluded 21 participants' data from our analyses for the following reasons:

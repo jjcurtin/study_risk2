@@ -9,9 +9,9 @@ source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true
 study <- "combined"
 window <- "day"
 lead <- 0
-version <- "v8"
+version <- "v9"
 algorithm <- "xgboost"
-batch <- "dem_oud"
+batch <- "full"
 
 
 configs_per_job <- 10  # number of model configurations that will be fit/evaluated within each CHTC
@@ -142,7 +142,7 @@ build_recipe <- function(d, config) {
     step_zv(all_predictors()) |>
     step_impute_median(all_numeric_predictors()) |>
     step_impute_mode(all_nominal_predictors()) |>
-    step_dummy(all_nominal_predictors()) |>
+    step_dummy(all_nominal_predictors(), one_hot = TRUE) |>
     step_normalize(all_predictors()) |>
     # bring to fence outliers with Z scores > |5|
     step_mutate_at(all_predictors(), fn = ~ pmax(pmin(., 5), -5)) |>

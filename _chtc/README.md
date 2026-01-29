@@ -26,4 +26,5 @@ V7 = Add back in fence to V5, add opioid baseline feats, add day of week back in
 
 V8 = final sample (N = 299) - require 20% EMAs
 
-v9 = final sample (N = 303?) - dont remove subids with frequent lapses if no validity concerns and they state they have goal of abstinence at monthly checkin
+v9 = final sample (N = 303) - dont remove subids with frequent lapses if no validity concerns and they state they have goal of abstinence at monthly checkin
+Also changes to one-hot coding
