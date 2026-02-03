@@ -13,7 +13,7 @@ params:
   
   study: "combined"
   model: "dyn_dem_oud" 
-  version: "v7"
+  version: "v8"
 editor_options: 
   chunk_output_type: console
 ---
@@ -47,33 +47,293 @@ pp_dem <- read_csv(here::here(path_models,
                               "pp_fairness_xgboost_contrast_full.csv"),
                    show_col_types = FALSE)
 
-preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v7_dyn_dem_oud.rds"))
+preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v8_dyn_dem_oud.rds"))
 
 
 shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
                                            version, "_", model, ".rds")))
 ```
 
+
+## Protocol Deviations
+
+We published this study's protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants. The registered report can be found at [https://www.researchprotocols.org/2021/12/e29563/](https://www.researchprotocols.org/2021/12/e29563/). For transparency, we documented changes made to the registered report below: 
+
+### Sensing Data Streams  
+Our candidate models included features derived from a subset of intake self-report measures, daily surveys, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by (1) our group's personal sensing work with alcohol use disorder, (2) technological constraints, and (3) the desire to balance feature diversity for capturing lapse complexity and minimizing participant burden and computational cost. 
+
+1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
+    
+2. We discontinued collecting daily video check-ins about 6 months into the 2.5 year data collection due to technical issues and App usage data (beyond the required study tasks) were generally sparse and inconsistent across participants. 
+
+3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to generally not include self-report measures. Intake and monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, we did include a subset of key demographic variables reported at intake (gender, race/ethnicity, income, sexual orientation, and geographic location). We selected these variables based on evidence of influencing OUD treatment access and clinical outcomes or carrying general societal stigma to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables.
+
+### Resampling Method
+Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was substantially lower (N = 299). To maximize data use, we used nested cross-validation (6 repeats of 5-fold cross-validation on the outer loop and 2 repeats of 5-fold cross-validation on the inner loop). This resampling method still removes optimization bias by separating model selection and evaluation. Specifically, nested cross-validation embeds an inner cross-validation loop for model selection within an outer cross-validation loop for model evaluation. This approach makes more efficient use of data in that each observation contributes to model training and model evaluation during the cross-validation process. Moreover, final estimates are averaged over 30 test sets leading to less variance in the estimate compared to a single test set. 
+
+
+
+## Daily Survey
+
+This survey asks about your recent drug use, medication assisted treatment, mood, and daily experiences. Several questions ask about using drugs "for non-medical reasons" which means using drugs to feel intoxicated or high. It is possible to use a drug you are prescribed for non-medical reasons, for example, by taking more than prescribed.
+
+1. Have you used any opioids for non-medical reasons that you have not yet reported?
+
+    - No 
+    - Yes 
+
+    Please select the time(s) that you have not yet reported when you used opioids for non-medical reasons: [Display if Q1 is Yes]
+
+    [TIME PICKER, MULTI-SELECT]
+
+
+
+Thinking about the past 24 hours…
+
+2. Which of these drugs have you used for non-medical reasons? Select all that apply.
+
+    - Alcohol
+    - Cannabis (marijuana, pot, grass, hash, K2, spice, etc.)
+    - Stimulants (cocaine, meth, speed, ecstasy, molly, Adderall, etc.)
+    - Inhalants (nitrous, glue, petrol, paint thinner, etc.)
+    - Sedatives or sleeping pills (Valium, Serepax, Rohypnol, etc.)
+    - Hallucinogens (LSD, acid, mushrooms, PCP, special K, etc.)
+    - None of the above
+
+
+3. Did you take your daily medication for opioid use (e.g., Suboxone, Methadone, Buprenorphine, etc.). as prescribed?
+
+    - Yes
+    - No, I missed a dose
+    - No, I am using a monthly medication (e.g., Vivitrol)
+    - No, I am no longer prescribed medication for opioid use
+
+
+Thinking about the past 24 hours…
+
+4. Think about the worst pain you experienced. How painful was it?
+
+    - No pain 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+5. Think about the greatest urge you had to use opioids. How strong was it?
+
+    - No urge
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+6. Think about the riskiest situation you experienced (people, places, or things that interfere with your recovery). How risky was it?
+
+    - No risky situation
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+7. Think of the biggest hassle or most stressful event you experienced. How stressful was it?
+
+    - No hassle/stressful event
+    - Mildly
+    - Moderately 
+    - Considerably
+    - Extremely
+
+8. Think of the most pleasant or positive event you experienced. How pleasant was it?
+
+    - No pleasant/positive event
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+
+Thinking about the past 24 hours…
+
+9. How did you sleep?
+
+    - Very badly
+    - Badly
+    - Neutral
+    - Well
+    - Very well
+
+10. How depressed have you felt?
+
+    - Not at all
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+11. How angry have you felt?
+
+    - Not at all
+    - Mildly
+    - Moderately 
+    - Considerably
+    - Extremely
+
+12. How anxious have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+13. How relaxed have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+14. How happy have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+Now thinking forward to the next week…
+
+15. How motivated are you to completely avoid using opioids for non-medical reasons?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+16. How confident are you in your ability to completely avoid using opioids for non-medical reasons?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+Thank you! You have now completed the daily update.
+
+
+## Monthly Geolocation Context Questions
+
+The next questions ask you about the places you have gone more than once or spent the night at in the past month.
+
+Our automated system has identified these places using the data you share with us. The system is not perfect; it may have identified places that you have not been. You will be able to tell us if the system has made an error.
+
+You visited the place shown below, near [*address*], several times in the past month. Recently, you visited this place on [*date*]. 
+
+[display on map]
+
+1. Which of the following best describes this place?
+
+    - My home [If selected, skip to end of survey]
+    - Someone else’s home
+    - A shelter, group home, hotel, or other temporary place I stayed [If selected, skip to end of survey] 
+    - A restaurant, business, public place, or other non-residential place  
+    - I do not recognize this location or was just passing by [If selected, skip to end of survey]
+
+2. What do you do at this place? Select all that apply.
+
+    – Work 
+    – Take classes 
+    – Religious or spiritual activities 
+    – Volunteer or do community service 
+    – Exercise or play sports 
+    – Spend time with friends 
+    – Spend time with family 
+    – Socialize with new people 
+    – Relax 
+    – Drink alcohol 
+    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group) 
+    - Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.) 
+    – Get physical health care 
+    – None of the above
+
+3. In general, how often is going to this place pleasant?
+
+    - Never 
+    - Rarely 
+    - Sometimes 
+    - Most of the time 
+    - Always
+
+4. In general, how often is going to this place unpleasant?
+
+    - Never 
+    - Rarely 
+    - Sometimes
+    - Most of the time 
+    - Always
+
+5. In general, how much does going to this place help your recovery from opioids?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+6. In general, how much does going to this place harm your recovery from opioids?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+## Data Exclusions
+
+A total of 334 participants were eligible, consented, and remained on study for at least one month. Of these we excluded 21 participants' data from our analyses for the following reasons:
+
+
+1. 7 participants were excluded due to evidence of careless responding on daily surveys. They all reported over 200 lapses while on study and had the highest number of duplicate lapse reports (accounting for 1177/1285 duplicate lapses). These subids also account for 62/66 lapses that started after the survey start time, but before survey complete time. This could mean they were stopping the survey to use opioids or could be potentially careless or inaccurate reporting. They also account for 64/107 missing lapse dates and times after responding yes to "Have you used any opioids for non-medical reasons that you have not yet reported?". A more precise description by participant is listed below.
+
+    - subid 1312 reported 1099 lapses over 359 days. Also reported 418 duplicate lapses not included in 1099 count. 
+
+    - subid 1427 reported 854 lapses over 364 days. Also reported 388 duplicate lapses not included in 854 count. They had 13 lapses that started after the survey start time (but before survey completion).
+
+    - subid 1132 reported 769 lapses over 360 days. Also reported 129 duplicate lapses not included in 769 count. They also had 27 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". They had 8 lapses that started after the survey start time (but before survey completion).
+
+    - subid 1216 reported 680 lapses over 401 days. Also reported 96 duplicate lapses not included in 680 count.
+
+    - subid 1172 reported 420 lapses over 367 days. Also reported 60 duplicates not included in 420 count. They also had 37 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". 
+
+    - subid 1379 reported 383 lapses over 265 days. They had 14 lapses that started after the survey start time (but before survey completion).
+
+    - subid 1101 reported 235 lapses over 144 days. Also reported 62 duplicate lapses not included in 235 count.
+
+
+2. 10 participants were excluded due to unusually low geolocation sensing adherence. 
+
+    - 3 participants had no gps data.
+
+    - 7 participants had fewer than 20 geolocation points per day on average.
+
+
+3. 14 participants were excluded due to insufficient context data for geolocation points. We required participants have at least two contextualized locations other than their home. 
+
+    - 2 participants had no context data for any locations
+
+    - 12 participants did not have at least 2 known locations outside their home. Many only had home address reported and we do not gather follow-up context information about the home.
+
+
+
+
+
 ## Supplemental Figures
 
-### Figure S1: Predicted Probabilities by True Outcome
-```{r}
-#| code-fold: true
-
-base_rate <- preds |> count(label) |> reframe(base_rate = n/nrow(preds)) |> slice_head(n = 1)
-
-preds |> 
-  ggplot() +
-  geom_histogram(aes(x = prob_raw), color = "black", 
-                 fill = "light grey", bins = 40) +
-  facet_wrap(~ label, ncol = 1, scales = "free_y") +
-  geom_vline(xintercept = base_rate$base_rate, color = "dark red") +
-  labs(x = "Raw (uncalibrated) predicted probabilties") +
-  theme_classic() 
-```
-
-
-### Figure S2: Global Feature Importance for all Feature Categories
+### Figure S1: Global Feature Importance for all Feature Categories
 
 ```{r}
 #| code-fold: true
@@ -144,7 +404,7 @@ global_panel_all + local_panel_all
 ```
 
 
-### Figure S3: Individual Shapley Plots for all Feature Categories
+### Figure S2: Individual Shapley Plots for all Feature Categories
 
 ```{r}
 #| label: fig-2
@@ -182,7 +442,10 @@ shaps|>
 
 ## Supplemental Tables
 
-### Table S1: Demographic Contrasts for all Models
+### Table S1: Simple k-fold Performance by Statistical Algorithm
+
+
+### Table S2: Demographic Contrasts for all Models
 
 ```{r}
 #| label: tbl-fairness
@@ -264,7 +527,6 @@ pp_sex |>
   kbl() |> 
   kable_classic()
 ```
-
 
 
 

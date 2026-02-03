@@ -196,9 +196,9 @@
   
 
 
-</header>     <div id="69bc16c0-1235-4091-a1d7-2d18dfd42216" class="cell markdown">
+</header>     <div id="7c0ad42f-0692-4819-9fe8-8c99925adefa" class="cell markdown">
 <p>Kendra Wyant<br>
-2025-12-27</p>
+2026-01-03</p>
 <section id="fairness" class="level3">
 <h3 class="anchored" data-anchor-id="fairness">Fairness</h3>
 </section>
@@ -223,8 +223,8 @@
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"below poverty"</span>,</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"small town/rural"</span>,</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"high school or less"</span>), </span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Disadvantaged (not male, Hispanic and/or not White, below poverty, small town/rural, high school or less)"</span>,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Advantaged (male, non-Hispanic White, above poverty, urban/suburban, some college)"</span>),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Disadvantaged (not male, Hispanic and/or not White, below poverty, rural, high school or less)"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Advantaged (male, non-Hispanic White, above poverty, urban, some college)"</span>),</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>         fairness <span class="op">=</span> factor(fairness),</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>         group <span class="op">=</span> factor(group, levels <span class="op">=</span> c(<span class="st">"Gender"</span>, <span class="st">"Race"</span>,</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"Income"</span>, <span class="st">"Geography"</span>, <span class="st">"Education"</span>))) <span class="op">|&gt;</span>  </span>
@@ -238,11 +238,10 @@
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>       color <span class="op">=</span> NULL) <span class="op">+</span></span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  theme(legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        legend.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">7</span>),</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  scale_color_manual(values <span class="op">=</span> c(<span class="st">"#240e31"</span>, <span class="st">"#046B52"</span>)) <span class="op">+</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  geom_hline(yintercept <span class="op">=</span> subset(pp_all, model <span class="op">==</span> <span class="st">"main"</span>)$pp_median, linetype <span class="op">=</span> <span class="st">"dashed"</span>,  color <span class="op">=</span> <span class="st">"grey"</span>) <span class="op">+</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>guides(color <span class="op">=</span> guide_legend(nrow <span class="op">=</span> <span class="dv">2</span>, byrow <span class="op">=</span> TRUE))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  scale_color_manual(values <span class="op">=</span> c(<span class="st">"#240e31"</span>, <span class="st">"#046B52"</span>)) <span class="op">+</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  geom_hline(yintercept <span class="op">=</span> subset(pp_all, model <span class="op">==</span> <span class="st">"main"</span>)$pp_median, linetype <span class="op">=</span> <span class="st">"dashed"</span>,  color <span class="op">=</span> <span class="st">"grey"</span>) <span class="op">+</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>guides(color <span class="op">=</span> guide_legend(nrow <span class="op">=</span> <span class="dv">2</span>, byrow <span class="op">=</span> TRUE))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-1" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -251,19 +250,19 @@
 <img src="mak_figures.embed_files/figure-html/fig-1-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban or surburban geographic location, and some college education) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, small town or rural geographic location, and high school education or less) are depicted in green. Overall model performance across groups is depicted as the dashed grey line.
+Figure&nbsp;1: Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban location, and some college education) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, rural location, and high school education or less) are depicted in green. Overall model performance across groups is depicted as the dashed grey line.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="93fbf974-1cd3-46cf-918c-66481bd22fdf" class="cell markdown">
+<div id="1211dd57-148f-4012-9555-7470b2bbe681" class="cell markdown">
 <section id="calibration" class="level3">
 <h3 class="anchored" data-anchor-id="calibration">Calibration</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-fig-2" class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>preds_all_raw <span class="op">|&gt;</span> </span>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-fig-2" class="cell" data-fig-width="8">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cal <span class="op">&lt;-</span> preds_all_raw <span class="op">|&gt;</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  bind_rows(preds_all_logi) <span class="op">|&gt;</span> </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  mutate(prob <span class="op">=</span> factor(prob, levels <span class="op">=</span> c(<span class="st">"Raw (uncalibrated)"</span>, </span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"Platt calibration"</span>))) <span class="op">|&gt;</span> </span>
@@ -292,15 +291,25 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  coord_cartesian(clip <span class="op">=</span> <span class="st">"off"</span>) <span class="op">+</span></span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  scale_color_manual(values <span class="op">=</span> c(<span class="st">"#240e31"</span>, <span class="st">"#046B52"</span>)) <span class="op">+</span></span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  scale_linetype_manual(values <span class="op">=</span> c(<span class="st">"solid"</span>, <span class="st">"twodash"</span>)) <span class="op">+</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  theme_classic(base_size <span class="op">=</span> <span class="dv">11</span>) <span class="op">+</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  theme(</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">11</span>),</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    legend.title <span class="op">=</span> element_text(face <span class="op">=</span> <span class="st">"bold"</span>),</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    legend.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">10</span>),</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    axis.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">10</span>),</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    axis.title <span class="op">=</span> element_text(face <span class="op">=</span> <span class="st">"bold"</span>)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  theme(axis.text<span class="op">=</span>element_text(size<span class="op">=</span><span class="fl">9.5</span>),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        legend.key.size <span class="op">=</span> unit(<span class="fl">0.25</span>, <span class="st">"cm"</span>),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        legend.position <span class="op">=</span> <span class="st">"bottom"</span>) </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>hist <span class="op">&lt;-</span> preds <span class="op">|&gt;</span> </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  ggplot() <span class="op">+</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  geom_histogram(aes(x <span class="op">=</span> prob_raw), color <span class="op">=</span> <span class="st">"black"</span>, </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                 fill <span class="op">=</span> <span class="st">"light grey"</span>, bins <span class="op">=</span> <span class="dv">40</span>) <span class="op">+</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> label, ncol <span class="op">=</span> <span class="dv">1</span>, scales <span class="op">=</span> <span class="st">"free_y"</span>) <span class="op">+</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  labs(x <span class="op">=</span> <span class="st">"Raw (uncalibrated) probabilties"</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>       y <span class="op">=</span> NULL) <span class="op">+</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  theme(axis.text<span class="op">=</span>element_text(size<span class="op">=</span><span class="fl">9.5</span>),</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>))</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>cal <span class="op">+</span> hist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -308,19 +317,19 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 <img src="mak_figures.embed_files/figure-html/fig-2-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Calibration plots of raw and calibrated lapse probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as dark purple lines Platt calibrated probabilities are depicted as green dashed lines.
+Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plot along the x-axis depicts observation frequency in each bin. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="91f933df-ebf6-4593-a8c4-df34e165fb04" class="cell markdown">
+<div id="3052a38c-6254-4be1-bdaa-93ec1ed7e7a3" class="cell markdown">
 <section id="feature-importance" class="level3">
 <h3 class="anchored" data-anchor-id="feature-importance">Feature Importance</h3>
 <p>top 30</p>
 </section>
 </div>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="4473abee-49d3-41d3-95fd-b7b108117334" class="cell">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="c84d01ca-9b2f-4138-8c43-01f7cca97306" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
@@ -395,98 +404,36 @@ Figure&nbsp;3
 </div>
 </div>
 </div></div>
-<div id="0565afdb-a9b6-4680-a9e5-db34574f8bac" class="cell markdown">
-<p>Supplemental figure with all feature groups</p>
-</div>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="91f3ce25-c0c0-4429-ab4e-07750435d255" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>shap_levels_all <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  arrange(mean_value) <span class="op">|&gt;</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>global_panel_all <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span> </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels_all)) <span class="op">|&gt;</span> </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  ggplot(mapping <span class="op">=</span> aes(x <span class="op">=</span> variable_grp, y <span class="op">=</span> mean_value)) <span class="op">+</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  geom_bar(fill <span class="op">=</span> <span class="st">"#240e31"</span>, </span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>           stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span>) <span class="op">+</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  labs(y <span class="op">=</span> <span class="st">"Mean(|Shapley Value|)"</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>       x <span class="op">=</span> NULL,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>       fill <span class="op">=</span> NULL) <span class="op">+</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  theme(axis.text<span class="op">=</span>element_text(size<span class="op">=</span><span class="fl">9.5</span>),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        legend.key.size <span class="op">=</span> unit(<span class="fl">0.25</span>, <span class="st">"cm"</span>),</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>),</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        legend.position <span class="op">=</span> <span class="st">"right"</span>) <span class="op">+</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  coord_flip()</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>local_panel_all <span class="op">&lt;-</span> shaps_day_max <span class="op">|&gt;</span> </span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  right_join(shaps <span class="op">|&gt;</span> ungroup() <span class="op">|&gt;</span> select(variable_grp) <span class="op">|&gt;</span> distinct(), </span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>             by <span class="op">=</span> <span class="st">"variable_grp"</span>) <span class="op">|&gt;</span> </span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  mutate(prop <span class="op">=</span> if_else(<span class="kw">is</span>.na(prop), <span class="dv">0</span>, prop)) <span class="op">|&gt;</span> </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels_all)) <span class="op">|&gt;</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  ggplot(mapping <span class="op">=</span> aes(x <span class="op">=</span> variable_grp, y <span class="op">=</span> prop)) <span class="op">+</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  geom_bar(fill <span class="op">=</span> <span class="st">"#046B52"</span>, </span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>           stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span>) <span class="op">+</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  labs(y <span class="op">=</span> <span class="st">"Proportion of days as top feature"</span>,</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>       x <span class="op">=</span> NULL,</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>       fill <span class="op">=</span> NULL) <span class="op">+</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  theme(axis.text<span class="op">=</span>element_text(size<span class="op">=</span><span class="fl">9.5</span>),</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        axis.text.y <span class="op">=</span> element_blank(),</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        axis.ticks.y <span class="op">=</span> element_blank(),</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        legend.key.size <span class="op">=</span> unit(<span class="fl">0.25</span>, <span class="st">"cm"</span>),</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>),</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        legend.position <span class="op">=</span> <span class="st">"right"</span>) <span class="op">+</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  coord_flip()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="2b4e0bd7-be3e-427a-8f08-d22ea64d10a1" class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div class="">
-<figure class="figure">
-<p class=""><img src="mak_figures.embed_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div></div>
-<div id="746908e9-9751-4993-bbba-d49fef0e198c" class="cell markdown">
+<div id="b39358a0-4001-444e-9966-fc272cb1e329" class="cell markdown">
 <p>Individual Shapley plots (about 90 categories total)</p>
 </div>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-fig-4" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-fig-4" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  arrange(desc(mean_value)) <span class="op">|&gt;</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  slice_head(n <span class="op">=</span> <span class="dv">30</span>) <span class="op">|&gt;</span> </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">10</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">5</span>) <span class="op">+</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  labs(</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Top 30 SHAP Variable Relationships"</span>,</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  theme(</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">8</span>),</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    plot.title <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  arrange(desc(mean_value)) <span class="op">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  slice_head(n <span class="op">=</span> <span class="dv">30</span>) <span class="op">|&gt;</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">5</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">5</span>) <span class="op">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  labs(</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Top 30 SHAP Variable Relationships"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  theme(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">8</span>),</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    plot.title <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -501,36 +448,37 @@ Figure&nbsp;4: Feature importance partial dependence plots.
 </div>
 </div>
 </div></div>
-<div id="99ec3759-c014-4de7-8817-4641102bc63c" class="cell markdown">
+<div id="6cbb519e-d349-410c-b7a8-ce79733c513e" class="cell markdown">
 <p>Individual Shapley plots by raw and diff</p>
 </div>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-fig-5" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-fig-5" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(str_detect(variable_grp, <span class="st">"Raw"</span>) <span class="op">|</span> str_detect(variable_grp, <span class="st">"demographic"</span>)) <span class="op">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  arrange(desc(mean_value)) <span class="op">|&gt;</span> </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">5</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">5</span>) <span class="op">+</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  labs(</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Raw SHAP Variable Relationships"</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  theme(</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">8</span>),</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    plot.title <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  arrange(desc(mean_value)) <span class="op">|&gt;</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  slice_head(n <span class="op">=</span> <span class="dv">30</span>) <span class="op">|&gt;</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(str_detect(variable_grp, <span class="st">"Raw"</span>) <span class="op">|</span> str_detect(variable_grp, <span class="st">"demographic"</span>)) <span class="op">|&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">5</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">5</span>) <span class="op">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  labs(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Raw SHAP Variable Relationships"</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  theme(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">8</span>),</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    plot.title <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-5" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -545,33 +493,34 @@ Figure&nbsp;5: Raw feature importance partial dependence plots.
 </div>
 </div>
 </div></div>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-fig-6" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-fig-6" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(str_detect(variable_grp, <span class="st">"Diff"</span>)) <span class="op">|&gt;</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  arrange(desc(mean_value)) <span class="op">|&gt;</span> </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">5</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">5</span>) <span class="op">+</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  labs(</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Difference SHAP Variable Relationships"</span>,</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  theme(</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">8</span>),</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    plot.title <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>)</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="op">&lt;-</span> shaps <span class="op">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  group_by(variable_grp) <span class="op">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  summarize(mean_value <span class="op">=</span> mean(<span class="bu">abs</span>(value)), .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  arrange(desc(mean_value)) <span class="op">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  slice_head(n <span class="op">=</span> <span class="dv">30</span>) <span class="op">|&gt;</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(str_detect(variable_grp, <span class="st">"Diff"</span>)) <span class="op">|&gt;</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">5</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">5</span>) <span class="op">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  labs(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Difference SHAP Variable Relationships"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  theme(</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    strip.text <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">8</span>),</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    plot.title <span class="op">=</span> element_text(size <span class="op">=</span> <span class="dv">14</span>, face <span class="op">=</span> <span class="st">"bold"</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-6" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -585,153 +534,6 @@ Figure&nbsp;6: Difference feature importance partial dependence plots.
 </figure>
 </div>
 </div>
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="35693379-0f5a-4897-8a78-ea820433b793" class="cell raw">
-<!-- ## Tune GAM line -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="8a0f47d7-7f5e-44d4-a4be-1641183871e1" class="cell raw">
-<!-- - Thin Plate Regression Splines (bs = "tp") is default and usually best for continuous predictors. -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="5c653c60-22e8-475e-b536-db63acba911f" class="cell raw">
-<!-- - Rule of thumb: k = min(20, length(unique(x))/4). -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="f3f7d000-b7a6-4fc3-afc6-b7b7089c4af1" class="cell raw">
-<!-- ```{r} -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="047700e5-bf7a-4b7d-87a8-4cacd0a9e033" class="cell raw">
-<!-- min(20, length(unique(subset(shaps, variable_grp == "Urge, Raw (EMA)")$rfvalue))/4) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [21]:</pre></div><div id="cf42cbdd-436a-4f4f-8969-61e9c20bd21f" class="cell raw">
-<!-- shaps|> -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [22]:</pre></div><div id="6cd06706-eda9-41d9-86d6-a37c9f4b03ab" class="cell raw">
-<!--   filter(variable_grp == "Urge, Raw (EMA)") |> -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [23]:</pre></div><div id="34653f2d-ff52-43e4-a196-0f4d40daacc9" class="cell raw">
-<!--   ggplot(aes(x = rfvalue, y = value)) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [24]:</pre></div><div id="d9fe1e78-3fb9-4b0f-a0c8-3f57938f40ca" class="cell raw">
-<!--   geom_point(alpha = .3) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [25]:</pre></div><div id="03943aff-aa0c-4bcc-a3cc-a1da1aaa526c" class="cell raw">
-<!--   geom_smooth(method = "gam", formula = y ~ s(x, k = 20, bs = "cs"), se = FALSE) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [26]:</pre></div><div id="6916d91e-886f-4a89-9809-205efb2a8c76" class="cell raw">
-<!--   labs( -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [27]:</pre></div><div id="8588e7cd-8f7a-448d-8086-2c23ee36a58d" class="cell raw">
-<!--     x = "z-score raw feature score", -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [28]:</pre></div><div id="2e0e7e2e-8d93-438b-a9d2-f481f2b0d242" class="cell raw">
-<!--     y = "Shapley value" -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [29]:</pre></div><div id="ba81b3e0-6b66-4a15-a30c-8c8b151a70bd" class="cell raw">
-<!--   ) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [30]:</pre></div><div id="ececcb90-647c-4f83-b058-a3d77c5c6734" class="cell raw">
-<!--   theme_classic()  -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [31]:</pre></div><div id="7a31e67b-8814-42fb-92cf-2464c52ab2b9" class="cell raw">
-<!-- ``` -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [32]:</pre></div><div id="4038a6fa-ac29-4c6e-b7c2-a197c2da4938" class="cell raw">
-<!-- ```{r} -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [33]:</pre></div><div id="07b6305e-3244-4b25-bb4f-2ab9da797026" class="cell raw">
-<!-- shaps|> -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [34]:</pre></div><div id="c8fb9261-63a4-476c-a017-f9c1f7258821" class="cell raw">
-<!--   filter(variable_grp == "past_month_opioid_use_yes") |> -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [35]:</pre></div><div id="c6ba852b-6605-42dc-b276-fa82e266aed8" class="cell raw">
-<!--   ggplot(aes(x = rfvalue, y = value)) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [36]:</pre></div><div id="eb735e64-9a7b-41d1-a829-94f8412bb2b8" class="cell raw">
-<!--   geom_point(alpha = .3) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [37]:</pre></div><div id="0a692a12-59ca-4fdb-92d1-a6d89caa8d2c" class="cell raw">
-<!--   geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [38]:</pre></div><div id="6c756ade-f64d-41bd-b5da-ebbee08acc29" class="cell raw">
-<!--   labs( -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [39]:</pre></div><div id="44b09c07-246e-40da-ac83-d59d86afaf09" class="cell raw">
-<!--     x = "z-score raw feature score", -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [40]:</pre></div><div id="0b50ac99-3127-4df4-ae83-9b000aa2ea1a" class="cell raw">
-<!--     y = "Shapley value" -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [41]:</pre></div><div id="ec6285d1-a80e-4761-9d5d-f549c42beabc" class="cell raw">
-<!--   ) + -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [42]:</pre></div><div id="67ad8a42-51d1-4fc5-a400-40187b3640fd" class="cell raw">
-<!--   theme_classic()  -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [43]:</pre></div><div id="5617024a-b884-47d7-bd2d-e1c7ae1001da" class="cell raw">
-<!-- ``` -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [44]:</pre></div><div id="16112b36-0028-4fa5-8bd0-57ec68d4ac72" class="cell raw">
-<!-- ```{r} -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [45]:</pre></div><div id="df75c500-90fd-400a-bad9-7712c5c0daec" class="cell raw">
-<!-- library(mgcv) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [46]:</pre></div><div id="b732e4ee-3678-41ed-8db8-2ce3283e1e8e" class="cell raw">
-<!-- df <- shaps|> -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [47]:</pre></div><div id="bcc6164f-b64b-4935-914f-1989274eb285" class="cell raw">
-<!--   filter(variable_grp == "Urge, Raw (EMA)")  -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [48]:</pre></div><div id="de7f6194-35e1-40a6-af9d-74bc8bd5373e" class="cell raw">
-<!-- # Quick sanity checks -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [49]:</pre></div><div id="c2d4978c-dd3e-4a08-9bbc-fc43155447b3" class="cell raw">
-<!-- summary(df$rfvalue) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [50]:</pre></div><div id="5b3c5e89-92d7-42f8-8d37-ed03324f2e31" class="cell raw">
-<!-- summary(df$value) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [51]:</pre></div><div id="3db260b8-ce90-4600-9d45-789eeff41292" class="cell raw">
-<!-- sum(is.na(df$rfvalue) | is.na(df$value)) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [52]:</pre></div><div id="39118fd2-5db2-42ca-b48b-cd3031427277" class="cell raw">
-<!-- # Baseline: thin plate regression spline, REML smoothing selection -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [53]:</pre></div><div id="8ed6483b-d1fc-4c6b-9582-c9d485019a30" class="cell raw">
-<!-- m1 <- gam( -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [54]:</pre></div><div id="483a09e6-7991-4c96-a855-5b280d13c3ac" class="cell raw">
-<!--   value ~ s(rfvalue, bs = "tp", k = 200),   -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [55]:</pre></div><div id="edd8b8ee-5d62-4f6b-b5af-77127143d099" class="cell raw">
-<!--   data = df, -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [56]:</pre></div><div id="2480f357-ac76-4169-8800-99145a725584" class="cell raw">
-<!--   method = "REML", -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [57]:</pre></div><div id="2b1d1c46-2016-4490-8d73-5c843bf72e32" class="cell raw">
-<!--   select = TRUE,  # enable shrinkage: removes unnecessary wiggles -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [58]:</pre></div><div id="8cdd3432-88a7-4e05-af78-e6df0267c0cd" class="cell raw">
-<!--   gamma = 1.3     # extra penalty discourages overfitting; try 1.2–1.6 -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [59]:</pre></div><div id="f73d55d2-2c39-455d-876f-b63dd18d3488" class="cell raw">
-<!-- ) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [60]:</pre></div><div id="7f43f8c4-b6aa-415b-acff-74d6a78bbeab" class="cell raw">
-<!-- summary(m1) -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [61]:</pre></div><div id="3a7a6ed7-0f5d-46a7-8af8-fc23d919911b" class="cell raw">
-<!-- gam.check(m1)   # checks k adequacy & residuals -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [62]:</pre></div><div id="b10de0f1-4cf3-44a3-970a-6738a76f817f" class="cell raw">
-<!-- ``` -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [63]:</pre></div><div id="64eea5dd-03bb-4c3f-a2e1-4fb548cd4686" class="cell raw">
-<!-- summary(m1): Look at edf (effective degrees of freedom) for s(x) → if edf is close to 1, trend is nearly linear; higher edf means more curvature. -->
-</div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [64]:</pre></div><div id="e9f1e64d-7919-4049-9a46-3136aeb44977" class="cell raw">
-<!-- gam.check(m1): If the k-index is < ~1.05 with small p‑value, k may be too small → increase k (e.g., 30–40). If diagnostics look fine but the curve is too wiggly, either reduce k or increase gamma. -->
 </div></div>
      </main>
 <!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">

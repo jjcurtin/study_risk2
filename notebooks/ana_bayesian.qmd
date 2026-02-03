@@ -27,13 +27,13 @@ path_models <- format_path(str_c("risk2/models/combined"))
 
 ```{r}
 test_metrics_main <- read_csv(here::here(path_models, 
-                                    "best_config_xgboost_v7_kfold_dyn_dem_oud.csv"), 
+                                    "best_config_xgboost_v8_kfold_dyn_dem_oud.csv"), 
                               show_col_types = FALSE) |> 
   select(split_num, "main" = roc_auc) |> 
   arrange(split_num)
 
 test_metrics_baseline <- read_csv(here::here(path_models, 
-                                    "best_config_xgboost_v1_kfold_baseline.csv"), 
+                                    "best_config_xgboost_v8_kfold_dem_oud.csv"), 
                               show_col_types = FALSE) |> 
   select(split_num, "baseline" = roc_auc) |> 
   arrange(split_num)
@@ -80,10 +80,10 @@ pp_perf_tibble <- pp_tidy |>
   arrange(model) 
 
 pp_perf_tibble |> 
-  write_csv(here::here(path_models, "pp_perf_tibble_xgboost_v7.csv"))
+  write_csv(here::here(path_models, "pp_perf_tibble_xgboost_v8.csv"))
 
 pp_tidy |> 
-  write_csv(here::here(path_models, "posteriors_xgboost_v7.csv"))
+  write_csv(here::here(path_models, "posteriors_xgboost_v8.csv"))
 
 pp_perf_tibble
 ```

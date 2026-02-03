@@ -111,6 +111,7 @@ dem_race <- intake |>
   add_row(var = "Race and Ethnicity (select all that apply)", .before = 1)
 
 dem_geography <- location |> 
+  mutate(geography = if_else(geography == "urban/suburban", "urban", "rural")) |> 
   select(var = geography) |>
   group_by(var) |>
   summarise(n = n()) |>

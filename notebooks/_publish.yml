@@ -2,3 +2,7 @@
   quarto-pub:
     - id: f6132bf9-e5b3-45db-9d9b-4edbda54852d
       url: https://kendra-wyant.quarto.pub/make-figures-b045
+- source: supplement.qmd
+  quarto-pub:
+    - id: 42ef9e56-5c90-44e8-856b-e4faf9366147
+      url: https://kendra-wyant.quarto.pub/supplemental-material-f41f
