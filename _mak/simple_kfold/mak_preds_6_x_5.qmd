@@ -11,7 +11,7 @@ format:
     embed-resources: true
 params:
   study: "combined"
-  version: "v7"
+  version: "v8"
   cv: "kfold"
   algorithm: "xgboost"
   model: "dyn_dem_oud" # all or raw - UPDATE FILTER IF FITTING RAW
@@ -641,29 +641,29 @@ shaps_out_grp <- shaps_out |>
                                 "Day (label)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable, "med_"),
-                                "MOUD efficacy, Raw (baseline)",
+                                "MOUD efficacy (baseline)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable, "od_hx"),
-                                "Overdose history, Raw (baseline)",
+                                "Overdose history (baseline)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable, "preferred_opioid"),
-                                "Preferred opioid, Raw (baseline)",
+                                "Preferred opioid (baseline)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable, "preferred_roa"),
-                                "Preferred ROA, Raw (baseline)",
+                                "Preferred ROA (baseline)",
                                 variable_grp)) |> 
   # rename other baseline features
   mutate(variable_grp = case_match(variable_grp,
-                                  "counseling_freq" ~ "Counseling frequency, Raw (baseline)",
-                                  "self_help_meetings_freq" ~ "Self-help meeting frequency, Raw (baseline)",
-                                  "dsm_c"  ~ "DSM-5 OUD symptom count, Raw (baseline)",
-                                  "past_month_opioid_use_yes" ~ "Past month opioid use, Raw (baseline)",
-                                  "past_month_detox_or_residential_Yes" ~ "Past month residential treatment, Raw (baseline)",
-                                  "past_month_psych_med_yes" ~ "Past month psychiatric medication, Raw (baseline)",
-                                  "recovery_1_satisfaction" ~ "Recovery satisfaction, Raw (baseline)",
-                                  "recovery_2_motivation" ~ "Recovery motivation, Raw (baseline)",
-                                  "recovery_3_confidence" ~ "Recovery confidence, Raw (baseline)",
-                                  "recovery_4_avoid_other_drugs_Yes" ~ "Avoiding other drugs, Raw (baseline)",
+                                  "counseling_freq" ~ "Counseling frequency (baseline)",
+                                  "self_help_meetings_freq" ~ "Self-help meeting frequency (baseline)",
+                                  "dsm_c"  ~ "DSM-5 OUD symptom count (baseline)",
+                                  "past_month_opioid_use_yes" ~ "Past month opioid use (baseline)",
+                                  "past_month_detox_or_residential_Yes" ~ "Past month residential treatment (baseline)",
+                                  "past_month_psych_med_yes" ~ "Past month psychiatric medication (baseline)",
+                                  "recovery_1_satisfaction" ~ "Recovery satisfaction (baseline)",
+                                  "recovery_2_motivation" ~ "Recovery motivation (baseline)",
+                                  "recovery_3_confidence" ~ "Recovery confidence (baseline)",
+                                  "recovery_4_avoid_other_drugs_Yes" ~ "Avoiding other drugs (baseline)",
                                   
                                   .default = variable_grp),
          variable_grp = factor(variable_grp)) |> 
