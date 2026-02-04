@@ -44,15 +44,91 @@ contact_log <- read_csv(here::here(path_shared, "contact_log.csv"),
 
 ### On study
 
-Defined as at least 1 ema in first and in second week on study
-
+405 have at least one ema
 ```{r}
-ema <- read_csv(here::here(path_shared, "survey_daily.csv"),
-                        show_col_types = FALSE) 
+ema <- read_csv(here::here(path_shared, "survey_daily.csv"), 
+                show_col_types = FALSE)
 
 
 length(unique(ema$subid))
 ```
+
+**On study is defined as at least 1 ema in first and in second week on study**
+
+398 completed an EMA in first week
+
+**367** completed an EMA in first and second week
+
+```{r}
+ema_start <- contact_log |> 
+  select(subid, onboarding) |> 
+  right_join(ema, by = "subid")
+
+sub_first_week <- ema_start |> 
+  filter(start_date < (onboarding + days(7))) |> 
+  count(subid) 
+  
+nrow(sub_first_week)
+
+sub_sec_week <- ema_start |> 
+  filter(subid %in% sub_first_week$subid) |> 
+  filter(start_date >= (onboarding + days(7)) & start_date <= (onboarding + days(14))) |> 
+  count(subid) 
+
+nrow(sub_sec_week)
+```
+
+
+Check we didn't exclude any people retained in EMA study sample
+```{r}
+study_dates <- read_csv(here::here(path_shared, "study_dates_ema.csv"),
+                        show_col_types = FALSE)
+
+(excluded_sub <- study_dates |> 
+  filter(!subid %in% sub_sec_week$subid))
+```
+
+Count how many surveys they had over first 4 weeks
+```{r}
+ema_start |> 
+  filter(subid %in% excluded_sub$subid) |> 
+  filter(start_date <= (onboarding + days(28))) |> 
+  count(subid) 
+
+contact_log |> 
+  filter(subid %in% excluded_sub$subid) |> 
+  left_join(study_dates, by = "subid") |> 
+  select(subid, onboarding, study_start)
+
+ema_start |> 
+  filter(subid %in% excluded_sub$subid) |> 
+  group_by(subid) |> 
+  arrange(start_date) |> 
+  slice_head(n = 1) |> 
+  left_join(study_dates, by = "subid") |> 
+  select(subid, study_start, ema_start = start_date)
+
+# 4/10 completed one in first week
+ema_start |> 
+  filter(subid %in% excluded_sub$subid) |> 
+  filter(start_date <= (onboarding + days(7))) |> 
+  count(subid) 
+
+# 5/10 had one in second week
+ema_start |> 
+  filter(subid %in% excluded_sub$subid) |> 
+  filter(start_date >= (onboarding + days(7)) & start_date <= (onboarding + days(14))) |> 
+  count(subid) 
+
+ema_start |> 
+  filter(subid %in% excluded_sub$subid) |> 
+  count(subid) |> 
+  left_join(study_dates, by = "subid")
+```
+
+
+
+
 
 
 

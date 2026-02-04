@@ -296,6 +296,7 @@ metrics_test |>
 
 median(metrics_test$roc_auc) 
 mean(metrics_test$roc_auc) 
+hist(metrics_test$roc_auc) 
 ```
 
 
