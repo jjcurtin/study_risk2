@@ -1,0 +1,103 @@
+---
+title: "disposition"
+author: "Kendra wyant"
+date: "`r lubridate::today()`"
+format: 
+  html:
+    toc: true 
+    toc_depth: 4
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Setup
+```{r}
+#| include: false
+
+options(conflicts.policy = "depends.ok")
+library(tidyverse) 
+library(lubridate)
+library(skimr)
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+theme_set(theme_classic())
+options(dplyr.print_max=Inf)
+
+path_shared <- format_path("risk2/data_processed/shared")
+```
+
+## Read in data
+
+```{r}
+contact_log <- read_csv(here::here(path_shared, "contact_log.csv"),
+                        show_col_types = FALSE) |> 
+  # filter out no shows
+  filter(!is.na(consent)) |> 
+  glimpse()
+```
+
+### screened 420 participants
+
+
+**Missing data/noncompliance with study procedures**
+
+If one or more of the following conditions is met, participants will be withdrawn from the study with no option of re-enrolling (unless they have been incarcerated or enrolled in inpatient treatment).
+
+- < 20 complete daily updates in any four-week period; > 2 missing lapse questions among completed daily updates in the same period.
+
+- Failing to complete a total of three monthly updates.
+
+- Failing to provide location data consistently by disabling location sharing for more than 12 hours in a four-week period.
+
+### Lost 86 before month 1
+```{r}
+contact_log <- contact_log |> 
+  mutate(excluded = if_else(subid == 1243 | subid == 1245, "excluded", excluded))
+  
+contact_log |>  
+  filter(excluded == "excluded") |> nrow()
+```
+
+```{r}
+contact_log <- contact_log |> 
+  mutate(days_on_study = as.numeric(mdy(study_termination) - mdy(onboarding)))
+```
+
+```{r}
+ema <- read_csv(here::here(path_shared, "survey_daily.csv"),
+                show_col_types = FALSE)
+
+
+ema_count <- ema |> 
+  group_by(subid) |> 
+  count() |> 
+  rename(ema_n = n)
+
+contact_log <- contact_log |> 
+  left_join(ema_count, by = "subid")
+```
+
+#### 13 never enrolled officially after onboarding
+
+- 4 never installed app
+- no notes on other 9
+
+
+```{r}
+contact_log |> 
+  filter(disposition == "never enrolled") |> 
+  view()
+```
+
+#### 28 were withdrawn or discontinued before 
+
+
+```{r}
+contact_log |>  
+  filter(excluded == "excluded" & disposition != "never enrolled" & days_on_study <= 31) |> view()
+```
+
+
+#### 334 made it to month 1

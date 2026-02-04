@@ -11,7 +11,7 @@ window <- "day"
 lead <- 0
 version <- "v9"
 algorithm <- "xgboost"
-batch <- "full"
+batch <- "ablate_both"
 
 
 configs_per_job <- 10  # number of model configurations that will be fit/evaluated within each CHTC
@@ -36,10 +36,10 @@ y_level_neg <- "No lapse"
 
 
 # CV SETTINGS------
-cv_resample_type <- "kfold" # can be boot, kfold, or nested
-cv_resample = "6_x_5" # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
-cv_inner_resample <- NULL # can also be a single number for bootstrapping (i.e., 100)
-cv_outer_resample <- NULL # outer resample will always be kfold
+cv_resample_type <- "nested" # can be boot, kfold, or nested
+cv_resample = NULL # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
+cv_inner_resample <- "1_x_5" # can also be a single number for bootstrapping (i.e., 100)
+cv_outer_resample <- "6_x_5" # outer resample will always be kfold
 cv_group <- "subid" # set to NULL if not grouping
 cv_strat <- TRUE # set to FALSE if not stratifying - If TRUE you must have a strat variable in your data
 # IMPORTANT - NEED TO REMOVE STRATIFY VARIABLE FROM DATA IN RECIPE - See Recipe below for example code
@@ -90,7 +90,7 @@ username <- "kpaquette2"
 stage_data = FALSE
 max_idle <- 1000
 request_cpus <- 1
-request_memory <- "90000MB"
+request_memory <- "15000MB"
 request_disk <- "3000MB"
 want_campus_pools <- TRUE # previously flock
 want_ospool <- TRUE # previously glide
