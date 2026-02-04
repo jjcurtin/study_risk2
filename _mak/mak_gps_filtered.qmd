@@ -66,7 +66,7 @@ gps <- gps |>
 Average pointes
 ```{r}
 gps_counts <- gps |> 
-  mutate(date = date( dttm_obs)) |> 
+  mutate(date = date(time)) |> 
   group_by(subid, date) |> 
   count() |> 
   group_by(subid) |> 
@@ -76,7 +76,7 @@ gps_counts |>
   summarise(mean_mean = mean(mean),
             min = min(mean),
             max = max(mean))
-
+```
 
 
 ## Save GPS  
