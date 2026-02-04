@@ -52,6 +52,29 @@ preds_all_raw <- probs |>
 
 # Introduction
 
+Opioid use disorder
+- Prevalence
+- harms
+- cost
+- When also accounting for costs associated with loss of life and reduced quality of life, one research group estimated that in 2017 the cost of opioid use disorder alone exceeded $1 trillion (Florence et al., 2021).
+
+MOUD is efficacious.
+
+Lapses are still frequent even with MOUD maintenance and put individual at high risk of relapse and overdose.
+
+Relapse prevention constructs from literature associated with opioid lapse 
+- pain [@pappRealtimeAssociationsYoung2020]
+
+Map onto EMA and GPS sensing features
+
+Prior related work 
+
+Importance of predicting when and why someone is at risk 
+
+
+Aims of study
+
+
 
 # Methods
 

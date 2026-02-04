@@ -30,6 +30,8 @@ path_shared <- format_path("risk2/data_processed/shared")
 
 ## Read in data
 
+
+### screened/consented 420 participants
 ```{r}
 contact_log <- read_csv(here::here(path_shared, "contact_log.csv"),
                         show_col_types = FALSE) |> 
@@ -38,7 +40,23 @@ contact_log <- read_csv(here::here(path_shared, "contact_log.csv"),
   glimpse()
 ```
 
-### screened 420 participants
+
+
+### On study
+
+Defined as at least 1 ema in first and in second week on study
+
+```{r}
+ema <- read_csv(here::here(path_shared, "survey_daily.csv"),
+                        show_col_types = FALSE) 
+
+
+length(unique(ema$subid))
+```
+
+
+
+
 
 
 **Missing data/noncompliance with study procedures**
