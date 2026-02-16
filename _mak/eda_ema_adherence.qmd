@@ -1,0 +1,156 @@
+---
+title: "EMA Adherence EDA"
+author: "Kendra wyant"
+date: "`r lubridate::today()`"
+format: 
+  html:
+    toc: true 
+    toc_depth: 4
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Setup
+```{r}
+#| include: false
+
+options(conflicts.policy = "depends.ok")
+library(tidyverse) 
+library(lubridate)
+library(skimr)
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+theme_set(theme_classic())
+options(dplyr.print_max=Inf)
+
+path_shared <- format_path("risk2/data_processed/shared")
+```
+
+## Read in data
+
+
+```{r}
+#| code-fold: true
+
+ema <- read_csv(here::here(path_shared, "survey_daily.csv"), 
+                show_col_types = FALSE) |> 
+  mutate(start_date = with_tz(start_date,tzone = "America/Chicago"))
+
+study_dates <- read_csv(here::here(path_shared, "study_dates_ema.csv"), 
+                show_col_types = FALSE)
+  
+length(unique(ema$subid))
+```
+
+
+
+## Create days on study tibble
+
+End 28 days before study end date
+
+Get all study days for each subid
+```{r}
+# function to map over
+get_study_days <- function(the_subid, dates) {
+  study_start <- dates |>  
+    filter(subid == the_subid) |>  
+    pull(study_start)
+  study_end <- dates |>  
+    filter(subid == the_subid) |> 
+    mutate(ema_end = date(ema_end),
+           study_end = pmin(study_end, ema_end, na.rm = TRUE)) |> 
+    pull(study_end)
+  study_days <- tibble(subid = the_subid, 
+                       study_day = seq(study_start, 
+                                       study_end - days(28), 
+                                       by = "day")) 
+  return(study_days)
+}
+
+sub_days <- study_dates$subid |> 
+  map_dfr(~get_study_days(.x, study_dates))
+```
+
+Count EMAs per day with maximum value 1
+```{r}
+ema <- ema |> 
+  mutate(date = date(start_date)) |> 
+  group_by(subid, date) |> 
+  count() |> 
+  mutate(n = if_else(n > 1, 1, n)) |> 
+  ungroup() 
+```
+
+
+Calculate number of EMAs in next 28 days for each subid and study_day in sub_days
+```{r}
+ema_count <- sub_days |> 
+  left_join(ema |> 
+              rename(survey_day = date), 
+            by = "subid",
+            relationship = "many-to-many") |> 
+  filter(is.na(survey_day) | (survey_day > study_day & 
+                                survey_day <= study_day + 28)) |> 
+  group_by(subid, study_day) |> 
+  summarise(n_surveys = sum(!is.na(survey_day)),
+            .groups = "drop")
+```
+
+
+Add 28-day periods with 0 EMAs back in 
+```{r}
+ema_count <- ema_count |> 
+  right_join(sub_days, by = c("subid", "study_day")) |> 
+  mutate(n_surveys = if_else(is.na(n_surveys), 
+                                   0, 
+                                   n_surveys)) |> 
+  arrange(subid, study_day)
+```
+
+
+Calculate adherence for 28 day windows
+```{r}
+ema_count <- ema_count |> 
+  mutate(n_prompts = 28,
+         adherence = n_surveys/n_prompts)
+```
+
+
+Add day number indicator
+```{r}
+ema_count <- ema_count |> 
+  group_by(subid) |> 
+  mutate(day_num = row_number()) |> 
+  ungroup()
+```
+
+
+
+Plot next 28-day adherence 
+
+```{r}
+subids <- unique(ema_count$subid)
+
+# split into groups of 5
+subid_groups <- split(subids, ceiling(seq_along(subids) / 5))
+
+map(subid_groups, function(ids) {
+  ema_count |>
+    filter(subid %in% ids) |>
+    ggplot(aes(x = day_num, y = adherence,
+               group = subid, color = factor(subid))) +
+    geom_line() +
+    scale_x_continuous(breaks = seq(0, 364, 28), limits = c(0, 372)) +
+    scale_y_continuous(breaks = c(.25, .5, .75, 1.0), limits = c(0, 1)) +
+    scale_color_manual(values = c("#0000F5", "#3BDFF5",
+                                  "#43DE49", "#DE43C7",
+                                  "#F59F3B")) +
+    labs(color = NULL) +
+    theme_classic()
+})
+```
+
+
+

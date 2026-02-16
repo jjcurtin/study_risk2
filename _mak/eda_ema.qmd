@@ -1,5 +1,5 @@
 ---
-title: "disposition"
+title: "EMA EDA"
 author: "Kendra wyant"
 date: "`r lubridate::today()`"
 format: 
@@ -35,7 +35,8 @@ path_shared <- format_path("risk2/data_processed/shared")
 #| code-fold: true
 
 ema <- read_csv(here::here(path_shared, "survey_daily.csv"), 
-                show_col_types = FALSE)
+                show_col_types = FALSE) |> 
+  mutate(start_date = with_tz(start_date,tzone = "America/Chicago"))
 
 study_start <- read_csv(here::here(path_shared, "contact_log.csv"), 
                 show_col_types = FALSE) |> 
@@ -51,7 +52,7 @@ length(unique(ema$subid))
 
 
 
-## Bin EMA
+## EMA
 
 ```{r}
 #| code-fold: true
@@ -64,6 +65,11 @@ ema <- ema |>
   mutate(n = if_else(n > 1, 1, n)) |> 
   ungroup() |> 
   left_join(study_start, by = "subid")
+
+ema <- ema |> 
+  left_join(ema_study_dates |> select(subid, study_end),
+            by = "subid") |> 
+  filter(!date > study_end)
 
 
 ema_count <- ema |> 
@@ -640,7 +646,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -668,7 +674,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -696,7 +702,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -724,7 +730,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -752,7 +758,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -780,7 +786,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -808,7 +814,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -836,7 +842,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -864,7 +870,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -892,7 +898,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -920,7 +926,7 @@ ggplot() +
                        name = "Number of Daily Surveys",
                        na.value = "white") +
   scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
+    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
     limits = c(-1, 65),
     expand = c(0, 0)
   ) +
@@ -930,89 +936,211 @@ ggplot() +
   geom_vline(xintercept = 4) +
   geom_vline(xintercept = 52)
 
-ggplot() +
- geom_tile(data = strip |>
-             filter(subid %in% sub_group_12) |> 
-             mutate(subid = factor(subid, levels = sub_group_12)),
-    aes(x = week, y = subid, fill = group),
-    width = 0.8) +
-  scale_fill_manual(
-    values = c(Included = "green", Excluded = "red"),
-    name = NULL) +
-  ggnewscale::new_scale_fill() +
-  geom_tile(data = ema_count |>
-              filter(subid %in% sub_group_12) |> 
-              mutate(subid = factor(subid, levels = sub_group_12)),
-            aes(x = week, y = subid, fill = n)) +
-  scale_fill_viridis_c(option = "C",
-                       name = "Number of Daily Surveys",
-                       na.value = "white") +
-  scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
-    limits = c(-1, 65),
-    expand = c(0, 0)
-  ) +
-  labs(x = "Week number", y = "subid") +
-  theme_minimal() +
-  theme(panel.grid = element_blank()) +
-  geom_vline(xintercept = 4) +
-  geom_vline(xintercept = 52)
+# ggplot() +
+#  geom_tile(data = strip |>
+#              filter(subid %in% sub_group_12) |> 
+#              mutate(subid = factor(subid, levels = sub_group_12)),
+#     aes(x = week, y = subid, fill = group),
+#     width = 0.8) +
+#   scale_fill_manual(
+#     values = c(Included = "green", Excluded = "red"),
+#     name = NULL) +
+#   ggnewscale::new_scale_fill() +
+#   geom_tile(data = ema_count |>
+#               filter(subid %in% sub_group_12) |> 
+#               mutate(subid = factor(subid, levels = sub_group_12)),
+#             aes(x = week, y = subid, fill = n)) +
+#   scale_fill_viridis_c(option = "C",
+#                        name = "Number of Daily Surveys",
+#                        na.value = "white") +
+#   scale_x_continuous(
+#     breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
+#     limits = c(-1, 65),
+#     expand = c(0, 0)
+#   ) +
+#   labs(x = "Week number", y = "subid") +
+#   theme_minimal() +
+#   theme(panel.grid = element_blank()) +
+#   geom_vline(xintercept = 4) +
+#   geom_vline(xintercept = 52)
+# 
+# ggplot() +
+#  geom_tile(data = strip |>
+#              filter(subid %in% sub_group_13) |> 
+#              mutate(subid = factor(subid, levels = sub_group_13)),
+#     aes(x = week, y = subid, fill = group),
+#     width = 0.8) +
+#   scale_fill_manual(
+#     values = c(Included = "green", Excluded = "red"),
+#     name = NULL) +
+#   ggnewscale::new_scale_fill() +
+#   geom_tile(data = ema_count |>
+#               filter(subid %in% sub_group_13) |> 
+#               mutate(subid = factor(subid, levels = sub_group_13)),
+#             aes(x = week, y = subid, fill = n)) +
+#   scale_fill_viridis_c(option = "C",
+#                        name = "Number of Daily Surveys",
+#                        na.value = "white") +
+#   scale_x_continuous(
+#     breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
+#     limits = c(-1, 65),
+#     expand = c(0, 0)
+#   ) +
+#   labs(x = "Week number", y = "subid") +
+#   theme_minimal() +
+#   theme(panel.grid = element_blank()) +
+#   geom_vline(xintercept = 4) +
+#   geom_vline(xintercept = 52)
 
-ggplot() +
- geom_tile(data = strip |>
-             filter(subid %in% sub_group_13) |> 
-             mutate(subid = factor(subid, levels = sub_group_13)),
-    aes(x = week, y = subid, fill = group),
-    width = 0.8) +
-  scale_fill_manual(
-    values = c(Included = "green", Excluded = "red"),
-    name = NULL) +
-  ggnewscale::new_scale_fill() +
-  geom_tile(data = ema_count |>
-              filter(subid %in% sub_group_13) |> 
-              mutate(subid = factor(subid, levels = sub_group_13)),
-            aes(x = week, y = subid, fill = n)) +
-  scale_fill_viridis_c(option = "C",
-                       name = "Number of Daily Surveys",
-                       na.value = "white") +
-  scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
-    limits = c(-1, 65),
-    expand = c(0, 0)
-  ) +
-  labs(x = "Week number", y = "subid") +
-  theme_minimal() +
-  theme(panel.grid = element_blank()) +
-  geom_vline(xintercept = 4) +
-  geom_vline(xintercept = 52)
-
-ggplot() +
- geom_tile(data = strip |>
-             filter(subid %in% sub_group_14) |> 
-             mutate(subid = factor(subid, levels = sub_group_14)),
-    aes(x = week, y = subid, fill = group),
-    width = 0.8) +
-  scale_fill_manual(
-    values = c(Included = "green", Excluded = "red"),
-    name = NULL) +
-  ggnewscale::new_scale_fill() +
-  geom_tile(data = ema_count |>
-              filter(subid %in% sub_group_14) |> 
-              mutate(subid = factor(subid, levels = sub_group_14)),
-            aes(x = week, y = subid, fill = n)) +
-  scale_fill_viridis_c(option = "C",
-                       name = "Number of Daily Surveys",
-                       na.value = "white") +
-  scale_x_continuous(
-    breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 34, 36, 40, 44, 48, 52, 56, 60, 64),
-    limits = c(-1, 65),
-    expand = c(0, 0)
-  ) +
-  labs(x = "Week number", y = "subid") +
-  theme_minimal() +
-  theme(panel.grid = element_blank()) +
-  geom_vline(xintercept = 4) +
-  geom_vline(xintercept = 52)
+# ggplot() +
+#  geom_tile(data = strip |>
+#              filter(subid %in% sub_group_14) |> 
+#              mutate(subid = factor(subid, levels = sub_group_14)),
+#     aes(x = week, y = subid, fill = group),
+#     width = 0.8) +
+#   scale_fill_manual(
+#     values = c(Included = "green", Excluded = "red"),
+#     name = NULL) +
+#   ggnewscale::new_scale_fill() +
+#   geom_tile(data = ema_count |>
+#               filter(subid %in% sub_group_14) |> 
+#               mutate(subid = factor(subid, levels = sub_group_14)),
+#             aes(x = week, y = subid, fill = n)) +
+#   scale_fill_viridis_c(option = "C",
+#                        name = "Number of Daily Surveys",
+#                        na.value = "white") +
+#   scale_x_continuous(
+#     breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64),
+#     limits = c(-1, 65),
+#     expand = c(0, 0)
+#   ) +
+#   labs(x = "Week number", y = "subid") +
+#   theme_minimal() +
+#   theme(panel.grid = element_blank()) +
+#   geom_vline(xintercept = 4) +
+#   geom_vline(xintercept = 52)
 ```
+
+
+## Histograms
+```{r}
+ema_count <- ema_count |> 
+  mutate(n = if_else(is.na(n), 0, n))
+
+ema_count |> 
+  ggplot() +
+  geom_histogram(aes(x = n), bins = 8)
+
+
+janitor::tabyl(ema_count$n)
+
+
+
+
+
+ema_count |>
+  filter(subid %in% sub_group_1) |> 
+  mutate(subid = factor(subid, levels = sub_group_1)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_2) |> 
+  mutate(subid = factor(subid, levels = sub_group_2)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_3) |> 
+  mutate(subid = factor(subid, levels = sub_group_3)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_4) |> 
+  mutate(subid = factor(subid, levels = sub_group_4)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_5) |> 
+  mutate(subid = factor(subid, levels = sub_group_5)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_6) |> 
+  mutate(subid = factor(subid, levels = sub_group_6)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_7) |> 
+  mutate(subid = factor(subid, levels = sub_group_7)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_8) |> 
+  mutate(subid = factor(subid, levels = sub_group_8)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_9) |> 
+  mutate(subid = factor(subid, levels = sub_group_9)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_10) |> 
+  mutate(subid = factor(subid, levels = sub_group_10)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+ema_count |>
+  filter(subid %in% sub_group_11) |> 
+  mutate(subid = factor(subid, levels = sub_group_11)) |> 
+  ggplot(aes(x = n)) +
+  geom_histogram(aes(y = after_stat(count / sum(count))), bins = 8) +
+  facet_wrap(~ subid) +
+  theme_classic()
+```
+
+
+## Monthly Surveys
+
+33 people missing more than 3 monthly surveys total   
+
+No notes as to why missing more than 3
+```{r}
+contact_log <- read_csv(here::here(path_shared, "contact_log.csv"), 
+                show_col_types = FALSE) |> 
+  mutate(expected_monthly = floor(days_on_study/30),
+         expected_monthly = if_else(expected_monthly > 12, 12, expected_monthly))
+
+contact_log |> 
+  filter(num_monthly_surveys < expected_monthly - 3) |> 
+  nrow()
+
+contact_log |> 
+  filter(num_monthly_surveys < expected_monthly - 3) |> 
+  select(subid, num_monthly_surveys, expected_monthly)
+
+contact_log |> 
+  filter(num_monthly_surveys < expected_monthly - 3) |> 
+  view()
+```
+
 
 

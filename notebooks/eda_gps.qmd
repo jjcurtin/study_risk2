@@ -67,421 +67,421 @@ gps_count <- gps |>
   left_join(gps |> 
   group_by(subid) |> 
   filter(date > onboarding & date < onboarding + days(7)) |> 
-  summarise(n = sum(n)/7) |> 
+  summarise(n = sum(n, na.rm = TRUE)/7) |> 
   mutate(week = 1) |> 
   ungroup(), by = "subid") |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(7) & date < onboarding + days(14)) |> 
-  summarise(n = sum(n)/7) |> 
+  summarise(n = sum(n, na.rm = TRUE)/7) |> 
   mutate(week = 2) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(14) & date < onboarding + days(21)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 3) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(21) & date < onboarding + days(28)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 4) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(28) & date < onboarding + days(35)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 5) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(35) & date < onboarding + days(42)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 6) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(42) & date < onboarding + days(49)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 7) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(49) & date < onboarding + days(56)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 8) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(56) & date < onboarding + days(63)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 9) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(63) & date < onboarding + days(70)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 10) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(70) & date < onboarding + days(77)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 11) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(77) & date < onboarding + days(84)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 12) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(84) & date < onboarding + days(91)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 13) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(91) & date < onboarding + days(98)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 14) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(98) & date < onboarding + days(105)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 15) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(105) & date < onboarding + days(112)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 16) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(112) & date < onboarding + days(119)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 17) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(119) & date < onboarding + days(126)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 18) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(126) & date < onboarding + days(133)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 19) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(133) & date < onboarding + days(140)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 20) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(140) & date < onboarding + days(147)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 21) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(147) & date < onboarding + days(154)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 22) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(154) & date < onboarding + days(161)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 23) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(161) & date < onboarding + days(168)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 24) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(168) & date < onboarding + days(175)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 25) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(175) & date < onboarding + days(182)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 26) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(182) & date < onboarding + days(189)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 27) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(189) & date < onboarding + days(196)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 28) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(196) & date < onboarding + days(203)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 29) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(203) & date < onboarding + days(210)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 30) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(210) & date < onboarding + days(217)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 31) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(217) & date < onboarding + days(224)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 32) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(224) & date < onboarding + days(231)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 33) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(231) & date < onboarding + days(238)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 34) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(238) & date < onboarding + days(245)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 35) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(245) & date < onboarding + days(252)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 36) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(252) & date < onboarding + days(259)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 37) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(259) & date < onboarding + days(266)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 38) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(266) & date < onboarding + days(273)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 39) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(273) & date < onboarding + days(280)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 40) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(280) & date < onboarding + days(287)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 41) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(287) & date < onboarding + days(294)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 42) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(294) & date < onboarding + days(301)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 43) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(301) & date < onboarding + days(308)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 44) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(308) & date < onboarding + days(315)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 45) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(315) & date < onboarding + days(322)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 46) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(322) & date < onboarding + days(329)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 47) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(329) & date < onboarding + days(336)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 48) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(336) & date < onboarding + days(343)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 49) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(343) & date < onboarding + days(350)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 50) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(350) & date < onboarding + days(357)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 51) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(357) & date < onboarding + days(364)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 52) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(364) & date < onboarding + days(371)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 53) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(371) & date < onboarding + days(378)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 54) |>  
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(378) & date < onboarding + days(385)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 55) |> 
   ungroup()) |>
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(385) & date < onboarding + days(392)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 56) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(392) & date < onboarding + days(399)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 57) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(399) & date < onboarding + days(406)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 58) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(406) & date < onboarding + days(413)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 59) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(413) & date < onboarding + days(420)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 60) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(420) & date < onboarding + days(427)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 61) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(427) & date < onboarding + days(434)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 62) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(434) & date < onboarding + days(441)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 63) |> 
   ungroup()) |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(441) & date < onboarding + days(448)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 64) |> 
   ungroup())  |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(448) & date < onboarding + days(455)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 65) |> 
   ungroup())  |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(455) & date < onboarding + days(462)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 66) |> 
   ungroup())  |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(462) & date < onboarding + days(469)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 67) |> 
   ungroup())  |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(469) & date < onboarding + days(476)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 68) |> 
   ungroup())  |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(476) & date < onboarding + days(483)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 69) |> 
   ungroup())  |> 
   bind_rows(gps |> 
   group_by(subid) |> 
   filter(date >= onboarding + days(483) & date < onboarding + days(490)) |> 
-  summarise(n = sum(n)/7) |>  
+  summarise(n = sum(n, na.rm = TRUE)/7) |>  
   mutate(week = 70) |> 
   ungroup())
 ```
