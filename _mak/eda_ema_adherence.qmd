@@ -714,6 +714,18 @@ study_dates |>
 ```
 
 
+Save out as new file that can be used for filtering labels
+
+```{r}
+study_dates |> 
+  mutate(ema_end = date(ema_end),
+         study_end_ad = pmin(study_end_ad, ema_end, na.rm = TRUE)) |> 
+  select(subid, study_end_ad) |> 
+  write_csv(here::here(path_shared, "study_end_ad_ema.csv"))
+```
+
+
+
 ## Remake plots with updated end dates
 ```{r}
 #| code-fold: true
@@ -1286,4 +1298,5 @@ map(subid_groups, function(ids) {
   plot_1 + plot_2
 })
 ```
+
 
