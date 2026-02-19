@@ -68,11 +68,21 @@ study_dates <- study_dates |>
 
 ## GPS Adherence for next 28 days
 
-391 provided gps data  
-353 with one month of EMA data
+- 391 provided gps data  
+- 362 with one month of GPS data
+
 ```{r}
   
 length(unique(gps$subid))
+
+
+gps |> 
+  group_by(subid) |> 
+  arrange(desc(date)) |> 
+  slice_head(n = 1) |>
+  mutate(days = as.numeric(date - study_start)) |> 
+  filter(days >= 28) |> 
+  nrow()
 ```
 
 Create days on study tibble
