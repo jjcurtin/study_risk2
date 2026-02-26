@@ -156,25 +156,70 @@ ema_count <- ema_count |>
 
 ### Update study end dates
 
+```{r}
+#| code-fold: true
+
+get_labels <- function(the_subid, dates) {
+  
+  study_start <- dates |>  
+    filter(subid == the_subid) |>  
+    pull(study_start)
+  
+  study_end <- dates |>  
+    filter(subid == the_subid) |> 
+    mutate(ema_end = date(ema_end),
+           study_end = pmin(study_end, ema_end, na.rm = TRUE)) |> 
+    pull(study_end)
+  
+  if (study_end == study_start) {
+      study_days <- tibble(subid = the_subid, 
+                         study_day = seq(study_start, study_end, 
+                                         by = "day")) 
+  } 
+  
+  if (study_end != study_start) {
+      study_days <- tibble(subid = the_subid, 
+                         study_day = seq(study_start, study_end - days(1), 
+                                         by = "day"))
+    }
+  
+  return(study_days)
+}
+```
+
+
 - 405 participants completed at least one daily survey
-- 359 subids had at least 28 days of data prior to new compliance threshold (i.e., old plots)
-- 340 subids have at least 28 days of data with compliance threshold implemented
-- 322 of these completed a monthly survey
-- 316 provided GPS context data
+- 99195 labels
 
 ```{r}
 length(unique(ema$subid))
 
-length(unique(ema_count$subid))
+unique(ema$subid) |> 
+  map_dfr(~get_labels(.x, study_dates)) |> 
+  nrow()
+```
+
+- 330 completed a monthly survey and provided GPS context data
+- 96334 labels
+
+```{r}
+starting_sample <- monthly |> 
+  filter(subid %in% context$subid) 
+
+length(unique(starting_sample$subid))
+
+unique(starting_sample$subid) |> 
+  map_dfr(~get_labels(.x, study_dates)) |> 
+  nrow()
 ```
 
 
 Add new study end column that will be updated
 ```{r}
 study_dates <- study_dates |> 
+  filter(subid %in% starting_sample$subid) |> 
   mutate(study_end_ad = study_end)
 ```
-
 
 Set compliance threshold for discontinuing. 
 
@@ -187,7 +232,7 @@ Set compliance threshold for discontinuing.
 4. Discontinuation is considered every time adherence falls below .33
 
 ```{r}
-for (sub in unique(ema_count$subid)) {
+for (sub in unique(study_dates$subid)) {
   study_days <- pull(subset(ema_count, subid == sub), study_day)
   adherence <- pull(subset(ema_count, subid == sub), adherence)
   
@@ -208,12 +253,32 @@ for (sub in unique(ema_count$subid)) {
 ```
 
 
-96 subids have updated study_end dates
+89 subids have updated study_end dates
 ```{r}
 study_dates |> 
   filter(study_end != study_end_ad) |> 
   glimpse()
 ```
+
+316 have at least 28 days on study
+```{r}
+study_dates <- study_dates  |> 
+  mutate(ema_end = date(ema_end),
+         study_end_ad = pmin(study_end_ad, ema_end, na.rm = TRUE)) |> 
+  mutate(on_study = as.numeric(study_end_ad - study_start)) |> 
+  filter(on_study >= 28) 
+
+nrow(study_dates)
+```
+
+85862 labels
+```{r}
+unique(study_dates$subid) |> 
+  map_dfr(~get_labels(.x, study_dates |> 
+                        mutate(study_end = study_end_ad))) |> 
+  nrow()
+```
+
 
 
 Save out as new file that can be used for filtering labels
@@ -222,7 +287,7 @@ Save out as new file that can be used for filtering labels
 study_dates |> 
   mutate(ema_end = date(ema_end),
          study_end_ad = pmin(study_end_ad, ema_end, na.rm = TRUE)) |> 
-  select(subid, study_end_ad) |> 
+  select(subid, study_start, study_end_ad) |> 
   write_csv(here::here(path_shared, "study_end_ad_ema.csv"))
 ```
 
@@ -727,27 +792,6 @@ ema_count <- ema_count |>
   ungroup()
 ```
 
-340 subids with 28 days of data after compliance threshold applied
-```{r}
-length(unique(ema_count$subid))
-```
-
-
-322 completed a monthly survey  
-316 provided gps context
-```{r}
-monthly |> 
-  filter(subid %in% ema_count$subid) |> 
-  pull(subid) |> 
-  unique() |> 
-  length()
-
-context |> 
-  filter(subid %in% ema_count$subid) |> 
-  pull(subid) |> 
-  unique() |> 
-  length()
-```
 
 
 
