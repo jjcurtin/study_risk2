@@ -4262,9 +4262,9 @@ Demographic and Clinical Characteristics
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>table_ci <span class="sc">|&gt;</span> </span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Median auROC Difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Probability =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Contrast =</span> contrast, Median, <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span>, Probability) <span class="sc">|&gt;</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Contrast =</span> contrast, <span class="st">`</span><span class="at">Median auROC Difference</span><span class="st">`</span>, <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span>, Probability) <span class="sc">|&gt;</span> </span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">width =</span> <span class="st">&quot;25em&quot;</span>) <span class="sc">|&gt;</span> </span>
@@ -4290,7 +4290,7 @@ Median difference in auROC, 95% Bayesian credible interval (CI), and posterior p
  <thead>
   <tr>
    <th style="text-align:left;"> Contrast </th>
-   <th style="text-align:left;"> Median </th>
+   <th style="text-align:left;"> Median auROC Difference </th>
    <th style="text-align:left;"> Bayesian CI </th>
    <th style="text-align:left;"> Probability </th>
   </tr>

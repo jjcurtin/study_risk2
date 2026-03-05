@@ -40,7 +40,7 @@ pp_dem <- read_csv(here::here(path_models,
 
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
-# shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+shaps <- read_rds(here::here(path_models, "shapsgrp_v2_1_x_5_day_v10_kfold_full_final.rds"))
 
 options(scipen = 999)
 ```
@@ -72,7 +72,7 @@ pp_dem |>
                                          "below poverty",
                                          "small town/rural",
                                          "not heterosexual"), 
-                            "Disadvantaged (not male, Hispanic and/or not White, <$25,000 annual income, rural, not heterosexual)",
+                            "Disadvantaged (not male, Hispanic and/or not White, <$25,000 income, rural, not heterosexual)",
                             "Advantaged (male, non-Hispanic White, $25,000+ income, urban, heterosexual)"),
          fairness = factor(fairness),
          group = factor(group, levels = c("Gender", "Race",
@@ -179,11 +179,10 @@ cal + hist
 
 
 
-<!--
+
 
 ### Feature Importance
 
-top 30
 ```{r}
 #| code-fold: true
 
@@ -289,80 +288,5 @@ shaps|>
     plot.title = element_text(size = 14, face = "bold")
   )
 ```
-
-
-Individual Shapley plots by raw and diff
-```{r}
-#| label: fig-5
-#| fig-cap: "Raw feature importance partial dependence plots."
-#| message: false
-#| fig-width: 10
-#| fig-height: 14
-#| code-fold: true
-
-shap_levels <- shaps |> 
-  group_by(variable_grp) |>
-  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
-  arrange(desc(mean_value)) |> 
-  slice_head(n = 30) |> 
-  filter(str_detect(variable_grp, "Raw") | str_detect(variable_grp, "demographic")) |>
-  pull(variable_grp)
-
-shaps|>
-  filter(variable_grp %in% shap_levels) |>
-  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
-  geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
-  labs(
-    title = "Raw SHAP Variable Relationships",
-    x = "z-score raw feature score",
-    y = "Shapley value"
-  ) +
-  theme_classic() +
-  theme(
-    strip.text = element_text(size = 8),
-    plot.title = element_text(size = 14, face = "bold")
-  )
-```
-
-```{r}
-#| label: fig-6
-#| fig-cap: "Difference feature importance partial dependence plots."
-#| message: false
-#| fig-width: 10
-#| fig-height: 14
-#| code-fold: true
-
-shap_levels <- shaps |> 
-  group_by(variable_grp) |>
-  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
-  arrange(desc(mean_value)) |> 
-  slice_head(n = 30) |> 
-  filter(str_detect(variable_grp, "Diff")) |> 
-  pull(variable_grp)
-
-shaps|>
-  filter(variable_grp %in% shap_levels) |>
-  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
-  geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
-  labs(
-    title = "Difference SHAP Variable Relationships",
-    x = "z-score raw feature score",
-    y = "Shapley value"
-  ) +
-  theme_classic() +
-  theme(
-    strip.text = element_text(size = 8),
-    plot.title = element_text(size = 14, face = "bold")
-  )
-```
-
-
--->
 
 

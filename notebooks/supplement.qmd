@@ -43,7 +43,7 @@ pp_dem <- read_csv(here::here(path_models,
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 
-# shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 
@@ -288,7 +288,7 @@ You visited the place shown below, near [*address*], several times in the past m
 
 ## Supplemental Figures
 
-<!--
+
 ### Figure S1: Global Feature Importance for all Feature Categories
 
 ```{r}
@@ -384,7 +384,7 @@ shaps|>
   geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
-    title = "Top 30 SHAP Variable Relationships",
+    title = "SHAP Variable Relationships",
     x = "z-score raw feature score",
     y = "Shapley value"
   ) +
@@ -395,7 +395,6 @@ shaps|>
   )
 ```
 
--->
 
 
 ## Supplemental Tables
