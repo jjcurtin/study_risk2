@@ -16,7 +16,7 @@ params:
   version: "v9"
   cv: "nested"
   algorithms: "all"   # "all" or name of specific algorithm
-  model: "ablate_ema" # "main" or "baseline"
+  model: "full" # "main" or "baseline"
 editor_options: 
   chunk_output_type: console
 ---

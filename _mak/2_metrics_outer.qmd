@@ -258,7 +258,7 @@ if(!file.exists(here::here(path_models, str_c("outer_preds_",
     map(\(l) pluck(l)) |> 
     list_rbind() |>  
     write_rds(here::here(path_models, str_c("outer_preds_", cv_outer_resample,
-                                           "_", window, "_", 
+                                           "_", cv_inner_resample, "_", window, "_", 
                                            version, "_", cv, "_", model,
                                            ".rds")))
  
@@ -290,13 +290,13 @@ metrics_test <- probs_out |>
 metrics_test |> 
   arrange(outer_split_num) |> 
   write_csv(here::here(path_models, str_c("test_auroc_", cv_outer_resample,
-                                          "_", window, "_", 
+                                          "_", cv_outer_resample, "_", window, "_", 
                                           version, "_", cv, "_", model, 
                                           ".csv"))) 
 
 median(metrics_test$roc_auc) 
 mean(metrics_test$roc_auc) 
-hist(metrics_test$roc_auc) 
+hist(metrics_test$roc_auc, xlim = c(.65, .95)) 
 ```
 
 
