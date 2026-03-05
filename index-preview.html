@@ -1,52 +1,175 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.6.39">
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="author" content="Kendra Wyant">
+    <meta name="author" content="John J. Curtin">
+    <meta name="dcterms.date" content="2026-03-05">
+    <meta name="keywords" content="Substance use disorders, Precision mental health">
 
-<meta name="author" content="Kendra Wyant">
-<meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2026-03-05">
-<meta name="keywords" content="Substance use disorders, Precision mental health">
+    <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      /* CSS for citations */
+      div.csl-bib-body { }
+      div.csl-entry {
+        clear: both;
+        margin-bottom: 0em;
+      }
+      .hanging-indent div.csl-entry {
+        margin-left:2em;
+        text-indent:-2em;
+      }
+      div.csl-left-margin {
+        min-width:2em;
+        float:left;
+      }
+      div.csl-right-inline {
+        margin-left:2em;
+        padding-left:1em;
+      }
+      div.csl-indent {
+        margin-left: 2em;
+      }    </style>
 
-<title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
 
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
 
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = "index.html";
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="site_libs/manuscript-notebook/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -60,9 +183,8 @@ div.csl-indent {
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
-
-
-<meta name="citation_title" content="Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder">
+     
+      <meta name="citation_title" content="Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder">
 <meta name="citation_abstract" content="Enter abstract here.
 ">
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
@@ -103,9 +225,16 @@ div.csl-indent {
 <meta name="citation_reference" content="citation_title=Exploring the intersectionality of stigma and substance use help-seeking behaviours among lesbian, gay, bisexual, transgender, queer, questioning or otherwise gender or sexuality minority (LGBTQ+) individuals in the United States: A scoping review;,citation_abstract=Problematic substance use (SU) is a significant issue among LGBTQ+ individuals, but rates of treatment/help-seeking in this population remain low. This review aimed to investigate literature about intersectional stigma of SU and LGBTQ+ identity and its impact on SU help-seeking behaviours in the U.S. Eligible studies from eight-database were included if peer-reviewed, in English, from the U.S., published between 2000 and 2022, focused on SU, stigma, SU help-seeking behaviours, among LGBTQ+ adults. Of 458 search results, 50 underwent full-text review, 12 were included in the final sample. Minority Stress Theory emerged as a relevant theoretical framework. Findings revealed that increased SU as a coping strategy was associated with minority stress. Intersectional stigma negatively impacted SU treatment experience among LGBTQ+ individuals, leading to avoidance of help-seeking or poor treatment outcomes. Patterns of SU and impact of stigma among LGBTQ+ individuals differ, wherein bisexual and transgender individuals reported significantly more treatment barriers and unique stressors. LGBTQ+ individuals reported earlier age of SU onset and were more likely to encounter opportunities for SU. This review highlights the impact of intersectional stigma on SU help-seeking behaviour among LGBTQ+ individuals in the U.S. Recommendations are provided for future clinical practice, research, and policy to better support LGBTQ+ individuals.;,citation_author=Yitong Xin;,citation_author=Corrine M. Schwarting;,citation_author=Mary R. Wasef;,citation_author=Alan K. Davis;,citation_publication_date=2023-01;,citation_cover_date=2023-01;,citation_year=2023;,citation_issue=1;,citation_doi=10.1080/17441692.2023.2277854;,citation_issn=1744-1692;,citation_pmid=37939481;,citation_volume=18;,citation_journal_title=Global Public Health;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 </head>
 
-<body>
+  <body class="quarto-notebook">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> Article Notebook</h6>
 
-<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+            <a href="./index.qmd" class="btn btn-primary quarto-download-embed" download="index.qmd">Download Source</a>
+          </div>
+
+     <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</h1>
@@ -150,7 +279,7 @@ div.csl-indent {
               </div>
       </div>
       <div class="quarto-title-meta-column-end quarto-other-formats-target">
-      <div class="quarto-alternate-formats"><div class="quarto-title-meta-heading">Other Formats</div><div class="quarto-title-meta-contents"><p><a href="index.docx"><i class="bi bi-file-word"></i>MS Word</a></p></div><div class="quarto-title-meta-contents"><p><a href="index.pdf"><i class="bi bi-file-pdf"></i>Typst (apaish)</a></p></div></div></div>
+      </div>
     </div>
 
     <div>
@@ -208,17 +337,35 @@ div.csl-indent {
   <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="index-preview.html"><i class="bi bi-journal-code"></i>Article Notebook</a></li><li><a href="notebooks\ana_fairness-preview.html"><i class="bi bi-journal-code"></i>Fairness analyses</a></li><li><a href="notebooks\mak_tables-preview.html"><i class="bi bi-journal-code"></i>Make All Tables for Main Manuscript</a></li><li><a href="notebooks\mak_figures-preview.html"><i class="bi bi-journal-code"></i>Make Figures</a></li><li><a href="notebooks\ana_bayesian-preview.html"><i class="bi bi-journal-code"></i>Model evaluation</a></li><li><a href="notebooks\supplement-preview.html"><i class="bi bi-journal-code"></i>Supplemental Material</a></li></ul></div></nav>
+</nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">      
 
-
-
-  
-
-
+       <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">source</span>(<span class="st">"https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>path_models <span class="ot">&lt;-</span> <span class="fu">format_path</span>(<span class="fu">str_c</span>(<span class="st">"risk2/models/combined"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pp_perf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">"pp_perf_tibble_v10.csv"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>probs <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">"preds_1_x_5_day_v10_kfold_full_final.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>Opioid use disorder - Prevalence - harms - cost - When also accounting for costs associated with loss of life and reduced quality of life, one research group estimated that in 2017 the cost of opioid use disorder alone exceeded $1 trillion (Florence et al., 2021).</p>
@@ -326,9 +473,39 @@ div.csl-indent {
 <section id="participants-1" class="level2">
 <h2 class="anchored" data-anchor-id="participants-1">Participants</h2>
 <p>We enrolled 330 participants across 47 states in the United States from April 2021 through December 2024. To be considered enrolled in the study, participants were required to be eligible, consent, and complete the first personalized monthly survey where geolocation context were provided.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Of these 330, 14 were excluded for not providing at least 28 days of EMA data with acceptable adherence<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, 7 participants were excluded due to evidence of careless responding on daily surveys, and 13 participants were excluded due to having insufficient context data for geolocation points (fewer than two contextualized locations). Our final analysis sample consisted of 296 participants. Participant demographic and OUD characteristics of our final sample is presented in <a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a>.</p>
-<div class="quarto-embed-nb-cell">
-<div class="cell">
-<div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_tables.qmd" data-notebook-title="Make All Tables for Main Manuscript" data-notebook-cellid="cell-tbl-1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>footnote_table_dem_a <span class="op">&lt;-</span> <span class="st">"N = 296"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>table_dem <span class="op">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  knitr::kable() <span class="op">|&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  kable_classic() <span class="op">|&gt;</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">2</span>, end_row <span class="op">=</span> <span class="dv">7</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">9</span>, end_row <span class="op">=</span> <span class="dv">12</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">14</span>, end_row <span class="op">=</span> <span class="dv">18</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">20</span>, end_row <span class="op">=</span> <span class="dv">26</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">28</span>, end_row <span class="op">=</span> <span class="dv">29</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">31</span>, end_row <span class="op">=</span> <span class="dv">36</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">38</span>, end_row <span class="op">=</span> <span class="dv">43</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">45</span>, end_row <span class="op">=</span> <span class="dv">52</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">54</span>, end_row <span class="op">=</span> <span class="dv">57</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">59</span>, end_row <span class="op">=</span> <span class="dv">60</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">62</span>, end_row <span class="op">=</span> <span class="dv">63</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">65</span>, end_row <span class="op">=</span> <span class="dv">66</span>) <span class="op">|&gt;</span> </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">68</span>, end_row <span class="op">=</span> <span class="dv">71</span>) <span class="op">|&gt;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">73</span>, end_row <span class="op">=</span> <span class="dv">77</span>) <span class="op">|&gt;</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">79</span>, end_row <span class="op">=</span> <span class="dv">83</span>) <span class="op">|&gt;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  kableExtra::footnote(general <span class="op">=</span> c(footnote_table_dem_a), escape<span class="op">=</span>FALSE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in attr(x, "align"): 'xfun::attr()' is deprecated.
+Use 'xfun::attr2()' instead.
+See help("Deprecated")
+Warning in attr(x, "align"): 'xfun::attr()' is deprecated.
+Use 'xfun::attr2()' instead.
+See help("Deprecated")</code></pre>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;1: Demographic and Clinical Characteristics
@@ -821,8 +998,8 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 </div>
 </div>
 </figure>
-</div>
-</div>
+</div></div>
+</div></div>
 </div>
 </section>
 <section id="adherence-features-and-labels" class="level2">
@@ -833,9 +1010,30 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 <section id="auroc-and-model-comparisons-1" class="level2">
 <h2 class="anchored" data-anchor-id="auroc-and-model-comparisons-1">auROC and Model Comparisons</h2>
 <p>The median posterior probability for the best full model was 0.91, with narrow 95% CI ([0.90, 0.92]). We compared our full model’s performance to three ablated models (i.e.,full vs.&nbsp;ablated daily survey, full vs.&nbsp;ablated geolocation, full vs.&nbsp;ablated daily survey and geolocation) to evaluate the incremental predictive value of adding the dynamic sensing features. There was strong evidence that the full model’s performance was better compared to models that ablated the daily survey features and the daily survey and geolocation features combined (probabilities = 1.00). There was no evidence that the full model performed better than a model with geolocation features ablated (probability = 0.35). The median difference in auROC, 95% Bayesian CI, and posterior probability that that the auROC difference was greater than 0 for all ablation contrasts are presented in <a href="#tbl-2" class="quarto-xref">Table&nbsp;2</a>.</p>
-<div class="quarto-embed-nb-cell">
-<div class="cell">
-<div id="tbl-2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_tables.qmd" data-notebook-title="Make All Tables for Main Manuscript" data-notebook-cellid="cell-tbl-2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>footnote_table_model <span class="op">&lt;-</span> <span class="st">"Median auROC differences greater than 0 indicate the full model, on average, performed better than the ablated model (i.e., full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is greater than 0 (i.e., the full model is performing better)."</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>table_ci <span class="op">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  mutate(`Bayesian CI` <span class="op">=</span> str_c(<span class="st">"["</span>, <span class="bu">round</span>(lower, <span class="dv">3</span>), <span class="st">", "</span>, <span class="bu">round</span>(upper, <span class="dv">3</span>), <span class="st">"]"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         Median <span class="op">=</span> <span class="im">as</span>.character(<span class="bu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         Probability <span class="op">=</span> sprintf(<span class="st">"</span><span class="sc">%.3f</span><span class="st">"</span>, probability)) <span class="op">|&gt;</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  select(Contrast <span class="op">=</span> contrast, Median, `Bayesian CI`, Probability) <span class="op">|&gt;</span> </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  knitr::kable() <span class="op">|&gt;</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  kable_classic() <span class="op">|&gt;</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  kableExtra::column_spec(<span class="dv">1</span>, width <span class="op">=</span> <span class="st">"25em"</span>) <span class="op">|&gt;</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  kableExtra::add_footnote(label <span class="op">=</span> footnote_table_model,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                           notation <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                           escape <span class="op">=</span> FALSE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in attr(x, "align"): 'xfun::attr()' is deprecated.
+Use 'xfun::attr2()' instead.
+See help("Deprecated")
+Warning in attr(x, "align"): 'xfun::attr()' is deprecated.
+Use 'xfun::attr2()' instead.
+See help("Deprecated")</code></pre>
+</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="tbl-2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;2: Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was larger than 0 for all ablated model contrasts.
@@ -883,16 +1081,59 @@ Table&nbsp;2: Median difference in auROC, 95% Bayesian credible interval (CI), a
 </div>
 </div>
 </figure>
-</div>
-</div>
+</div></div>
+</div></div>
 </div>
 <p>Our fairness subgroup comparisons for the full model revealed moderate evidence that performance differed by geographic location (probability = 0.85) and strong evidence that performance differed by gender, income, race and ethnicity, and sexual orientation (probabilities &gt; 0.94). Notably, our model performed better for individuals with an annual income of less than $25,000 compared to individuals with an annual income greater than $25,000, thus favoring the disadvantaged group. While differences in performance estimates exist, this model is likely still clinically meaningful across subgroups, as all subgroups yielded median auROCs between 0.88 - 0.92 (<a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>). A table of fairness subgroup comparisons is available in the supplement.</p>
-<div class="quarto-embed-nb-cell">
-<div id="cell-fig-1" class="cell" data-message="false">
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-1">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-1" class="cell" data-message="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pp_dem <span class="op">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  mutate(group <span class="op">=</span> case_match(model,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"male"</span> <span class="op">~</span> <span class="st">"Gender"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"not male"</span> <span class="op">~</span> <span class="st">"Gender"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"non-Hispanic White"</span> <span class="op">~</span> <span class="st">"Race"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"Hispanic and/or not white"</span> <span class="op">~</span> <span class="st">"Race"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"below poverty"</span> <span class="op">~</span> <span class="st">"Income"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"above poverty"</span> <span class="op">~</span> <span class="st">"Income"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"urban/suburban"</span> <span class="op">~</span> <span class="st">"Geography"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"small town/rural"</span> <span class="op">~</span> <span class="st">"Geography"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"heterosexual"</span> <span class="op">~</span> <span class="st">"Orientation"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"not heterosexual"</span> <span class="op">~</span> <span class="st">"Orientation"</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>         fairness <span class="op">=</span> if_else(model <span class="op">%</span><span class="kw">in</span><span class="op">%</span> c(<span class="st">"not male"</span>, </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"Hispanic and/or not white"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"below poverty"</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"small town/rural"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                                         <span class="st">"not heterosexual"</span>), </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Disadvantaged (not male, Hispanic and/or not White, &lt;$25,000 annual income, rural, not heterosexual)"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"Advantaged (male, non-Hispanic White, $25,000+ income, urban, heterosexual)"</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>         fairness <span class="op">=</span> factor(fairness),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>         group <span class="op">=</span> factor(group, levels <span class="op">=</span> c(<span class="st">"Gender"</span>, <span class="st">"Race"</span>,</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"Income"</span>, <span class="st">"Orientation"</span>, <span class="st">"Geography"</span>))) <span class="op">|&gt;</span>  </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> group, y <span class="op">=</span> pp_median, color <span class="op">=</span> fairness)) <span class="op">+</span> </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  geom_point(position <span class="op">=</span> position_dodge(width <span class="op">=</span> <span class="fl">0.5</span>), size <span class="op">=</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  geom_line(position <span class="op">=</span> position_dodge(width <span class="op">=</span> <span class="fl">0.5</span>)) <span class="op">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  geom_segment(mapping <span class="op">=</span> aes(x <span class="op">=</span> group, y <span class="op">=</span> pp_lower, yend <span class="op">=</span> pp_upper, color <span class="op">=</span> fairness),</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>               position <span class="op">=</span> position_dodge(width <span class="op">=</span> <span class="fl">0.5</span>)) <span class="op">+</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  scale_y_continuous(<span class="st">"auROC"</span>, limits <span class="op">=</span> c(<span class="fl">.50</span>, <span class="fl">1.0</span>)) <span class="op">+</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  labs(x <span class="op">=</span> NULL,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>       color <span class="op">=</span> NULL) <span class="op">+</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  theme(legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  scale_color_manual(values <span class="op">=</span> c(<span class="st">"#240e31"</span>, <span class="st">"#046B52"</span>)) <span class="op">+</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  geom_hline(yintercept <span class="op">=</span> subset(pp_all, model <span class="op">==</span> <span class="st">"full"</span>)$pp_median, linetype <span class="op">=</span> <span class="st">"dashed"</span>,  color <span class="op">=</span> <span class="st">"grey"</span>) <span class="op">+</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>guides(color <span class="op">=</span> guide_legend(nrow <span class="op">=</span> <span class="dv">2</span>, byrow <span class="op">=</span> TRUE))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_line()`: Each group consists of only one observation.
+ℹ Do you need to adjust the group aesthetic?</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div id="fig-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
 <a href="index_files/figure-html/notebooks-mak_figures-fig-1-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, greater than $25,000 annual income, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, less than $25,000 annual income, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."><img src="index_files/figure-html/notebooks-mak_figures-fig-1-output-2.png" width="672" height="480" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -901,18 +1142,66 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </figure>
 </div>
 </div>
-</div>
+</div></div>
 </div>
 </section>
 <section id="calibration-and-overall-performance-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-and-overall-performance-1">Calibration and Overall Performance</h2>
 <p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and down-sampled the majority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.016). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.016). A Calibration plot revealed our raw model predictions were better aligned with observed probabilities than the Platt scaled probabilities. Our model did more poorly when predicting higher lapse risk probabilities due to the infrequency of observed lapse rates in these bins (<a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). Histograms of raw risk probability distributions separately by true lapse outcome are presented in <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
-<div class="quarto-embed-nb-cell">
-<div id="cell-fig-2" class="cell" data-fig-width="8">
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-2" class="cell" data-fig-width="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cal <span class="op">&lt;-</span> preds_all_raw <span class="op">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  bind_rows(preds_all_logi) <span class="op">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  mutate(prob <span class="op">=</span> factor(prob, levels <span class="op">=</span> c(<span class="st">"Raw (uncalibrated)"</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"Platt calibration"</span>))) <span class="op">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  group_by(bins,  prob)  <span class="op">|&gt;</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  summarize(mean_lapse <span class="op">=</span> mean(lapse),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            .groups <span class="op">=</span> <span class="st">"drop"</span>) <span class="op">|&gt;</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  mutate(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    bins <span class="op">=</span> <span class="im">as</span>.numeric(bins),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    midpoints <span class="op">=</span> bin_width<span class="op">/</span><span class="dv">2</span> <span class="op">+</span> bin_width <span class="op">*</span> (bins <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  )  <span class="op">|&gt;</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> midpoints, y <span class="op">=</span> mean_lapse, group <span class="op">=</span> prob,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>             color <span class="op">=</span> prob, linetype <span class="op">=</span> prob)) <span class="op">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  geom_abline(slope <span class="op">=</span> <span class="dv">1</span>, intercept <span class="op">=</span> <span class="dv">0</span>, linetype <span class="op">=</span> <span class="st">"longdash"</span>, color <span class="op">=</span> <span class="st">"gray80"</span>) <span class="op">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  geom_line(linewidth <span class="op">=</span> <span class="fl">.7</span>) <span class="op">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  labs(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"Predicted Lapse Probability (Bin Midpoint)"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Observed Lapse Probability"</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    color <span class="op">=</span> NULL,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    linetype <span class="op">=</span> NULL</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  geom_rug(data <span class="op">=</span> rug_data, aes(x <span class="op">=</span> rug_x), sides <span class="op">=</span> <span class="st">"b"</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>           inherit.aes <span class="op">=</span> FALSE) <span class="op">+</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  scale_x_continuous(breaks <span class="op">=</span> seq(<span class="dv">0</span>, <span class="dv">1</span>, bin_width), limits <span class="op">=</span> c(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  scale_y_continuous(limits <span class="op">=</span> c(<span class="op">-</span><span class="fl">0.08</span>, <span class="dv">1</span>), breaks <span class="op">=</span> seq(<span class="dv">0</span>,<span class="dv">1</span>, bin_width),</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>                     expand <span class="op">=</span> c(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  coord_cartesian(clip <span class="op">=</span> <span class="st">"off"</span>) <span class="op">+</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  scale_color_manual(values <span class="op">=</span> c(<span class="st">"#240e31"</span>, <span class="st">"#046B52"</span>)) <span class="op">+</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  scale_linetype_manual(values <span class="op">=</span> c(<span class="st">"solid"</span>, <span class="st">"twodash"</span>)) <span class="op">+</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  theme(axis.text<span class="op">=</span>element_text(size<span class="op">=</span><span class="fl">9.5</span>),</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        legend.key.size <span class="op">=</span> unit(<span class="fl">0.25</span>, <span class="st">"cm"</span>),</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>),</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        legend.position <span class="op">=</span> <span class="st">"bottom"</span>) </span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>hist <span class="op">&lt;-</span> preds <span class="op">|&gt;</span> </span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  ggplot() <span class="op">+</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  geom_histogram(aes(x <span class="op">=</span> prob_raw), color <span class="op">=</span> <span class="st">"black"</span>, </span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>                 fill <span class="op">=</span> <span class="st">"light grey"</span>, bins <span class="op">=</span> <span class="dv">40</span>) <span class="op">+</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> label, ncol <span class="op">=</span> <span class="dv">1</span>, scales <span class="op">=</span> <span class="st">"free_y"</span>) <span class="op">+</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  labs(x <span class="op">=</span> <span class="st">"Raw (uncalibrated) probabilties"</span>,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>       y <span class="op">=</span> NULL) <span class="op">+</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  theme_classic() <span class="op">+</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  theme(axis.text<span class="op">=</span>element_text(size<span class="op">=</span><span class="fl">9.5</span>),</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>        panel.border <span class="op">=</span> element_rect(colour <span class="op">=</span> <span class="st">"black"</span>, fill <span class="op">=</span> NA, linewidth <span class="op">=</span> <span class="dv">1</span>))</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>cal <span class="op">+</span> hist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
 <a href="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plot along the x-axis depicts observation frequency in each bin. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome."><img src="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" width="768" height="480" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -921,7 +1210,7 @@ Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scale
 </figure>
 </div>
 </div>
-</div>
+</div></div>
 </div>
 </section>
 <section id="feature-importance-1" class="level2">
@@ -1012,10 +1301,8 @@ Xin, Y., Schwarting, C. M., Wasef, M. R., &amp; Davis, A. K. (2023). Exploring t
 </div>
 </div>
 </section>
-
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
 <ol>
 <li id="fn1"><p>$0.25 per survey plus an additional $3.70 for completing at least 12 surveys in the first half of the month and an additional $3.70 for completing at least 12 surveys in the second half of the month (total range of $14.40 - $15.15)<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Participants were also compensated for providing other sensing data as part of the parent grant’s aims, including $10 per month for sharing cellular communication logs and text message content and up to $10 per month for the daily video check-in.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1023,9 +1310,9 @@ Xin, Y., Schwarting, C. M., Wasef, M. R., &amp; Davis, A. K. (2023). Exploring t
 <li id="fn4"><p>If adherence fell below 33% (roughly 9 surveys in a 28-day period) for a prolonged period of time, participant study end dates were changed to match the start of this adherence drop.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>The best model configuration used 5:1 downsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 5, mtry = 40.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section></div></main>
-<!-- /main column -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section>
+     </main>
+<!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1441,9 +1728,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-</div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
@@ -1474,9 +1759,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   };
   
 })();
-          </script>
-
-
-
-
+          </script> 
+  
 </body></html>
