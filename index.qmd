@@ -41,6 +41,8 @@ path_models <- format_path(str_c("risk2/models/combined"))
   
 pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_v10.csv"),
                     show_col_types = FALSE) 
+
+probs <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 # Introduction
@@ -176,21 +178,15 @@ The median posterior probability for the best full model was `r sprintf("%.2f", 
 
 {{< embed notebooks/mak_tables.qmd#tbl-2 >}}
 
-<!--update-->
-Our fairness subgroup comparisons for the full model revealed no evidence that performance differed by gender, income, race and ethnicity, sexual orientation, and geographic location (probabilities > 0.90). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.91 - 0.94 (@fig-1). A table of fairness subgroup comparisons is available in the supplement.
+Our fairness subgroup comparisons for the full model revealed moderate evidence that performance differed by geographic location (probability = 0.85) and strong evidence that performance differed by gender, income, race and ethnicity, and sexual orientation (probabilities > 0.94). Notably, our model performed better for individuals with an annual income of less than \$25,000 compared to individuals with an annual income greater than \$25,000, thus favoring the disadvantaged group. While differences in performance estimates exist, this model is likely still clinically meaningful across subgroups, as all subgroups yielded median auROCs between 0.88 - 0.92 (@fig-1). A table of fairness subgroup comparisons is available in the supplement.
 
 {{< embed notebooks/mak_figures.qmd#fig-1 >}}
 
 
 ## Calibration and Overall Performance
-<!--JJC: maybe here is where you talk about the final model configuration instead?-->
+The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and down-sampled the majority class.^[The best model configuration used 5:1 downsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 5, mtry = 40.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed our raw model predictions were better aligned with observed probabilities than the Platt scaled probabilities. Our model did more poorly when predicting higher lapse risk probabilities due to the infrequency of observed lapse rates in these bins (@fig-2). Histograms of raw risk probability distributions separately by true lapse outcome are presented in @fig-2.
 
-The best full model configuration used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:1 upsampling of the minority class and the following hyperparameter values: learning rate = .01, tree depth = 5, mtry = 50.] 
-
-
-The full model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed our raw model predictions tended to systematically over-predict risk probabilities (@fig-2).  Platt scaling appeared to produce probabilities closer to the ideal line were predicted probabilities perfectly match observed rates. Histograms of raw risk probability distributions separately by true lapse outcome are presented in @fig-2.  
-
-<!-- {{< embed notebooks/mak_figures.qmd#fig-2 >}} -->
+{{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
 ## Feature Importance
 

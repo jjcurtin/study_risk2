@@ -51,7 +51,7 @@ options(scipen = 999)
 
 ```{r}
 #| label: fig-1
-#| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
+#| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, greater than \$25,000 annual income, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, less than \$25,000 annual income, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
 #| message: false
 #| code-fold: true
 
@@ -72,8 +72,8 @@ pp_dem |>
                                          "below poverty",
                                          "small town/rural",
                                          "not heterosexual"), 
-                            "Disadvantaged (not male, Hispanic and/or not White, below poverty, rural, not heterosexual)",
-                            "Advantaged (male, non-Hispanic White, above poverty, urban, heterosexual)"),
+                            "Disadvantaged (not male, Hispanic and/or not White, <\$25,000 annual income, rural, not heterosexual)",
+                            "Advantaged (male, non-Hispanic White, \$25,000+ income, urban, heterosexual)"),
          fairness = factor(fairness),
          group = factor(group, levels = c("Gender", "Race",
                                                 "Income", "Orientation", "Geography"))) |>  
