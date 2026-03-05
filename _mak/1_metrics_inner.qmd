@@ -13,7 +13,7 @@ params:
   study: "combined"
   window: "1day"
   lead: 0
-  version: "v9"
+  version: "v10"
   cv: "nested"
   algorithms: "all"   # "all" or name of specific algorithm
   model: "full" # "main" or "baseline"

@@ -9,7 +9,7 @@ source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true
 study <- "combined"
 window <- "day"
 lead <- 0
-version <- "v9"
+version <- "v10"
 algorithm <- "xgboost"
 batch <- "full"
 
@@ -38,7 +38,7 @@ y_level_neg <- "No lapse"
 # CV SETTINGS------
 cv_resample_type <- "nested" # can be boot, kfold, or nested
 cv_resample = NULL # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
-cv_inner_resample <- "2_x_5" # can also be a single number for bootstrapping (i.e., 100)
+cv_inner_resample <- "1_x_5" # can also be a single number for bootstrapping (i.e., 100)
 cv_outer_resample <- "6_x_5" # outer resample will always be kfold
 cv_group <- "subid" # set to NULL if not grouping
 cv_strat <- TRUE # set to FALSE if not stratifying - If TRUE you must have a strat variable in your data

@@ -238,6 +238,24 @@ if(!file.exists(here::here(path_models, str_c("outer_preds_",
     d <- read_rds(here::here(path_batch, "input", fn))
   }
   
+  if (model == "ablate_ema") {
+  # filter out difference scores
+  d <- d |>
+    select(-c(p168.l0.rratecount.count.lapse:urge.p168.l0.dmin_response)) 
+  }
+
+  if (model == "ablate_gps") {
+    # filter out difference scores
+    d <- d |>
+      select(-c(p24.l0.rratesum_duration.socialize_new_people.yes:p168.dvar_location)) 
+  }
+
+
+  if (model == "ablate_both") {
+    # filter out difference scores
+    d <- d |>
+      select(-c(p168.l0.rratecount.count.lapse:p168.dvar_location)) 
+  }
 
  d <- format_data(d) |> 
     arrange(label_num) |> 
