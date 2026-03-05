@@ -39,15 +39,8 @@ suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/b
 
 path_models <- format_path(str_c("risk2/models/combined"))
   
-pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_xgboost_v8.csv"),
+pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_v10.csv"),
                     show_col_types = FALSE) 
-
-probs <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v8_dyn_dem_oud.rds"))
-
-preds_all_raw <- probs |> 
-  mutate(bins = cut(prob_raw, breaks = seq(0, 1, .1)), 
-         lapse = if_else(label == "Lapse", 1, 0)) |> 
-  count(bins)
 ```
 
 # Introduction
@@ -179,29 +172,33 @@ The average percentage of missing values across daily survey features was low (m
 
 
 ## auROC and Model Comparisons
-The best full model configuration used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:1 upsampling of the minority class and the following hyperparameter values: learning rate = .01, tree depth = 5, mtry = 50.] The median posterior probability for the best model was `r round(pp_perf$pp_median[1], 2)`, with narrow 95% CI ([`r round(pp_perf$pp_lower[1], 2)`, `r round(pp_perf$pp_upper[1], 2)`]). <!--JJC: This is confusing. For model comparisons, there are 30 best configurations right.  There is only ONE figuration for the final final model but that is only used for calibration and SHAP but not for model comparisons or fairness.  you talk about model comparisons next-->
+The median posterior probability for the best full model was `r sprintf("%.2f", pp_perf$pp_median[1])`, with narrow 95% CI ([`r sprintf("%.2f", pp_perf$pp_lower[1])`, `r sprintf("%.2f", pp_perf$pp_upper[1])`]). We compared our full model's performance to three ablated models (i.e.,full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation) to evaluate the incremental predictive value of adding the dynamic sensing features. There was strong evidence that the full model's performance was better compared to models that ablated the daily survey features and the daily survey and geolocation features combined (probabilities = 1.00). There was no evidence that the full model performed better than a model with geolocation features ablated (probability = 0.35). The median difference in auROC, 95% Bayesian CI, and posterior probability that that the auROC difference was greater than 0 for all ablation contrasts are presented in @tbl-2.
 
-<!--update to table for 4 model contrasts between full and ablated models-->
-We compared our best model's performance to a baseline model that only used day of week and demographic and OUD characteristic features to evaluate the incremental predictive value of adding the dynamic daily survey and geolocation sensing features. The median posterior probability for the baseline model was  `r round(pp_perf$pp_median[2], 2)` (95% CI [`r round(pp_perf$pp_lower[2], 2)`, `r round(pp_perf$pp_upper[2], 2)`]). A Bayesian model comparison revealed extremely strong evidence that the best model was more predictive than the baseline model (probability = 1.00).
+{{< embed notebooks/mak_tables.qmd#tbl-2 >}}
 
-Our fairness subgroup comparisons for the full model revealed no evidence that performance meaningfully differed by education (probability = 0.55) and strong evidence that performance differed by gender, income, race and ethnicity, and geographic location (probabilities > 0.90). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.91 - 0.94 (@fig-1). A table of fairness subgroup comparisons is available in the supplement.
+<!--update-->
+Our fairness subgroup comparisons for the full model revealed no evidence that performance differed by gender, income, race and ethnicity, sexual orientation, and geographic location (probabilities > 0.90). Notably, our model performed better for individuals with an annual income below the federal poverty line compared to individuals above the federal poverty line, thus favoring the disadvantaged group. While differences in performance estimates exist across subgroups, they are not likely clinically meaningful as all of our subgroups yielded median auROCs between 0.91 - 0.94 (@fig-1). A table of fairness subgroup comparisons is available in the supplement.
 
 {{< embed notebooks/mak_figures.qmd#fig-1 >}}
 
 
 ## Calibration and Overall Performance
 <!--JJC: maybe here is where you talk about the final model configuration instead?-->
+
+The best full model configuration used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:1 upsampling of the minority class and the following hyperparameter values: learning rate = .01, tree depth = 5, mtry = 50.] 
+
+
 The full model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed our raw model predictions tended to systematically over-predict risk probabilities (@fig-2).  Platt scaling appeared to produce probabilities closer to the ideal line were predicted probabilities perfectly match observed rates. Histograms of raw risk probability distributions separately by true lapse outcome are presented in @fig-2.  
 
-{{< embed notebooks/mak_figures.qmd#fig-2 >}}
+<!-- {{< embed notebooks/mak_figures.qmd#fig-2 >}} -->
 
 ## Feature Importance
 
 For brevity, we are only displaying the top 30 features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.<!--mention 85 total number of categories-->
 
-{{< embed notebooks/mak_figures.qmd#fig-3 >}}
+<!-- {{< embed notebooks/mak_figures.qmd#fig-3 >}} -->
 
-{{< embed notebooks/mak_figures.qmd#fig-4 >}}
+<!-- {{< embed notebooks/mak_figures.qmd#fig-4 >}} -->
 
 
 # Discussion
@@ -219,7 +216,7 @@ For brevity, we are only displaying the top 30 features, as defined by the 30 la
 
 - Optimal thresholds depend on the setting, outcome prevalence, and the relative costs of misclassification, and should be addressed separately from discrimination evaluation (e.g., with a decision curve analysis). <!--JJC: and didnt you say we wouldnt recommend classifying at all?-->
 
-- Discussion about GPS data. Hard to get. With better sensing features could be more important. X% of gps features were imputed as median. Low leverage for predictions.
+- Discussion about GPS data. No evidence that geolocation offered incremental predictive value. Hard to get. With better sensing features could be more important. X% of gps features were imputed as median. Low leverage for predictions. 
 
 - Daily surveys remain to be a feasible and predictive signal even when measured over a year.
 

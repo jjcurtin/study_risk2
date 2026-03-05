@@ -1,0 +1,138 @@
+---
+title: "Model evaluation"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+suppressPackageStartupMessages(library(tidyposterior))
+
+path_models <- format_path(str_c("risk2/models/combined"))
+
+```
+
+
+```{r}
+test_metrics_full <- read_csv(here::here(path_models, 
+                                    "test_auroc_6_x_5_1_x_5_day_v10_nested_full.csv"), 
+                              show_col_types = FALSE) |> 
+  select(split_num = outer_split_num, "full" = roc_auc) |> 
+  arrange(split_num)
+
+test_metrics_ablate_both <- read_csv(here::here(path_models, 
+                                    "test_auroc_6_x_5_1_x_5_day_v10_nested_ablate_both.csv"), 
+                              show_col_types = FALSE) |> 
+  select(split_num = outer_split_num, "ablated daily survey and geolocation" = roc_auc) |> 
+  arrange(split_num)
+
+test_metrics_ablate_ema <- read_csv(here::here(path_models, 
+                                    "test_auroc_6_x_5_1_x_5_day_v10_nested_ablate_ema.csv"), 
+                              show_col_types = FALSE) |> 
+  select(split_num = outer_split_num, "ablated daily survey" = roc_auc) |> 
+  arrange(split_num)
+
+test_metrics_ablate_gps <- read_csv(here::here(path_models, 
+                                    "test_auroc_6_x_5_1_x_5_day_v10_nested_ablate_gps.csv"), 
+                              show_col_types = FALSE) |> 
+  select(split_num = outer_split_num, "ablated geolocation" = roc_auc) |> 
+  arrange(split_num)
+
+test_metrics <- test_metrics_full |> 
+  left_join(test_metrics_ablate_both, by = c("split_num")) |> 
+  left_join(test_metrics_ablate_ema, by = c("split_num")) |> 
+  left_join(test_metrics_ablate_gps, by = c("split_num")) |> 
+  mutate(fold_num = rep(1:5, 6),
+         repeat_num = c(rep(1, 5), rep(2, 5), rep(3, 5), 
+                        rep(4, 5), rep(5, 5), rep(6, 5))) |> 
+  select(-split_num) |> 
+  glimpse()
+```
+
+
+#### Model evaluation
+```{r}
+#| output: false
+
+# Repeated CV (id = repeat, id2 = fold within repeat)
+# with a common variance:  statistic ~ model + (model | id2/id)
+set.seed(101)
+pp <- test_metrics |> 
+  rename(id = fold_num,
+         id2 = repeat_num) |> 
+  perf_mod(formula = statistic ~ model + (1 | id2/id),
+         transform = tidyposterior::logit_trans,  # for skewed & bounded AUC
+         iter = 6000, chains = 4, adapt_delta = .99, # increased iteration from 2000 to fix divergence issues
+         family = gaussian, 
+)  
+
+```
+
+```{r}
+pp_tidy <- pp |> 
+  tidy(seed = 123) 
+
+q = c(.025, .5, .975)
+pp_perf_tibble <- pp_tidy |> 
+  group_by(model) |> 
+  summarize(pp_median = quantile(posterior, probs = q[2]),
+            pp_lower = quantile(posterior, probs = q[1]), 
+            pp_upper = quantile(posterior, probs = q[3])) |> 
+  mutate(model = factor(model, levels = c("full", "ablated daily survey", "ablated geolocation", "ablated daily survey and geolocation"))) |> 
+  arrange(model) 
+
+pp_perf_tibble |> 
+  write_csv(here::here(path_models, "pp_perf_tibble_v10.csv"))
+
+pp_tidy |> 
+  write_csv(here::here(path_models, "posteriors_v10.csv"))
+
+pp_perf_tibble
+```
+
+
+
+### Model Comparison
+
+```{r}
+
+ci_ablate <- pp |>
+  contrast_models(list("full", "full", "full"),
+                  list("ablated daily survey", "ablated geolocation", "ablated daily survey and geolocation")) |>
+  summary(size = 0) |> 
+  mutate(contrast = factor(contrast,
+                           levels = c("full vs ablated daily survey",
+                                      "full vs ablated geolocation",
+                                      "full vs ablated daily survey and geolocation"),
+                           labels = c("full vs. ablated daily survey",
+                                      "full vs. ablated geolocation",
+                                      "full vs. ablated daily survey and geolocation"))) |> 
+  arrange(contrast)
+
+ci_median <- pp |>
+  contrast_models(list("full", "full", "full"),
+                  list("ablated daily survey", "ablated geolocation", "ablated daily survey and geolocation")) |>
+  group_by(contrast) |>
+  summarize(median = quantile(difference, .5))
+
+
+ci_ablate <- ci_ablate |>
+  left_join(ci_median, by = c("contrast")) 
+
+ci_ablate |>
+  write_csv(here::here(path_models, "contrast_ablate_v10.csv"))
+
+ci_ablate
+```

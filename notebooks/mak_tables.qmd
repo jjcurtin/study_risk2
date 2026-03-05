@@ -32,10 +32,6 @@ options(knitr.kable.NA = '')
 ```
 
 
-
-## Table 1 participant demographics
-
-Table 1 
 ```{r}
 study_dates <- read_csv(file.path(path_shared, "study_dates_gps.csv"), 
                         show_col_types = FALSE)
@@ -307,32 +303,63 @@ table_dem <- dem_age |>
          `%` = perc)
 ```
 
+
+```{r}
+
+path_models <- format_path(str_c("risk2/models/combined"))
+
+table_ci <- read_csv(here::here(path_models, "contrast_ablate_v10.csv"),
+                    show_col_types = FALSE) 
+```
+
+
+### Table 1: Demographics and Clinical Characteristics
+
 ```{r}
 #| label: tbl-1
 #| tbl-cap: "Demographic and Clinical Characteristics"
 
-footnote_table_dem_a <- "N = 299"
+footnote_table_dem_a <- "N = 296"
 
 
 table_dem |> 
   knitr::kable() |> 
   kable_classic() |> 
-  kableExtra::group_rows(start_row = 2, end_row = 8) |> 
-  kableExtra::group_rows(start_row = 10, end_row = 13) |> 
-  kableExtra::group_rows(start_row = 15, end_row = 19) |> 
-  kableExtra::group_rows(start_row = 21, end_row = 27) |> 
-  kableExtra::group_rows(start_row = 29, end_row = 30) |> 
-  kableExtra::group_rows(start_row = 32, end_row = 37) |> 
-  kableExtra::group_rows(start_row = 39, end_row = 44) |> 
-  kableExtra::group_rows(start_row = 46, end_row = 53) |> 
-  kableExtra::group_rows(start_row = 55, end_row = 58) |> 
-  kableExtra::group_rows(start_row = 60, end_row = 61) |> 
-  kableExtra::group_rows(start_row = 63, end_row = 64) |> 
-  kableExtra::group_rows(start_row = 66, end_row = 67) |> 
-  kableExtra::group_rows(start_row = 69, end_row = 72) |>
-  kableExtra::group_rows(start_row = 74, end_row = 78) |>
-  kableExtra::group_rows(start_row = 80, end_row = 84) |>
+  kableExtra::group_rows(start_row = 2, end_row = 7) |> 
+  kableExtra::group_rows(start_row = 9, end_row = 12) |> 
+  kableExtra::group_rows(start_row = 14, end_row = 18) |> 
+  kableExtra::group_rows(start_row = 20, end_row = 26) |> 
+  kableExtra::group_rows(start_row = 28, end_row = 29) |> 
+  kableExtra::group_rows(start_row = 31, end_row = 36) |> 
+  kableExtra::group_rows(start_row = 38, end_row = 43) |> 
+  kableExtra::group_rows(start_row = 45, end_row = 52) |> 
+  kableExtra::group_rows(start_row = 54, end_row = 57) |> 
+  kableExtra::group_rows(start_row = 59, end_row = 60) |> 
+  kableExtra::group_rows(start_row = 62, end_row = 63) |> 
+  kableExtra::group_rows(start_row = 65, end_row = 66) |> 
+  kableExtra::group_rows(start_row = 68, end_row = 71) |>
+  kableExtra::group_rows(start_row = 73, end_row = 77) |>
+  kableExtra::group_rows(start_row = 79, end_row = 83) |>
   kableExtra::footnote(general = c(footnote_table_dem_a), escape=FALSE)
 ```
 
+### Table 2: Model Comparisons
 
+```{r }
+#| label: tbl-2
+#| tbl-cap: "Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was larger than 0 for all ablated model contrasts."
+
+footnote_table_model <- "Median auROC differences greater than 0 indicate the full model, on average, performed better than the ablated model (i.e., full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is greater than 0 (i.e., the full model is performing better)."
+
+table_ci |> 
+  mutate(`Bayesian CI` = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         Median = as.character(round(median, 3)),
+         Probability = sprintf("%.3f", probability)) |> 
+  select(Contrast = contrast, Median, `Bayesian CI`, Probability) |> 
+  knitr::kable() |> 
+  kable_classic() |> 
+  kableExtra::column_spec(1, width = "25em") |> 
+  kableExtra::add_footnote(label = footnote_table_model,
+                           notation = "none",
+                           escape = FALSE)
+```

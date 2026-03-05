@@ -14,9 +14,9 @@ params:
   window: "1day"
   lead: 0
   version: "v10"
-  cv: "nested"
+  cv: "kfold"
   algorithms: "all"   # "all" or name of specific algorithm
-  model: "full" # "main" or "baseline"
+  model: "full_final" # "full" or ablation model
 editor_options: 
   chunk_output_type: console
 ---
