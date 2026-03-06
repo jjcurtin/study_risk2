@@ -9,22 +9,11 @@ output:
 format:
   html:
     embed-resources: true
-params:
-  
-  study: "combined"
-  model: "dyn_dem_oud" 
-  version: "v8"
 editor_options: 
   chunk_output_type: console
 ---
 
 This file contains the supplemental materials for *Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning*. It includes all supplemental figures and tables.   
-```{r}
-#| include: false
-study <- params$study
-model <- params$model
-version <- params$version
-```
 
 
 ```{r}
@@ -40,18 +29,21 @@ library(kableExtra)
 devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
 
 path_shared <- format_path(str_c("risk2/data_processed/shared"))
-path_models <- format_path(str_c("risk2/models/", study))
+path_models <- format_path(str_c("risk2/models/combined"))
+
+kfold_results <- read_csv(here::here(path_models, 
+                              "inner_metrics_6_x_5_day_v10_kfold_full.csv"),
+                   show_col_types = FALSE)
 
 
 pp_dem <- read_csv(here::here(path_models, 
-                              "pp_fairness_xgboost_contrast_full.csv"),
+                              "pp_fairness_contrast_v10_full.csv"),
                    show_col_types = FALSE)
 
-preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v8_dyn_dem_oud.rds"))
+preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 
-shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
-                                           version, "_", model, ".rds")))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 
@@ -292,46 +284,10 @@ You visited the place shown below, near [*address*], several times in the past m
     - Considerably 
     - Extremely
 
-## Data Exclusions
-
-A total of 334 participants were eligible, consented, and remained on study for at least one month. Of these we excluded 21 participants' data from our analyses for the following reasons:
-
-
-1. 7 participants were excluded due to evidence of careless responding on daily surveys. They all reported over 200 lapses while on study and had the highest number of duplicate lapse reports (accounting for 1177/1285 duplicate lapses). These subids also account for 62/66 lapses that started after the survey start time, but before survey complete time. This could mean they were stopping the survey to use opioids or could be potentially careless or inaccurate reporting. They also account for 64/107 missing lapse dates and times after responding yes to "Have you used any opioids for non-medical reasons that you have not yet reported?". A more precise description by participant is listed below.
-
-    - subid 1312 reported 1099 lapses over 359 days. Also reported 418 duplicate lapses not included in 1099 count. 
-
-    - subid 1427 reported 854 lapses over 364 days. Also reported 388 duplicate lapses not included in 854 count. They had 13 lapses that started after the survey start time (but before survey completion).
-
-    - subid 1132 reported 769 lapses over 360 days. Also reported 129 duplicate lapses not included in 769 count. They also had 27 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". They had 8 lapses that started after the survey start time (but before survey completion).
-
-    - subid 1216 reported 680 lapses over 401 days. Also reported 96 duplicate lapses not included in 680 count.
-
-    - subid 1172 reported 420 lapses over 367 days. Also reported 60 duplicates not included in 420 count. They also had 37 of the 107 lapses with missing `lapse_date_time` values for `lapse_report` == "Yes". 
-
-    - subid 1379 reported 383 lapses over 265 days. They had 14 lapses that started after the survey start time (but before survey completion).
-
-    - subid 1101 reported 235 lapses over 144 days. Also reported 62 duplicate lapses not included in 235 count.
-
-
-2. 10 participants were excluded due to unusually low geolocation sensing adherence. 
-
-    - 3 participants had no gps data.
-
-    - 7 participants had fewer than 20 geolocation points per day on average.
-
-
-3. 14 participants were excluded due to insufficient context data for geolocation points. We required participants have at least two contextualized locations other than their home. 
-
-    - 2 participants had no context data for any locations
-
-    - 12 participants did not have at least 2 known locations outside their home. Many only had home address reported and we do not gather follow-up context information about the home.
-
-
-
 
 
 ## Supplemental Figures
+
 
 ### Figure S1: Global Feature Importance for all Feature Categories
 
@@ -428,7 +384,7 @@ shaps|>
   geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
-    title = "Top 30 SHAP Variable Relationships",
+    title = "SHAP Variable Relationships",
     x = "z-score raw feature score",
     y = "Shapley value"
   ) +
@@ -440,9 +396,32 @@ shaps|>
 ```
 
 
+
 ## Supplemental Tables
 
 ### Table S1: Simple k-fold Performance by Statistical Algorithm
+
+We used 6 repeats of 5-fold cross-validation for preliminary testing. We report the median auroc for the best model configuration for each candidate statistical algorithm below.
+
+```{r}
+metrics_avg <- kfold_results |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, resample) |>  
+   summarize(roc_auc = median(roc_auc),
+             n_jobs = n(), .groups = "drop") |> 
+  relocate(n_jobs) |>  
+  arrange(desc(roc_auc)) |> 
+  ungroup()
+
+metrics_avg |> 
+  group_by(algorithm) |> 
+  slice(1) |> 
+  mutate(roc_auc = round(roc_auc, 3)) |> 
+  select(Algorithm = algorithm,
+         `Median auROC` = roc_auc) |> 
+  arrange(desc(`Median auROC`)) |> 
+  kbl() |> 
+  kable_classic()
+```
 
 
 ### Table S2: Demographic Contrasts for all Models
@@ -452,7 +431,7 @@ shaps|>
 #| tbl-cap: "Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was smaller or larger than 0 for fairness contrasts."
 #| code-fold: true
 
-footnote_table_fair <- "Median auROC differences less than 0 indicate the model, on average, performed worse for the disadvantaged group (not male, non-White and/or Hispanic, income below poverty line, small town/rural, high school or less) compared to the advantaged group (male, non-Hispanic White, income above poverty line, urban/suburban, some college). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is smaller or larger than 0 (i.e., the models are performing differently for fairness subgroups)."
+footnote_table <- "Median auROC differences less than 0 indicate the model, on average, performed worse for the disadvantaged group (not male, non-White and/or Hispanic, income below poverty line, small town/rural, not heterosexual) compared to the advantaged group (male, non-Hispanic White, income above poverty line, urban/suburban, heterosexual). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is smaller or larger than 0 (i.e., the models are performing differently for fairness subgroups)."
 
 
 pp_sex <- pp_dem |> 
@@ -486,17 +465,6 @@ pp_race <- pp_dem |>
          `Bayesian CI` = ci,
          `Probability` = probability)
 
-pp_race <- pp_dem |> 
-  filter(contrast == "Hispanic and/or not white vs non-Hispanic White") |> 
-  mutate(contrast = "Hispanic and/or not White vs non-Hispanic White") |> 
-   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
-         median = as.character(round(median, 3)),
-         probability = as.character(sprintf("%.3f", probability))) |> 
-  select(contrast, median, ci, probability) |> 
-  rename(`Median` = median,
-         `Bayesian CI` = ci,
-         `Probability` = probability)
-
 pp_geography <- pp_dem |> 
   filter(contrast == "small town/rural vs urban/suburban") |> 
   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
@@ -507,8 +475,8 @@ pp_geography <- pp_dem |>
          `Bayesian CI` = ci,
          `Probability` = probability)
 
-pp_education <- pp_dem |> 
-  filter(contrast == "high school or less vs some college") |> 
+pp_orientation <- pp_dem |> 
+  filter(contrast == "not heterosexual vs heterosexual") |> 
   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
          median = as.character(round(median, 3)),
          probability = as.character(sprintf("%.3f", probability))) |> 
@@ -522,10 +490,13 @@ pp_education <- pp_dem |>
 pp_sex |> 
   bind_rows(pp_income) |> 
   bind_rows(pp_race) |> 
-  bind_rows(pp_geography) |> 
-   bind_rows(pp_education) |> 
+  bind_rows(pp_orientation) |> 
+   bind_rows(pp_geography) |> 
   kbl() |> 
-  kable_classic()
+  kable_classic() |> 
+  kableExtra::add_footnote(label = footnote_table,
+                           notation = "none",
+                           escape = FALSE)
 ```
 
 

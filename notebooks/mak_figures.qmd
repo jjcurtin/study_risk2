@@ -37,10 +37,10 @@ pp_all <- read_csv(here::here(path_models,
 pp_dem <- read_csv(here::here(path_models, 
                               "pp_fairness_v10_full.csv"),
                    show_col_types = FALSE)
-# preds <- read_rds(here::here(path_models, "preds_xgboost_kfold_6_x_5_v8_dyn_dem_oud.rds"))
-# 
-# shaps <- read_rds(here::here(path_models, str_c("shapsgrp_xgboost_kfold_6_x_5_",
-#                                            version, "_", model, ".rds")))
+
+preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
+
+shaps <- read_rds(here::here(path_models, "shapsgrp_v2_1_x_5_day_v10_kfold_full_final.rds"))
 
 options(scipen = 999)
 ```
@@ -51,7 +51,7 @@ options(scipen = 999)
 
 ```{r}
 #| label: fig-1
-#| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, above poverty, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, below poverty, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
+#| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, greater than $25,000 annual income, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, less than $25,000 annual income, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
 #| message: false
 #| code-fold: true
 
@@ -72,8 +72,8 @@ pp_dem |>
                                          "below poverty",
                                          "small town/rural",
                                          "not heterosexual"), 
-                            "Disadvantaged (not male, Hispanic and/or not White, below poverty, rural, not heterosexual)",
-                            "Advantaged (male, non-Hispanic White, above poverty, urban, heterosexual)"),
+                            "Disadvantaged (not male, Hispanic and/or not White, <$25,000 income, rural, not heterosexual)",
+                            "Advantaged (male, non-Hispanic White, $25,000+ income, urban, heterosexual)"),
          fairness = factor(fairness),
          group = factor(group, levels = c("Gender", "Race",
                                                 "Income", "Orientation", "Geography"))) |>  
@@ -94,7 +94,7 @@ guides(color = guide_legend(nrow = 2, byrow = TRUE))
 
 ```
 
-<!--
+
 
 ### Calibration
 
@@ -180,9 +180,9 @@ cal + hist
 
 
 
+
 ### Feature Importance
 
-top 30
 ```{r}
 #| code-fold: true
 
@@ -288,80 +288,5 @@ shaps|>
     plot.title = element_text(size = 14, face = "bold")
   )
 ```
-
-
-Individual Shapley plots by raw and diff
-```{r}
-#| label: fig-5
-#| fig-cap: "Raw feature importance partial dependence plots."
-#| message: false
-#| fig-width: 10
-#| fig-height: 14
-#| code-fold: true
-
-shap_levels <- shaps |> 
-  group_by(variable_grp) |>
-  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
-  arrange(desc(mean_value)) |> 
-  slice_head(n = 30) |> 
-  filter(str_detect(variable_grp, "Raw") | str_detect(variable_grp, "demographic")) |>
-  pull(variable_grp)
-
-shaps|>
-  filter(variable_grp %in% shap_levels) |>
-  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
-  geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
-  labs(
-    title = "Raw SHAP Variable Relationships",
-    x = "z-score raw feature score",
-    y = "Shapley value"
-  ) +
-  theme_classic() +
-  theme(
-    strip.text = element_text(size = 8),
-    plot.title = element_text(size = 14, face = "bold")
-  )
-```
-
-```{r}
-#| label: fig-6
-#| fig-cap: "Difference feature importance partial dependence plots."
-#| message: false
-#| fig-width: 10
-#| fig-height: 14
-#| code-fold: true
-
-shap_levels <- shaps |> 
-  group_by(variable_grp) |>
-  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
-  arrange(desc(mean_value)) |> 
-  slice_head(n = 30) |> 
-  filter(str_detect(variable_grp, "Diff")) |> 
-  pull(variable_grp)
-
-shaps|>
-  filter(variable_grp %in% shap_levels) |>
-  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
-  geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
-  labs(
-    title = "Difference SHAP Variable Relationships",
-    x = "z-score raw feature score",
-    y = "Shapley value"
-  ) +
-  theme_classic() +
-  theme(
-    strip.text = element_text(size = 8),
-    plot.title = element_text(size = 14, face = "bold")
-  )
-```
-
-
--->
 
 

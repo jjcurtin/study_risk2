@@ -353,9 +353,9 @@ footnote_table_model <- "Median auROC differences greater than 0 indicate the fu
 
 table_ci |> 
   mutate(`Bayesian CI` = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
-         Median = as.character(round(median, 3)),
+         `Median auROC Difference` = as.character(round(median, 3)),
          Probability = sprintf("%.3f", probability)) |> 
-  select(Contrast = contrast, Median, `Bayesian CI`, Probability) |> 
+  select(Contrast = contrast, `Median auROC Difference`, `Bayesian CI`, Probability) |> 
   knitr::kable() |> 
   kable_classic() |> 
   kableExtra::column_spec(1, width = "25em") |> 
