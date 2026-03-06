@@ -14,9 +14,9 @@ params:
   study: "combined"
   window: "1day"
   lead: 0
-  version: "v9"
+  version: "v10"
   cv: "nested"
-  model: "full"
+  model: "ablate_ema"
 editor_options: 
   chunk_output_type: console
 ---
@@ -136,10 +136,11 @@ fit_predict_eval <- function(split_num, splits, configs_best,
   preds_prob <- predict(model_best, feat_out,
                         type = "prob") 
   
- tibble(outer_split_num = split_num,
+  tibble(outer_split_num = split_num,
         id_obs = d_out$label_num,
         prob_raw = preds_prob[[str_c(".pred_", y_level_pos)]],
         label = d_out$y) 
+
   
 }
 ```
@@ -279,6 +280,7 @@ if(!file.exists(here::here(path_models, str_c("outer_preds_",
                                            "_", cv_inner_resample, "_", window, "_", 
                                            version, "_", cv, "_", model,
                                            ".rds")))
+
  
 } else {
   message("Resampled performance from nested CV previously calculated")
@@ -314,7 +316,7 @@ metrics_test |>
 
 median(metrics_test$roc_auc) 
 mean(metrics_test$roc_auc) 
-hist(metrics_test$roc_auc, xlim = c(.65, .95)) 
+hist(metrics_test$roc_auc) 
 ```
 
 
