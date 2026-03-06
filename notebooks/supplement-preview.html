@@ -3480,6 +3480,7 @@ border: 0;
   <li><a href="#supplemental-figures" id="toc-supplemental-figures" class="nav-link" data-scroll-target="#supplemental-figures">Supplemental Figures</a>
   <ul class="collapse">
   <li><a href="#figure-s1-global-feature-importance-for-all-feature-categories" id="toc-figure-s1-global-feature-importance-for-all-feature-categories" class="nav-link" data-scroll-target="#figure-s1-global-feature-importance-for-all-feature-categories">Figure S1: Global Feature Importance for all Feature Categories</a></li>
+  <li><a href="#figure-s2-individual-shapley-plots-for-all-feature-categories" id="toc-figure-s2-individual-shapley-plots-for-all-feature-categories" class="nav-link" data-scroll-target="#figure-s2-individual-shapley-plots-for-all-feature-categories">Figure S2: Individual Shapley Plots for all Feature Categories</a></li>
   </ul></li>
   <li><a href="#supplemental-tables" id="toc-supplemental-tables" class="nav-link" data-scroll-target="#supplemental-tables">Supplemental Tables</a>
   <ul class="collapse">
@@ -3857,30 +3858,79 @@ The following object is masked from &#39;package:dplyr&#39;:
 </div>
 </div></div>
 </section>
+<section id="figure-s2-individual-shapley-plots-for-all-feature-categories" class="level3">
+<h3 class="anchored" data-anchor-id="figure-s2-individual-shapley-plots-for-all-feature-categories">Figure S2: Individual Shapley Plots for all Feature Categories</h3>
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-fig-2" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>shap_levels <span class="ot">&lt;-</span> shaps <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable_grp) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_value =</span> <span class="fu">mean</span>(<span class="fu">abs</span>(value)), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_value)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(variable_grp)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>shaps<span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(variable_grp <span class="sc">%in%</span> shap_levels) <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">variable_grp =</span> <span class="fu">factor</span>(variable_grp, <span class="at">levels =</span> shap_levels)) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> rfvalue, <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> .<span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;gam&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">k =</span> <span class="dv">10</span>, <span class="at">bs =</span> <span class="st">&quot;cs&quot;</span>), <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> variable_grp, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">ncol =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;SHAP Variable Relationships&quot;</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;z-score raw feature score&quot;</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Shapley value&quot;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Failed to fit group -1.
+Caused by error in `gam.reparam()`:
+! NA/NaN/Inf in foreign function call (arg 3)</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class>
+<a href="supplement_files/figure-html/fig-2-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Feature importance partial dependence plots."><img role="img" src="supplement_files/figure-html/fig-2-1.png" class="img-fluid figure-img" width="960"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Feature importance partial dependence plots.
+</figcaption>
+</figure>
+</div>
+</div>
+</div></div>
+</section>
 </section>
 <section id="supplemental-tables" class="level2">
 <h2 class="anchored" data-anchor-id="supplemental-tables">Supplemental Tables</h2>
 <section id="table-s1-simple-k-fold-performance-by-statistical-algorithm" class="level3">
 <h3 class="anchored" data-anchor-id="table-s1-simple-k-fold-performance-by-statistical-algorithm">Table S1: Simple k-fold Performance by Statistical Algorithm</h3>
 <p>We used 6 repeats of 5-fold cross-validation for preliminary testing. We report the median auroc for the best model configuration for each candidate statistical algorithm below.</p>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>metrics_avg <span class="ot">&lt;-</span> kfold_results <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(algorithm, feature_set, hp1, hp2, hp3, resample) <span class="sc">|&gt;</span>  </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">summarize</span>(<span class="at">roc_auc =</span> <span class="fu">median</span>(roc_auc),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">n_jobs =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(n_jobs) <span class="sc">|&gt;</span>  </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(roc_auc)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>metrics_avg <span class="sc">|&gt;</span> </span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(algorithm) <span class="sc">|&gt;</span> </span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">roc_auc =</span> <span class="fu">round</span>(roc_auc, <span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Algorithm =</span> algorithm,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Median auROC</span><span class="st">`</span> <span class="ot">=</span> roc_auc) <span class="sc">|&gt;</span> </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Median auROC</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>metrics_avg <span class="ot">&lt;-</span> kfold_results <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(algorithm, feature_set, hp1, hp2, hp3, resample) <span class="sc">|&gt;</span>  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">summarize</span>(<span class="at">roc_auc =</span> <span class="fu">median</span>(roc_auc),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">n_jobs =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(n_jobs) <span class="sc">|&gt;</span>  </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(roc_auc)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>metrics_avg <span class="sc">|&gt;</span> </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(algorithm) <span class="sc">|&gt;</span> </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">roc_auc =</span> <span class="fu">round</span>(roc_auc, <span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Algorithm =</span> algorithm,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Median auROC</span><span class="st">`</span> <span class="ot">=</span> roc_auc) <span class="sc">|&gt;</span> </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Median auROC</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
 Use &#39;xfun::attr2()&#39; instead.
@@ -3912,83 +3962,83 @@ See help(&quot;Deprecated&quot;)</code></pre>
 </section>
 <section id="table-s2-demographic-contrasts-for-all-models" class="level3">
 <h3 class="anchored" data-anchor-id="table-s2-demographic-contrasts-for-all-models">Table S2: Demographic Contrasts for all Models</h3>
-<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [5]:</pre></div><div class="cell">
+<div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>footnote_table <span class="ot">&lt;-</span> <span class="st">&quot;Median auROC differences less than 0 indicate the model, on average, performed worse for the disadvantaged group (not male, non-White and/or Hispanic, income below poverty line, small town/rural, not heterosexual) compared to the advantaged group (male, non-Hispanic White, income above poverty line, urban/suburban, heterosexual). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is smaller or larger than 0 (i.e., the models are performing differently for fairness subgroups).&quot;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>pp_sex <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;not male vs male&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(probability, <span class="dv">3</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Median =</span> median,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">Probability =</span> probability)</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>pp_income <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;below poverty vs above poverty&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">round</span>(probability, <span class="dv">3</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast,median, ci, probability) <span class="sc">|&gt;</span> </span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>pp_race <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;Hispanic and/or not white vs non-Hispanic White&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">contrast =</span> <span class="st">&quot;Hispanic and/or not White vs non-Hispanic White&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability))) <span class="sc">|&gt;</span> </span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>pp_geography <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;small town/rural vs urban/suburban&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability))) <span class="sc">|&gt;</span> </span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>pp_orientation <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;not heterosexual vs heterosexual&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability))) <span class="sc">|&gt;</span> </span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>pp_sex <span class="sc">|&gt;</span> </span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(pp_income) <span class="sc">|&gt;</span> </span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(pp_race) <span class="sc">|&gt;</span> </span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(pp_orientation) <span class="sc">|&gt;</span> </span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>   <span class="fu">bind_rows</span>(pp_geography) <span class="sc">|&gt;</span> </span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">add_footnote</span>(<span class="at">label =</span> footnote_table,</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>                           <span class="at">notation =</span> <span class="st">&quot;none&quot;</span>,</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>                           <span class="at">escape =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>footnote_table <span class="ot">&lt;-</span> <span class="st">&quot;Median auROC differences less than 0 indicate the model, on average, performed worse for the disadvantaged group (not male, non-White and/or Hispanic, income below poverty line, small town/rural, not heterosexual) compared to the advantaged group (male, non-Hispanic White, income above poverty line, urban/suburban, heterosexual). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is smaller or larger than 0 (i.e., the models are performing differently for fairness subgroups).&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>pp_sex <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;not male vs male&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(probability, <span class="dv">3</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Median =</span> median,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">Probability =</span> probability)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>pp_income <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;below poverty vs above poverty&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fu">round</span>(probability, <span class="dv">3</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast,median, ci, probability) <span class="sc">|&gt;</span> </span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>pp_race <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;Hispanic and/or not white vs non-Hispanic White&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">contrast =</span> <span class="st">&quot;Hispanic and/or not White vs non-Hispanic White&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability))) <span class="sc">|&gt;</span> </span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>pp_geography <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;small town/rural vs urban/suburban&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability))) <span class="sc">|&gt;</span> </span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>pp_orientation <span class="ot">&lt;-</span> pp_dem <span class="sc">|&gt;</span> </span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(contrast <span class="sc">==</span> <span class="st">&quot;not heterosexual vs heterosexual&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ci =</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>         <span class="at">median =</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>         <span class="at">probability =</span> <span class="fu">as.character</span>(<span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability))) <span class="sc">|&gt;</span> </span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, median, ci, probability) <span class="sc">|&gt;</span> </span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">Median</span><span class="st">`</span> <span class="ot">=</span> median,</span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> ci,</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Probability</span><span class="st">`</span> <span class="ot">=</span> probability)</span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>pp_sex <span class="sc">|&gt;</span> </span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(pp_income) <span class="sc">|&gt;</span> </span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(pp_race) <span class="sc">|&gt;</span> </span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(pp_orientation) <span class="sc">|&gt;</span> </span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>   <span class="fu">bind_rows</span>(pp_geography) <span class="sc">|&gt;</span> </span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">add_footnote</span>(<span class="at">label =</span> footnote_table,</span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>                           <span class="at">notation =</span> <span class="st">&quot;none&quot;</span>,</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>                           <span class="at">escape =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
 Use &#39;xfun::attr2()&#39; instead.
 See help(&quot;Deprecated&quot;)</code></pre>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="tbl-fairness" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="tbl-fairness" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fairness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was smaller or larger than 0 for fairness contrasts.
