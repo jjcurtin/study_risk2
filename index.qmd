@@ -113,7 +113,7 @@ The STAR app passively recorded participants’ time-stamped geolocations (i.e.,
 Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem [@kuhnTidymodelsCollectionPackages2020; @kuhnTidyposteriorBayesianAnalysis2022; @goodrichRstanarmBayesianApplied2023]. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing [@chtc].
 
 ### Feature Engineering
-Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. We calculated a total of 289<!--update--> features from three data sources: 
+Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. We calculated a total of 297 features from three data sources: 
 
 1. *The prediction window day.* We created one-hot coded features for day of the week for the start of the prediction window.
 
@@ -184,7 +184,7 @@ Our fairness subgroup comparisons for the full model revealed strong evidence th
 
 
 ## Calibration and Overall Performance
-The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and down-sampled the majority class.^[The best model configuration used 5:1 downsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 5, mtry = 40.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.6; left panel of @fig-2). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of @fig-2.
+The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.6; left panel of @fig-2). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of @fig-2.
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
@@ -195,7 +195,7 @@ Feature importance values can also be aggregated across all participants and all
 
 The second way we calculated feature importance was by calculating the proportion of observations in which each feature category had the highest Shapley value. This approach summarizes how frequently a feature category is influential across observations (i.e., considering both magnitude and prevalence). We provided a plot of the relative ranking of feature categories by their overall feature importance using these two methods.
 
-For brevity, we are only displaying the top 30 features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.<!--mention 85 total number of categories-->
+For brevity, we are only displaying the top 30 (out of 186) features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.
 
 {{< embed notebooks/mak_figures.qmd#fig-3 >}} 
 

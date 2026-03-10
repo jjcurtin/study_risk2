@@ -16,7 +16,7 @@ params:
   version: "v10"
   cv: "kfold"
   algorithms: "all"   # "all" or name of specific algorithm
-  model: "full_final" # "full" or ablation model
+  model: "full" # "full" or ablation model
 editor_options: 
   chunk_output_type: console
 ---
