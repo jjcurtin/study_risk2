@@ -16,7 +16,7 @@ params:
   lead: 0
   version: "v10"
   cv: "nested"
-  model: "ablate_ema"
+  model: "ablate_gps"
 editor_options: 
   chunk_output_type: console
 ---
@@ -148,7 +148,7 @@ fit_predict_eval <- function(split_num, splits, configs_best,
 ### Read in aggregate CHTC metrics for inner folds
 ```{r read_inner_metrics}
 metrics_raw <- 
-  read_csv(here::here(path_models, str_c("inner_metrics_", window, 
+  read_csv(here::here(path_models, str_c("inner_metrics_6_x_5_1_x_5_day", 
                                    "_", version, "_", cv, "_", model, ".csv")), 
            col_types = "iiiiccdddcdddddddi") |> 
   glimpse()
@@ -239,11 +239,11 @@ if(!file.exists(here::here(path_models, str_c("outer_preds_",
     d <- read_rds(here::here(path_batch, "input", fn))
   }
   
-  if (model == "ablate_ema") {
+if (batch == "ablate_ema") {
   # filter out difference scores
   d <- d |>
-    select(-c(p168.l0.rratecount.count.lapse:urge.p168.l0.dmin_response)) 
-  }
+    select(-c(p24.l0.rratecount.count.lapse:urge.p168.l0.dmin_response))
+}
 
   if (model == "ablate_gps") {
     # filter out difference scores
