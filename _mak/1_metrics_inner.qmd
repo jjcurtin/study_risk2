@@ -185,6 +185,8 @@ results_all %>%
   write_csv(here::here(path_models, str_c("inner_metrics_1_x_5_day", 
                                            "_", version, "_", 
                                             cv, "_", model, ".csv")))
+
+#  write_csv(here::here(path_models, str_c("inner_metrics_6_x_5_day_v10_kfold_full.csv")))
 ```
 
 ### Median metrics across inner folds for model configurations
