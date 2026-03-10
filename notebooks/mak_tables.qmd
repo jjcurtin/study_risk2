@@ -340,7 +340,7 @@ table_dem |>
   kableExtra::group_rows(start_row = 68, end_row = 71) |>
   kableExtra::group_rows(start_row = 73, end_row = 77) |>
   kableExtra::group_rows(start_row = 79, end_row = 83) |>
-  kableExtra::footnote(general = c(footnote_table_dem_a), escape=FALSE)
+  kableExtra::footnote(general = c(footnote_table_dem_a), escape=FALSE) 
 ```
 
 ### Table 2: Model Comparisons
@@ -361,5 +361,5 @@ table_ci |>
   kableExtra::column_spec(1, width = "25em") |> 
   kableExtra::add_footnote(label = footnote_table_model,
                            notation = "none",
-                           escape = FALSE)
+                           escape = FALSE) 
 ```
