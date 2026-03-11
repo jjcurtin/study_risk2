@@ -3457,8 +3457,7 @@ border: 0;
        <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">source</span>(<span class="st">&quot;https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true&quot;</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: &#39;kableExtra&#39;</code></pre>
@@ -3469,332 +3468,319 @@ Attaching package: &#39;kableExtra&#39;</code></pre>
     group_rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: &#39;janitor&#39;</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
-
-    chisq.test, fisher.test</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>path_shared <span class="ot">&lt;-</span> <span class="fu">format_path</span>(<span class="st">&quot;risk2/data_processed/shared&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>path_shared <span class="ot">&lt;-</span> <span class="st">&quot;S:/risk2/data_processed/shared&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">knitr.kable.NA =</span> <span class="st">&#39;&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>study_dates <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;study_dates_gps.csv&quot;</span>), </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>location <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;features_fairness.csv&quot;</span>), </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>intake <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;survey_intake.csv&quot;</span>), </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(subid <span class="sc">%in%</span> study_dates<span class="sc">$</span>subid) </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcs to make df for table 1 (demographics and clinical characteristics)</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>n_total <span class="ot">&lt;-</span> <span class="fu">nrow</span>(study_dates)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>dem_age <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>dem_gender <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> gender) <span class="sc">|&gt;</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(var <span class="sc">!=</span> <span class="st">&quot;Prefer not to say&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Man&quot;</span>,</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Woman&quot;</span>,</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Non-binary&quot;</span>,</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Gender&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>dem_orientation <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> orientation) <span class="sc">|&gt;</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Straight, that is, not gay or lesbian&quot;</span>,</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Lesbian or gay&quot;</span>,</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Bisexual&quot;</span>,</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not sure&quot;</span>,</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Orientation&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>dem_race <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">&quot;race_&quot;</span>), <span class="sc">-</span>race_other_text) <span class="sc">|&gt;</span> </span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;var&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">case_match</span>(var,</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_ai_an&quot;</span> <span class="sc">~</span> <span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_asian&quot;</span> <span class="sc">~</span> <span class="st">&quot;Asian&quot;</span>,</span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_black&quot;</span> <span class="sc">~</span> <span class="st">&quot;Black/African American&quot;</span>,</span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_nat_hi&quot;</span> <span class="sc">~</span> <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_white&quot;</span> <span class="sc">~</span> <span class="st">&quot;White/Caucasian&quot;</span>,</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_hispanic&quot;</span> <span class="sc">~</span> <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_other&quot;</span> <span class="sc">~</span> <span class="st">&quot;Not listed above&quot;</span>),</span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>         <span class="at">var =</span> <span class="fu">factor</span>(var,<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Asian&quot;</span>,</span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Black/African American&quot;</span>,</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;White/Caucasian&quot;</span>,</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(value) <span class="sc">|&gt;</span> </span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>value) <span class="sc">|&gt;</span> </span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Race and Ethnicity (select all that apply)&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>dem_geography <span class="ot">&lt;-</span> location <span class="sc">|&gt;</span> </span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geography =</span> <span class="fu">if_else</span>(geography <span class="sc">==</span> <span class="st">&quot;urban/suburban&quot;</span>, <span class="st">&quot;urban&quot;</span>, <span class="st">&quot;rural&quot;</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> geography) <span class="sc">|&gt;</span></span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Geographic Location&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>dem_education <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> education) <span class="sc">|&gt;</span></span>
-<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
-<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;8th grade or less&quot;</span>,</span>
-<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Some high school, but did not graduate&quot;</span>,</span>
-<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;High school graduate or GED&quot;</span>,</span>
-<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Some college or 2-year degree&quot;</span>,</span>
-<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;4-year college graduate&quot;</span>,</span>
-<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;More than 4-year or advanced degree&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Education&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>dem_employment <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> employment) <span class="sc">|&gt;</span></span>
-<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Employment&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a>dem_income <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> income) <span class="sc">|&gt;</span></span>
-<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
-<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than $25,000&quot;</span>,</span>
-<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$25,000 - $34, 999&quot;</span>,</span>
-<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$35,000 - $49,999&quot;</span>,</span>
-<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$50,000 - $74, 999&quot;</span>,</span>
-<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$75, 000 - $99, 999&quot;</span>,</span>
-<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$100,000 - $149,999&quot;</span>,</span>
-<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$150, 000 - $199,999&quot;</span>,</span>
-<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$200, 000 or more&quot;</span>),</span>
-<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than $25,000&quot;</span>,</span>
-<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$25,000 - $34,999&quot;</span>,</span>
-<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$35,000 - $49,999&quot;</span>,</span>
-<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$50,000 - $74,999&quot;</span>,</span>
-<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$75,000 - $99,999&quot;</span>,</span>
-<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$100,000 - $149,999&quot;</span>,</span>
-<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$150,000 - $199,999&quot;</span>,</span>
-<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$200,000 or more&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Household Income&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a>dsm <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a>            <span class="at">min =</span> <span class="fu">min</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a>            <span class="at">max =</span> <span class="fu">max</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="st">&quot;DSM-5 OUD Symptom Count&quot;</span>,</span>
-<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">as.numeric</span>(<span class="st">&quot;&quot;</span>),</span>
-<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a>        <span class="at">perc =</span> <span class="fu">as.numeric</span>(<span class="st">&quot;&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(var, n, perc, <span class="fu">everything</span>())</span>
-<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-142"><a href="#cb8-142" aria-hidden="true" tabindex="-1"></a>past_month_opioid <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-143"><a href="#cb8-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_month_1_opioid) <span class="sc">|&gt;</span></span>
-<span id="cb8-144"><a href="#cb8-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>),</span>
-<span id="cb8-145"><a href="#cb8-145" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-146"><a href="#cb8-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-147"><a href="#cb8-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-148"><a href="#cb8-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-149"><a href="#cb8-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-150"><a href="#cb8-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Past Month Opioid Use&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-151"><a href="#cb8-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-152"><a href="#cb8-152" aria-hidden="true" tabindex="-1"></a>past_month_detox <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-153"><a href="#cb8-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> other_tx_2) <span class="sc">|&gt;</span></span>
-<span id="cb8-154"><a href="#cb8-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-155"><a href="#cb8-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-156"><a href="#cb8-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Past Month Detox or Residential Treatment&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a>past_month_psych <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> other_tx_1) <span class="sc">|&gt;</span></span>
-<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-166"><a href="#cb8-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Past Month Psychiatric Medication&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-167"><a href="#cb8-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-168"><a href="#cb8-168" aria-hidden="true" tabindex="-1"></a>opioid_preferred <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-169"><a href="#cb8-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_opioid_3) <span class="sc">|&gt;</span></span>
-<span id="cb8-170"><a href="#cb8-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var,</span>
-<span id="cb8-171"><a href="#cb8-171" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Fentanyl (Sublimaze, Actiq, apache, goodfella, TNT)&quot;</span>,</span>
-<span id="cb8-172"><a href="#cb8-172" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Heroin (black tar, black pearl, black, china white, dope, white lady, smack, snow, speedball)&quot;</span>,</span>
-<span id="cb8-173"><a href="#cb8-173" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Prescription opioid not for opioid treatment (OxyContin, Vicodin, Percocet, Opana)&quot;</span>,</span>
-<span id="cb8-174"><a href="#cb8-174" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Medication for opioid treatment (e.g., Suboxone, Methadone, etc.)&quot;</span>),</span>
-<span id="cb8-175"><a href="#cb8-175" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Fentanyl&quot;</span>,</span>
-<span id="cb8-176"><a href="#cb8-176" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Heroin&quot;</span>,</span>
-<span id="cb8-177"><a href="#cb8-177" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Prescription opioid not for opioid treatment&quot;</span>,</span>
-<span id="cb8-178"><a href="#cb8-178" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Medication for opioid treatment&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-179"><a href="#cb8-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-180"><a href="#cb8-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-181"><a href="#cb8-181" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-182"><a href="#cb8-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-183"><a href="#cb8-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Preferred Opioid&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-184"><a href="#cb8-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-185"><a href="#cb8-185" aria-hidden="true" tabindex="-1"></a>roa_preferred <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-186"><a href="#cb8-186" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_opioid_4) <span class="sc">|&gt;</span></span>
-<span id="cb8-187"><a href="#cb8-187" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
-<span id="cb8-188"><a href="#cb8-188" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Injection (IV, muscle, under skin)&quot;</span>,</span>
-<span id="cb8-189"><a href="#cb8-189" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Oral (swallow, chew)&quot;</span>,</span>
-<span id="cb8-190"><a href="#cb8-190" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Smoke (chase)&quot;</span>,</span>
-<span id="cb8-191"><a href="#cb8-191" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Sniff or snort&quot;</span>,</span>
-<span id="cb8-192"><a href="#cb8-192" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Other&quot;</span>),</span>
-<span id="cb8-193"><a href="#cb8-193" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Injection&quot;</span>,</span>
-<span id="cb8-194"><a href="#cb8-194" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Oral&quot;</span>,</span>
-<span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Smoke&quot;</span>,</span>
-<span id="cb8-196"><a href="#cb8-196" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Sniff or snort&quot;</span>,</span>
-<span id="cb8-197"><a href="#cb8-197" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Other&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-198"><a href="#cb8-198" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-199"><a href="#cb8-199" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-200"><a href="#cb8-200" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-201"><a href="#cb8-201" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-202"><a href="#cb8-202" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Preferred Route of Administration&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-203"><a href="#cb8-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-204"><a href="#cb8-204" aria-hidden="true" tabindex="-1"></a>od <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-205"><a href="#cb8-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_life_overdose) <span class="sc">|&gt;</span></span>
-<span id="cb8-206"><a href="#cb8-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
-<span id="cb8-207"><a href="#cb8-207" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>,</span>
-<span id="cb8-208"><a href="#cb8-208" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;1 time&quot;</span>,</span>
-<span id="cb8-209"><a href="#cb8-209" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;2-3 times&quot;</span>,</span>
-<span id="cb8-210"><a href="#cb8-210" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;4-5 times&quot;</span>,</span>
-<span id="cb8-211"><a href="#cb8-211" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;More than 5 times&quot;</span>),</span>
-<span id="cb8-212"><a href="#cb8-212" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Never&quot;</span>,</span>
-<span id="cb8-213"><a href="#cb8-213" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;1 time&quot;</span>,</span>
-<span id="cb8-214"><a href="#cb8-214" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;2-3 times&quot;</span>,</span>
-<span id="cb8-215"><a href="#cb8-215" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;4-5 times&quot;</span>,</span>
-<span id="cb8-216"><a href="#cb8-216" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;More than 5 times&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-217"><a href="#cb8-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-218"><a href="#cb8-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-219"><a href="#cb8-219" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-220"><a href="#cb8-220" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-221"><a href="#cb8-221" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Lifetime History of Overdose&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb8-222"><a href="#cb8-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-223"><a href="#cb8-223" aria-hidden="true" tabindex="-1"></a>dsm <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb8-224"><a href="#cb8-224" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> dsm_c) <span class="sc">|&gt;</span></span>
-<span id="cb8-225"><a href="#cb8-225" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">case_match</span>(var,</span>
-<span id="cb8-226"><a href="#cb8-226" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;Under threshold (0-1)&quot;</span>,</span>
-<span id="cb8-227"><a href="#cb8-227" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;Under threshold (0-1)&quot;</span>,</span>
-<span id="cb8-228"><a href="#cb8-228" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;Mild (2-3)&quot;</span>,</span>
-<span id="cb8-229"><a href="#cb8-229" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;Mild (2-3)&quot;</span>,</span>
-<span id="cb8-230"><a href="#cb8-230" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;Moderate (4-5)&quot;</span>,</span>
-<span id="cb8-231"><a href="#cb8-231" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">5</span> <span class="sc">~</span> <span class="st">&quot;Moderate (4-5)&quot;</span>,</span>
-<span id="cb8-232"><a href="#cb8-232" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">6</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
-<span id="cb8-233"><a href="#cb8-233" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
-<span id="cb8-234"><a href="#cb8-234" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">8</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
-<span id="cb8-235"><a href="#cb8-235" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">9</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
-<span id="cb8-236"><a href="#cb8-236" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">10</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
-<span id="cb8-237"><a href="#cb8-237" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">11</span> <span class="sc">~</span><span class="st">&quot;Severe (6+)&quot;</span>),</span>
-<span id="cb8-238"><a href="#cb8-238" aria-hidden="true" tabindex="-1"></a>         <span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Under threshold (0-1)&quot;</span>,</span>
-<span id="cb8-239"><a href="#cb8-239" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Mild (2-3)&quot;</span>,</span>
-<span id="cb8-240"><a href="#cb8-240" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Moderate (4-5)&quot;</span>,</span>
-<span id="cb8-241"><a href="#cb8-241" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Severe (6+)&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb8-242"><a href="#cb8-242" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb8-243"><a href="#cb8-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb8-244"><a href="#cb8-244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-245"><a href="#cb8-245" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb8-246"><a href="#cb8-246" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Self-reported DSM-5 OUD Symptom Count&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb8-247"><a href="#cb8-247" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="fu">tibble</span>(<span class="at">var =</span> <span class="st">&quot;Mild (2-3)&quot;</span>, <span class="at">n =</span> <span class="dv">0</span>, <span class="at">perc =</span> <span class="dv">0</span>), <span class="at">.before =</span> <span class="dv">3</span>)</span>
-<span id="cb8-248"><a href="#cb8-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-249"><a href="#cb8-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-250"><a href="#cb8-250" aria-hidden="true" tabindex="-1"></a>table_dem <span class="ot">&lt;-</span> dem_age <span class="sc">|&gt;</span> </span>
-<span id="cb8-251"><a href="#cb8-251" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_gender) <span class="sc">|&gt;</span> </span>
-<span id="cb8-252"><a href="#cb8-252" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_orientation) <span class="sc">|&gt;</span> </span>
-<span id="cb8-253"><a href="#cb8-253" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_race) <span class="sc">|&gt;</span> </span>
-<span id="cb8-254"><a href="#cb8-254" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_geography) <span class="sc">|&gt;</span> </span>
-<span id="cb8-255"><a href="#cb8-255" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_education) <span class="sc">|&gt;</span> </span>
-<span id="cb8-256"><a href="#cb8-256" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_employment) <span class="sc">|&gt;</span> </span>
-<span id="cb8-257"><a href="#cb8-257" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_income) <span class="sc">|&gt;</span> </span>
-<span id="cb8-258"><a href="#cb8-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dsm) <span class="sc">|&gt;</span></span>
-<span id="cb8-259"><a href="#cb8-259" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(past_month_opioid) <span class="sc">|&gt;</span> </span>
-<span id="cb8-260"><a href="#cb8-260" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(past_month_detox) <span class="sc">|&gt;</span> </span>
-<span id="cb8-261"><a href="#cb8-261" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(past_month_psych) <span class="sc">|&gt;</span> </span>
-<span id="cb8-262"><a href="#cb8-262" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(opioid_preferred) <span class="sc">|&gt;</span> </span>
-<span id="cb8-263"><a href="#cb8-263" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(roa_preferred) <span class="sc">|&gt;</span> </span>
-<span id="cb8-264"><a href="#cb8-264" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(od) <span class="sc">|&gt;</span> </span>
-<span id="cb8-265"><a href="#cb8-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> <span class="fu">round</span>(perc, <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb8-266"><a href="#cb8-266" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at"> </span><span class="st">`</span> <span class="ot">=</span> var,</span>
-<span id="cb8-267"><a href="#cb8-267" aria-hidden="true" tabindex="-1"></a>         <span class="at">N =</span> n,</span>
-<span id="cb8-268"><a href="#cb8-268" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">%</span><span class="st">`</span> <span class="ot">=</span> perc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>study_dates <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;study_dates_gps.csv&quot;</span>), </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>location <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;features_fairness.csv&quot;</span>), </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>intake <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;survey_intake.csv&quot;</span>), </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(subid <span class="sc">%in%</span> study_dates<span class="sc">$</span>subid) </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcs to make df for table 1 (demographics and clinical characteristics)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>n_total <span class="ot">&lt;-</span> <span class="fu">nrow</span>(study_dates)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>dem_age <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>dem_gender <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> gender) <span class="sc">|&gt;</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(var <span class="sc">!=</span> <span class="st">&quot;Prefer not to say&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Man&quot;</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Woman&quot;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Non-binary&quot;</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Gender&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>dem_orientation <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> orientation) <span class="sc">|&gt;</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Straight, that is, not gay or lesbian&quot;</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Lesbian or gay&quot;</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Bisexual&quot;</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not sure&quot;</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Orientation&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>dem_race <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">&quot;race_&quot;</span>), <span class="sc">-</span>race_other_text) <span class="sc">|&gt;</span> </span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;var&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">case_match</span>(var,</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_ai_an&quot;</span> <span class="sc">~</span> <span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_asian&quot;</span> <span class="sc">~</span> <span class="st">&quot;Asian&quot;</span>,</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_black&quot;</span> <span class="sc">~</span> <span class="st">&quot;Black/African American&quot;</span>,</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_nat_hi&quot;</span> <span class="sc">~</span> <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_white&quot;</span> <span class="sc">~</span> <span class="st">&quot;White/Caucasian&quot;</span>,</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_hispanic&quot;</span> <span class="sc">~</span> <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_other&quot;</span> <span class="sc">~</span> <span class="st">&quot;Not listed above&quot;</span>),</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>         <span class="at">var =</span> <span class="fu">factor</span>(var,<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Asian&quot;</span>,</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Black/African American&quot;</span>,</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;White/Caucasian&quot;</span>,</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(value) <span class="sc">|&gt;</span> </span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>value) <span class="sc">|&gt;</span> </span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Race and Ethnicity (select all that apply)&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `var = case_match(...)`.
+Caused by warning:
+! `case_match()` was deprecated in dplyr 1.2.0.
+ℹ Please use `recode_values()` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dem_geography <span class="ot">&lt;-</span> location <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geography =</span> <span class="fu">if_else</span>(geography <span class="sc">==</span> <span class="st">&quot;urban/suburban&quot;</span>, <span class="st">&quot;urban&quot;</span>, <span class="st">&quot;rural&quot;</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> geography) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Geographic Location&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>dem_education <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> education) <span class="sc">|&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;8th grade or less&quot;</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Some high school, but did not graduate&quot;</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;High school graduate or GED&quot;</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Some college or 2-year degree&quot;</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;4-year college graduate&quot;</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;More than 4-year or advanced degree&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Education&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>dem_employment <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> employment) <span class="sc">|&gt;</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Employment&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>dem_income <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> income) <span class="sc">|&gt;</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than $25,000&quot;</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$25,000 - $34, 999&quot;</span>,</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$35,000 - $49,999&quot;</span>,</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$50,000 - $74, 999&quot;</span>,</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$75, 000 - $99, 999&quot;</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$100,000 - $149,999&quot;</span>,</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$150, 000 - $199,999&quot;</span>,</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$200, 000 or more&quot;</span>),</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than $25,000&quot;</span>,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$25,000 - $34,999&quot;</span>,</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$35,000 - $49,999&quot;</span>,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$50,000 - $74,999&quot;</span>,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$75,000 - $99,999&quot;</span>,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$100,000 - $149,999&quot;</span>,</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$150,000 - $199,999&quot;</span>,</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;$200,000 or more&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Household Income&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>dsm <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">min =</span> <span class="fu">min</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">max =</span> <span class="fu">max</span>(dsm_c, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="st">&quot;DSM-5 OUD Symptom Count&quot;</span>,</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">as.numeric</span>(<span class="st">&quot;&quot;</span>),</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>        <span class="at">perc =</span> <span class="fu">as.numeric</span>(<span class="st">&quot;&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(var, n, perc, <span class="fu">everything</span>())</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>past_month_opioid <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_month_1_opioid) <span class="sc">|&gt;</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>),</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Past Month Opioid Use&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>past_month_detox <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> other_tx_2) <span class="sc">|&gt;</span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Past Month Detox or Residential Treatment&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>past_month_psych <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> other_tx_1) <span class="sc">|&gt;</span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Past Month Psychiatric Medication&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>opioid_preferred <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_opioid_3) <span class="sc">|&gt;</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var,</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Fentanyl (Sublimaze, Actiq, apache, goodfella, TNT)&quot;</span>,</span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Heroin (black tar, black pearl, black, china white, dope, white lady, smack, snow, speedball)&quot;</span>,</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Prescription opioid not for opioid treatment (OxyContin, Vicodin, Percocet, Opana)&quot;</span>,</span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Medication for opioid treatment (e.g., Suboxone, Methadone, etc.)&quot;</span>),</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Fentanyl&quot;</span>,</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Heroin&quot;</span>,</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Prescription opioid not for opioid treatment&quot;</span>,</span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Medication for opioid treatment&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Preferred Opioid&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>roa_preferred <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_opioid_4) <span class="sc">|&gt;</span></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Injection (IV, muscle, under skin)&quot;</span>,</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Oral (swallow, chew)&quot;</span>,</span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Smoke (chase)&quot;</span>,</span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Sniff or snort&quot;</span>,</span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Other&quot;</span>),</span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Injection&quot;</span>,</span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Oral&quot;</span>,</span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Smoke&quot;</span>,</span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Sniff or snort&quot;</span>,</span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Other&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Preferred Route of Administration&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>od <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> whoassist_life_overdose) <span class="sc">|&gt;</span></span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>,</span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;1 time&quot;</span>,</span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;2-3 times&quot;</span>,</span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;4-5 times&quot;</span>,</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;More than 5 times&quot;</span>),</span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Never&quot;</span>,</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;1 time&quot;</span>,</span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;2-3 times&quot;</span>,</span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;4-5 times&quot;</span>,</span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;More than 5 times&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Lifetime History of Overdose&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>dsm <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> dsm_c) <span class="sc">|&gt;</span></span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">case_match</span>(var,</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;Under threshold (0-1)&quot;</span>,</span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">1</span> <span class="sc">~</span> <span class="st">&quot;Under threshold (0-1)&quot;</span>,</span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">2</span> <span class="sc">~</span> <span class="st">&quot;Mild (2-3)&quot;</span>,</span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">3</span> <span class="sc">~</span> <span class="st">&quot;Mild (2-3)&quot;</span>,</span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">4</span> <span class="sc">~</span> <span class="st">&quot;Moderate (4-5)&quot;</span>,</span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">5</span> <span class="sc">~</span> <span class="st">&quot;Moderate (4-5)&quot;</span>,</span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">6</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">8</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">9</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">10</span> <span class="sc">~</span> <span class="st">&quot;Severe (6+)&quot;</span>,</span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>                          <span class="dv">11</span> <span class="sc">~</span><span class="st">&quot;Severe (6+)&quot;</span>),</span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>         <span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Under threshold (0-1)&quot;</span>,</span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Mild (2-3)&quot;</span>,</span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Moderate (4-5)&quot;</span>,</span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Severe (6+)&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Self-reported DSM-5 OUD Symptom Count&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="fu">tibble</span>(<span class="at">var =</span> <span class="st">&quot;Mild (2-3)&quot;</span>, <span class="at">n =</span> <span class="dv">0</span>, <span class="at">perc =</span> <span class="dv">0</span>), <span class="at">.before =</span> <span class="dv">3</span>)</span>
+<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a>table_dem <span class="ot">&lt;-</span> dem_age <span class="sc">|&gt;</span> </span>
+<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_gender) <span class="sc">|&gt;</span> </span>
+<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_orientation) <span class="sc">|&gt;</span> </span>
+<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_race) <span class="sc">|&gt;</span> </span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_geography) <span class="sc">|&gt;</span> </span>
+<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_education) <span class="sc">|&gt;</span> </span>
+<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_employment) <span class="sc">|&gt;</span> </span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dem_income) <span class="sc">|&gt;</span> </span>
+<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(dsm) <span class="sc">|&gt;</span></span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(past_month_opioid) <span class="sc">|&gt;</span> </span>
+<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(past_month_detox) <span class="sc">|&gt;</span> </span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(past_month_psych) <span class="sc">|&gt;</span> </span>
+<span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(opioid_preferred) <span class="sc">|&gt;</span> </span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(roa_preferred) <span class="sc">|&gt;</span> </span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(od) <span class="sc">|&gt;</span> </span>
+<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> <span class="fu">round</span>(perc, <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at"> </span><span class="st">`</span> <span class="ot">=</span> var,</span>
+<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a>         <span class="at">N =</span> n,</span>
+<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">%</span><span class="st">`</span> <span class="ot">=</span> perc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>path_models <span class="ot">&lt;-</span> <span class="fu">format_path</span>(<span class="fu">str_c</span>(<span class="st">&quot;risk2/models/combined&quot;</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>table_ci <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;contrast_ablate_v10.csv&quot;</span>),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>path_models <span class="ot">&lt;-</span> <span class="st">&quot;S:/risk2/models/combined&quot;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>table_ci <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;contrast_ablate_v10.csv&quot;</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <section id="table-1-demographics-and-clinical-characteristics" class="level3">
 <h3 class="anchored" data-anchor-id="table-1-demographics-and-clinical-characteristics">Table 1: Demographics and Clinical Characteristics</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>footnote_table_dem_a <span class="ot">&lt;-</span> <span class="st">&quot;N = 296&quot;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>table_dem <span class="sc">|&gt;</span> </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">2</span>, <span class="at">end_row =</span> <span class="dv">7</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">9</span>, <span class="at">end_row =</span> <span class="dv">12</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">14</span>, <span class="at">end_row =</span> <span class="dv">18</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">20</span>, <span class="at">end_row =</span> <span class="dv">26</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">28</span>, <span class="at">end_row =</span> <span class="dv">29</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">31</span>, <span class="at">end_row =</span> <span class="dv">36</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">38</span>, <span class="at">end_row =</span> <span class="dv">43</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">45</span>, <span class="at">end_row =</span> <span class="dv">52</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">54</span>, <span class="at">end_row =</span> <span class="dv">57</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">59</span>, <span class="at">end_row =</span> <span class="dv">60</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">62</span>, <span class="at">end_row =</span> <span class="dv">63</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">65</span>, <span class="at">end_row =</span> <span class="dv">66</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">68</span>, <span class="at">end_row =</span> <span class="dv">71</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">73</span>, <span class="at">end_row =</span> <span class="dv">77</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">79</span>, <span class="at">end_row =</span> <span class="dv">83</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">footnote</span>(<span class="at">general =</span> <span class="fu">c</span>(footnote_table_dem_a), <span class="at">escape=</span><span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
-Use &#39;xfun::attr2()&#39; instead.
-See help(&quot;Deprecated&quot;)
-Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
-Use &#39;xfun::attr2()&#39; instead.
-See help(&quot;Deprecated&quot;)</code></pre>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>footnote_table_dem_a <span class="ot">&lt;-</span> <span class="st">&quot;N = 296&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>table_dem <span class="sc">|&gt;</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">2</span>, <span class="at">end_row =</span> <span class="dv">7</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">9</span>, <span class="at">end_row =</span> <span class="dv">12</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">14</span>, <span class="at">end_row =</span> <span class="dv">18</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">20</span>, <span class="at">end_row =</span> <span class="dv">26</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">28</span>, <span class="at">end_row =</span> <span class="dv">29</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">31</span>, <span class="at">end_row =</span> <span class="dv">36</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">38</span>, <span class="at">end_row =</span> <span class="dv">43</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">45</span>, <span class="at">end_row =</span> <span class="dv">52</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">54</span>, <span class="at">end_row =</span> <span class="dv">57</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">59</span>, <span class="at">end_row =</span> <span class="dv">60</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">62</span>, <span class="at">end_row =</span> <span class="dv">63</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">65</span>, <span class="at">end_row =</span> <span class="dv">66</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">68</span>, <span class="at">end_row =</span> <span class="dv">71</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">73</span>, <span class="at">end_row =</span> <span class="dv">77</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">79</span>, <span class="at">end_row =</span> <span class="dv">83</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">footnote</span>(<span class="at">general =</span> <span class="fu">c</span>(footnote_table_dem_a), <span class="at">escape=</span><span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div><div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Demographic and Clinical Characteristics
@@ -4251,35 +4237,27 @@ Demographic and Clinical Characteristics
 </div>
 </div>
 </figure>
-</div></div>
+</div></div></div>
 </div></div>
 </section>
 <section id="table-2-model-comparisons" class="level3">
 <h3 class="anchored" data-anchor-id="table-2-model-comparisons">Table 2: Model Comparisons</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>footnote_table_model <span class="ot">&lt;-</span> <span class="st">&quot;Median auROC differences greater than 0 indicate the full model, on average, performed better than the ablated model (i.e., full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is greater than 0 (i.e., the full model is performing better).&quot;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>table_ci <span class="sc">|&gt;</span> </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Median auROC Difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Probability =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability)) <span class="sc">|&gt;</span> </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Contrast =</span> contrast, <span class="st">`</span><span class="at">Median auROC Difference</span><span class="st">`</span>, <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span>, Probability) <span class="sc">|&gt;</span> </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">width =</span> <span class="st">&quot;25em&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">add_footnote</span>(<span class="at">label =</span> footnote_table_model,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">notation =</span> <span class="st">&quot;none&quot;</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">escape =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
-Use &#39;xfun::attr2()&#39; instead.
-See help(&quot;Deprecated&quot;)
-Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
-Use &#39;xfun::attr2()&#39; instead.
-See help(&quot;Deprecated&quot;)</code></pre>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="tbl-2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>footnote_table_model <span class="ot">&lt;-</span> <span class="st">&quot;Median auROC differences greater than 0 indicate the full model, on average, performed better than the ablated model (i.e., full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is greater than 0 (i.e., the full model is performing better).&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>table_ci <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">round</span>(lower, <span class="dv">3</span>), <span class="st">&quot;, &quot;</span>, <span class="fu">round</span>(upper, <span class="dv">3</span>), <span class="st">&quot;]&quot;</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">`</span><span class="at">Median auROC Difference</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">as.character</span>(<span class="fu">round</span>(median, <span class="dv">3</span>)),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Probability =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.3f&quot;</span>, probability)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Contrast =</span> contrast, <span class="st">`</span><span class="at">Median auROC Difference</span><span class="st">`</span>, <span class="st">`</span><span class="at">Bayesian CI</span><span class="st">`</span>, Probability) <span class="sc">|&gt;</span> </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_classic</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">width =</span> <span class="st">&quot;25em&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">add_footnote</span>(<span class="at">label =</span> footnote_table_model,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">notation =</span> <span class="st">&quot;none&quot;</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">escape =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div><div id="tbl-2" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was larger than 0 for all ablated model contrasts.
@@ -4325,7 +4303,7 @@ Median difference in auROC, 95% Bayesian credible interval (CI), and posterior p
 </div>
 </div>
 </figure>
-</div></div>
+</div></div></div>
 </div></div>
 </section>
      </main>
