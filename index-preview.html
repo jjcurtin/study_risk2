@@ -7,7 +7,7 @@
 
     <meta name="author" content="Kendra Wyant">
     <meta name="author" content="John J. Curtin">
-    <meta name="dcterms.date" content="2026-03-05">
+    <meta name="dcterms.date" content="2026-03-10">
     <meta name="keywords" content="Substance use disorders, Precision mental health">
 
     <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -190,10 +190,10 @@
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-05">
-<meta name="citation_cover_date" content="2026-03-05">
+<meta name="citation_publication_date" content="2026-03-10">
+<meta name="citation_cover_date" content="2026-03-10">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-05">
+<meta name="citation_online_date" content="2026-03-10">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Diagnostic and statistical manual of mental disorders : DSM-5-TR;,citation_abstract=lxix, 1050 pages ; 26 cm;,citation_author=American Psychiatric Association;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;">
 <meta name="citation_reference" content="citation_title=Center for high throughput computing;,citation_author=Center for High Throughput Computing;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_doi=10.21231/GNT1-HW21;,citation_publisher=Center for High Throughput Computing;">
@@ -271,7 +271,7 @@
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 5, 2026</p>
+              <p class="date">March 10, 2026</p>
             </div>
           </div>
           
@@ -357,14 +357,16 @@
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">source</span>(<span class="st">"https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>path_models <span class="ot">&lt;-</span> <span class="fu">format_path</span>(<span class="fu">str_c</span>(<span class="st">"risk2/models/combined"</span>))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pp_perf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">"pp_perf_tibble_v10.csv"</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>probs <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">"preds_1_x_5_day_v10_kfold_full_final.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># path_models &lt;- format_path(str_c("risk2/models/combined"))</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>path_models <span class="ot">&lt;-</span> <span class="st">"S:/risk2/models/combined"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>pp_perf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">"pp_perf_tibble_v10.csv"</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>probs <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">"preds_1_x_5_day_v10_kfold_full_final.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
@@ -422,7 +424,7 @@
 <p>Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem <span class="citation" data-cites="kuhnTidymodelsCollectionPackages2020 kuhnTidyposteriorBayesianAnalysis2022 goodrichRstanarmBayesianApplied2023">(<a href="#ref-goodrichRstanarmBayesianApplied2023" role="doc-biblioref">Goodrich et al., 2023</a>; <a href="#ref-kuhnTidyposteriorBayesianAnalysis2022" role="doc-biblioref">Kuhn, 2022</a>; <a href="#ref-kuhnTidymodelsCollectionPackages2020" role="doc-biblioref">Kuhn &amp; Wickham, 2020</a>)</span>. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing <span class="citation" data-cites="chtc">(<a href="#ref-chtc" role="doc-biblioref">Center for High Throughput Computing, 2006</a>)</span>.</p>
 <section id="feature-engineering" class="level3">
 <h3 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h3>
-<p>Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. We calculated a total of 289 features from three data sources:</p>
+<p>Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. We calculated a total of 297 features from three data sources:</p>
 <ol type="1">
 <li><p><em>The prediction window day.</em> We created one-hot coded features for day of the week for the start of the prediction window.</p></li>
 <li><p><em>Demographic individual differences.</em> For demographics, we created ordinal features for age, education, and income based on predefined response ranges (see <a href="#tbl-1" class="quarto-xref">Table&nbsp;1</a> for ranges), an ordinal feature for RUCA code associated with home address (range 1-10), and one-hot coded features for gender (male, not male), race and ethnicity (non-Hispanic White, Hispanic and/or not White), orientation (heterosexual, not heterosexual), and employment (employed, not employed/looking for work, not employed/not looking or able to work).</p></li>
@@ -496,7 +498,7 @@
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">68</span>, end_row <span class="op">=</span> <span class="dv">71</span>) <span class="op">|&gt;</span></span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">73</span>, end_row <span class="op">=</span> <span class="dv">77</span>) <span class="op">|&gt;</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  kableExtra::group_rows(start_row <span class="op">=</span> <span class="dv">79</span>, end_row <span class="op">=</span> <span class="dv">83</span>) <span class="op">|&gt;</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  kableExtra::footnote(general <span class="op">=</span> c(footnote_table_dem_a), escape<span class="op">=</span>FALSE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  kableExtra::footnote(general <span class="op">=</span> c(footnote_table_dem_a), escape<span class="op">=</span>FALSE) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in attr(x, "align"): 'xfun::attr()' is deprecated.
 Use 'xfun::attr2()' instead.
@@ -1009,7 +1011,7 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 </section>
 <section id="auroc-and-model-comparisons-1" class="level2">
 <h2 class="anchored" data-anchor-id="auroc-and-model-comparisons-1">auROC and Model Comparisons</h2>
-<p>The median posterior probability for the best full model was 0.91, with narrow 95% CI ([0.90, 0.92]). To evaluate the incremental predictive value of our dynamic sensing features, we compared the performance of our full model to the performance of three ablated models: 0.62 (ablated daily survey features), 0.92 (ablated geolocation features), and 0.55 (ablated daily survey and geolocation features). There was strong evidence that the full model’s performance was better compared to models that ablated the daily survey features and the daily survey and geolocation features combined (probabilities = 1.00). There was no evidence that the full model performed better than a model with geolocation features ablated (probability = 0.35). The median difference in auROC, 95% Bayesian CI, and posterior probability that that the auROC difference was greater than 0 for all ablation contrasts are presented in <a href="#tbl-2" class="quarto-xref">Table&nbsp;2</a>.</p>
+<p>The median posterior probability for the best full model was 0.94, with narrow 95% CI ([0.93, 0.95]). To evaluate the incremental predictive value of our dynamic sensing features, we compared the performance of our full model to the performance of three ablated models: 0.63 (ablated daily survey features), 0.94 (ablated geolocation features), and 0.55 (ablated daily survey and geolocation features). There was strong evidence that the full model’s performance was better compared to models that ablated the daily survey features and the daily survey and geolocation features combined (probabilities = 1.00). There was no evidence that the full model performed better than a model with geolocation features ablated (probability = 0.34). The median difference in auROC, 95% Bayesian CI, and posterior probability that that the auROC difference was greater than 0 for all ablation contrasts are presented in <a href="#tbl-2" class="quarto-xref">Table&nbsp;2</a>.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_tables.qmd" data-notebook-title="Make All Tables for Main Manuscript" data-notebook-cellid="cell-tbl-2">
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>footnote_table_model <span class="op">&lt;-</span> <span class="st">"Median auROC differences greater than 0 indicate the full model, on average, performed better than the ablated model (i.e., full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is greater than 0 (i.e., the full model is performing better)."</span></span>
@@ -1024,7 +1026,7 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  kableExtra::column_spec(<span class="dv">1</span>, width <span class="op">=</span> <span class="st">"25em"</span>) <span class="op">|&gt;</span> </span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  kableExtra::add_footnote(label <span class="op">=</span> footnote_table_model,</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                           notation <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                           escape <span class="op">=</span> FALSE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                           escape <span class="op">=</span> FALSE) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in attr(x, "align"): 'xfun::attr()' is deprecated.
 Use 'xfun::attr2()' instead.
@@ -1052,20 +1054,20 @@ Table&nbsp;2: Median difference in auROC, 95% Bayesian credible interval (CI), a
 <tbody>
 <tr class="odd">
 <td style="text-align: left; width: 25em;">full vs. ablated daily survey</td>
-<td style="text-align: left;">0.294</td>
-<td style="text-align: left;">[0.271, 0.317]</td>
+<td style="text-align: left;">0.314</td>
+<td style="text-align: left;">[0.29, 0.338]</td>
 <td style="text-align: left;">1.000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; width: 25em;">full vs. ablated geolocation</td>
 <td style="text-align: left;">-0.002</td>
-<td style="text-align: left;">[-0.012, 0.007]</td>
-<td style="text-align: left;">0.349</td>
+<td style="text-align: left;">[-0.009, 0.005]</td>
+<td style="text-align: left;">0.342</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left; width: 25em;">full vs. ablated daily survey and geolocation</td>
-<td style="text-align: left;">0.363</td>
-<td style="text-align: left;">[0.339, 0.388]</td>
+<td style="text-align: left;">0.389</td>
+<td style="text-align: left;">[0.363, 0.414]</td>
 <td style="text-align: left;">1.000</td>
 </tr>
 </tbody><tfoot>
@@ -1084,7 +1086,7 @@ Table&nbsp;2: Median difference in auROC, 95% Bayesian credible interval (CI), a
 </div></div>
 </div></div>
 </div>
-<p>Our fairness subgroup comparisons for the full model revealed moderate evidence that performance differed by geographic location (probability = 0.85) and strong evidence that performance differed by gender, income, race and ethnicity, and sexual orientation (probabilities &gt; 0.94). Notably, our model performed better for individuals with an annual income of less than $25,000 compared to individuals with an annual income greater than $25,000, thus favoring the disadvantaged group. While differences in performance estimates exist, this model is likely still clinically meaningful across subgroups, as all subgroups yielded median auROCs between 0.88 - 0.92 (<a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>). A table of fairness subgroup comparisons is available in the supplement.</p>
+<p>Our fairness subgroup comparisons for the full model revealed strong evidence that performance differed by gender, income, race and ethnicity, sexual orientation, and geographic location (probabilities &gt; 0.97). Notably, our model performed better for individuals with an annual income of less than $25,000 compared to individuals with an annual income greater than $25,000, thus favoring the disadvantaged group. While differences in performance estimates exist, this model is likely still clinically meaningful across subgroups, as all subgroups yielded median auROCs between 0.91 - 0.95 (<a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>). A table of fairness subgroup comparisons is available in the supplement.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-1">
 <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-1" class="cell" data-message="false">
 <details class="code-fold">
@@ -1147,7 +1149,7 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </section>
 <section id="calibration-and-overall-performance-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-and-overall-performance-1">Calibration and Overall Performance</h2>
-<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and down-sampled the majority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.016). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.016). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.6; left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.6; left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-2">
 <div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-2" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cal <span class="op">&lt;-</span> preds_all_raw <span class="op">|&gt;</span> </span>
@@ -1217,12 +1219,12 @@ Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scale
 <h2 class="anchored" data-anchor-id="feature-importance-1">Feature Importance</h2>
 <p>Feature importance values can also be aggregated across all participants and all observations to provide a relative rank ordering of the most important features. A traditional mean absolute Shapley value approach revealed the most important features (i.e., largest magnitude of contribution to the prediction) to be differences in past opioid use.</p>
 <p>The second way we calculated feature importance was by calculating the proportion of observations in which each feature category had the highest Shapley value. This approach summarizes how frequently a feature category is influential across observations (i.e., considering both magnitude and prevalence). We provided a plot of the relative ranking of feature categories by their overall feature importance using these two methods.</p>
-<p>For brevity, we are only displaying the top 30 features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.<!--mention 85 total number of categories--></p>
+<p>For brevity, we are only displaying the top 30 (out of 186) features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-3">
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>global_panel <span class="op">+</span> local_panel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" height="480" width="768">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" width="768" height="480">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
 <a href="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: "><img src="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" id="fig-3" width="768" height="480" class="figure-img"></a>
@@ -1369,7 +1371,7 @@ Xin, Y., Schwarting, C. M., Wasef, M. R., &amp; Davis, A. K. (2023). Exploring t
 <li id="fn2"><p>Participants were also compensated for providing other sensing data as part of the parent grant’s aims, including $10 per month for sharing cellular communication logs and text message content and up to $10 per month for the daily video check-in.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>405 participants consented to participate in the study and provided at least one daily survey; however, 75 participants dropped out prior to completing the first personalized monthly survey and were therefore not considered fully enrolled in the study.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>If adherence fell below 33% (roughly 9 surveys in a 28-day period) for a prolonged period of time, participant study end dates were changed to match the start of this adherence drop.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>The best model configuration used 5:1 downsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 5, mtry = 40.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
      </main>

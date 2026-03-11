@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
     <meta name="author" content="Kendra Wyant">
-    <meta name="dcterms.date" content="2026-03-05">
+    <meta name="dcterms.date" content="2026-03-10">
 
     <title>Make All Tables for Main Manuscript</title>
     <style>
@@ -3424,7 +3424,7 @@ border: 0;
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 5, 2026</p>
+              <p class="date">March 10, 2026</p>
             </div>
           </div>
           
@@ -3785,7 +3785,7 @@ Attaching package: &#39;janitor&#39;</code></pre>
 <span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">68</span>, <span class="at">end_row =</span> <span class="dv">71</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">73</span>, <span class="at">end_row =</span> <span class="dv">77</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">group_rows</span>(<span class="at">start_row =</span> <span class="dv">79</span>, <span class="at">end_row =</span> <span class="dv">83</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">footnote</span>(<span class="at">general =</span> <span class="fu">c</span>(footnote_table_dem_a), <span class="at">escape=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">footnote</span>(<span class="at">general =</span> <span class="fu">c</span>(footnote_table_dem_a), <span class="at">escape=</span><span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
 Use &#39;xfun::attr2()&#39; instead.
@@ -4270,7 +4270,7 @@ Demographic and Clinical Characteristics
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">column_spec</span>(<span class="dv">1</span>, <span class="at">width =</span> <span class="st">&quot;25em&quot;</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">add_footnote</span>(<span class="at">label =</span> footnote_table_model,</span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">notation =</span> <span class="st">&quot;none&quot;</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">escape =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">escape =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in attr(x, &quot;align&quot;): &#39;xfun::attr()&#39; is deprecated.
 Use &#39;xfun::attr2()&#39; instead.
@@ -4298,20 +4298,20 @@ Median difference in auROC, 95% Bayesian credible interval (CI), and posterior p
 <tbody>
   <tr>
    <td style="text-align:left;width: 25em; "> full vs. ablated daily survey </td>
-   <td style="text-align:left;"> 0.294 </td>
-   <td style="text-align:left;"> [0.271, 0.317] </td>
+   <td style="text-align:left;"> 0.314 </td>
+   <td style="text-align:left;"> [0.29, 0.338] </td>
    <td style="text-align:left;"> 1.000 </td>
   </tr>
   <tr>
    <td style="text-align:left;width: 25em; "> full vs. ablated geolocation </td>
    <td style="text-align:left;"> -0.002 </td>
-   <td style="text-align:left;"> [-0.012, 0.007] </td>
-   <td style="text-align:left;"> 0.349 </td>
+   <td style="text-align:left;"> [-0.009, 0.005] </td>
+   <td style="text-align:left;"> 0.342 </td>
   </tr>
   <tr>
    <td style="text-align:left;width: 25em; "> full vs. ablated daily survey and geolocation </td>
-   <td style="text-align:left;"> 0.363 </td>
-   <td style="text-align:left;"> [0.339, 0.388] </td>
+   <td style="text-align:left;"> 0.389 </td>
+   <td style="text-align:left;"> [0.363, 0.414] </td>
    <td style="text-align:left;"> 1.000 </td>
   </tr>
 </tbody>
