@@ -22,11 +22,9 @@ html-table-processing: none
 #| warning: false
 
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
 library(kableExtra)
-library(janitor)
 
-path_shared <- format_path("risk2/data_processed/shared")
+path_shared <- "S:/risk2/data_processed/shared"
 
 options(knitr.kable.NA = '')
 ```
@@ -306,7 +304,7 @@ table_dem <- dem_age |>
 
 ```{r}
 
-path_models <- format_path(str_c("risk2/models/combined"))
+path_models <- "S:/risk2/models/combined"
 
 table_ci <- read_csv(here::here(path_models, "contrast_ablate_v10.csv"),
                     show_col_types = FALSE) 
@@ -340,7 +338,7 @@ table_dem |>
   kableExtra::group_rows(start_row = 68, end_row = 71) |>
   kableExtra::group_rows(start_row = 73, end_row = 77) |>
   kableExtra::group_rows(start_row = 79, end_row = 83) |>
-  kableExtra::footnote(general = c(footnote_table_dem_a), escape=FALSE)
+  kableExtra::footnote(general = c(footnote_table_dem_a), escape=FALSE) 
 ```
 
 ### Table 2: Model Comparisons
@@ -361,5 +359,5 @@ table_ci |>
   kableExtra::column_spec(1, width = "25em") |> 
   kableExtra::add_footnote(label = footnote_table_model,
                            notation = "none",
-                           escape = FALSE)
+                           escape = FALSE) 
 ```

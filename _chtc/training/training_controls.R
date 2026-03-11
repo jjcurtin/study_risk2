@@ -10,8 +10,8 @@ study <- "combined"
 window <- "day"
 lead <- 0
 version <- "v10"
-algorithm <- "random_forest"
-batch <- "full"
+algorithm <- "xgboost"
+batch <- "full_final"
 
 
 configs_per_job <- 10  # number of model configurations that will be fit/evaluated within each CHTC
@@ -37,7 +37,7 @@ y_level_neg <- "No lapse"
 
 # CV SETTINGS------
 cv_resample_type <- "kfold" # can be boot, kfold, or nested
-cv_resample = "6_x_5" # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
+cv_resample = "1_x_5" # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
 cv_inner_resample <- NULL # can also be a single number for bootstrapping (i.e., 100)
 cv_outer_resample <- NULL # outer resample will always be kfold
 cv_group <- "subid" # set to NULL if not grouping
