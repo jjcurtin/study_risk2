@@ -16,7 +16,7 @@ params:
   lead: 0
   version: "v10"
   cv: "nested"
-  model: "ablate_gps"
+  model: "ablate_ema"
 editor_options: 
   chunk_output_type: console
 ---

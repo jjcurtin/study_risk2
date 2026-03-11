@@ -1326,7 +1326,7 @@ shaps_out_grp <- shaps_out |>
             rfvalue = mean(rfvalue))
   
 shaps_out_grp |>
-  write_rds(here::here(path_models, "shapsgrp_v3_1_x_5_day_v10_kfold_full_final.rds"))
+  write_rds(here::here(path_models, "shapsgrp_v2_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 Look at Shaps as check  
