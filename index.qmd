@@ -223,6 +223,12 @@ For brevity, we are only displaying the top 30 (out of 186) features, as defined
 
 - Discussion about GPS data. No evidence that geolocation offered incremental predictive value. Hard to get. With better sensing features could be more important. 12% of gps features were imputed as median. Low leverage for predictions. 
 
+- If all you care about is prediction, you don't need gps. If you desire a more nuanced understanding of risk across a more diverse array of risk features than gps is helpful.
+
+- GPS may be better if we did not rely on only known locations but could passively contextualize locations. May be better with more robust sensing methods.
+
+- Overall, GPS didn't hurt predictions but also didn't add any value above and beyond daily surveys. Appears to overlap with EMA. 
+
 - Daily surveys remain to be a feasible and predictive signal even when measured over a year.
 
 
