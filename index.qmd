@@ -35,10 +35,12 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa
 #| message: false
 
 library(tidyverse)
-suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+# suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+# 
+# path_models <- format_path(str_c("risk2/models/combined"))
 
-path_models <- format_path(str_c("risk2/models/combined"))
-  
+path_models <- "S:/risk2/models/combined"
+
 pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_v10.csv"),
                     show_col_types = FALSE) 
 
@@ -184,7 +186,7 @@ Our fairness subgroup comparisons for the full model revealed strong evidence th
 
 
 ## Calibration and Overall Performance
-The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.6; left panel of @fig-2). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of @fig-2.
+The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.8; left panel of @fig-2). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of @fig-2.
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
