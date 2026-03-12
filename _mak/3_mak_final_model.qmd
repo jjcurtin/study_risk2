@@ -264,6 +264,23 @@ if(algorithm == "xgboost") {
 ```
 
 
+```{r}
+# shaps_out |>
+#   filter(variable == "p168.l0.rratesum_duration.harm.Not at all") |>
+#   ggplot(aes(x = rfvalue, y = value)) +
+#   geom_point(alpha = .3) +
+#   geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
+#   labs(
+#     title = "SHAP Variable Relationships",
+#     x = "z-score raw feature score",
+#     y = "Shapley value"
+#   ) +
+#   theme_classic() +
+#   theme(
+#     strip.text = element_text(size = 8),
+#     plot.title = element_text(size = 14, face = "bold")
+#   )
+```
 
 
 Group Shaps
@@ -388,26 +405,85 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.r"),
                                 "Evening out, Raw (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "transit") & 
-                                  str_detect(variable_grp, "l0.r"),
-                                "Transit, Raw (gps)",
-                                variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "harm")  & 
+         variable_grp = if_else(str_detect(variable_grp, "harm.Moderately")  & 
                                   str_detect(variable_grp, "l0.r"), 
                                 "Harmful locations, Raw (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "help")  & 
+         variable_grp = if_else(str_detect(variable_grp, "harm.Considerably")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Extremely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Mildly")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Not at all")  & 
                                   str_detect(variable_grp, "l0.r"), 
                                 "Helpful locations, Raw (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "unpleasant")  & 
+         variable_grp = if_else(str_detect(variable_grp, "help.Moderately")  & 
                                   str_detect(variable_grp, "l0.r"), 
-                                "Location valence, Raw (gps)",
+                                "Helpful locations, Raw (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "pleasant")  & 
-                                  (str_detect(variable_grp, "l0.r") | 
-                                  str_detect(variable_grp, "rvar_")), 
-                                "Location valence, Raw (gps)",
+         variable_grp = if_else(str_detect(variable_grp, "help.Considerably")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Extremely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Mildly")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Not at all")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "work") & 
                                   (str_detect(variable_grp, "l0.r") | 
@@ -559,25 +635,85 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.d"),
                                 "Evening out, Diff (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "transit")  & 
-                                  str_detect(variable_grp, "l0.d"),
-                                "Transit, Diff (gps)",
-                                variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "harm")  & 
+         variable_grp = if_else(str_detect(variable_grp, "harm.Moderately")  & 
                                   str_detect(variable_grp, "l0.d"), 
                                 "Harmful locations, Diff (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "help")  & 
+         variable_grp = if_else(str_detect(variable_grp, "harm.Considerably")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Extremely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Mildly")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Not at all")  & 
                                   str_detect(variable_grp, "l0.d"), 
                                 "Helpful locations, Diff (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "unpleasant")  & 
+         variable_grp = if_else(str_detect(variable_grp, "help.Moderately")  & 
                                   str_detect(variable_grp, "l0.d"), 
-                                "Location valence, Diff (gps)",
+                                "Helpful locations, Diff (gps)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "pleasant")  & 
+         variable_grp = if_else(str_detect(variable_grp, "help.Considerably")  & 
                                   str_detect(variable_grp, "l0.d"), 
-                                "Location valence, Diff (gps)",
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Extremely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Mildly")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Not at all")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "work")  & 
                                   str_detect(variable_grp, "l0.d"), 
