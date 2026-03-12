@@ -7,7 +7,7 @@
 
     <meta name="author" content="Kendra Wyant">
     <meta name="author" content="John J. Curtin">
-    <meta name="dcterms.date" content="2026-03-10">
+    <meta name="dcterms.date" content="2026-03-11">
     <meta name="keywords" content="Substance use disorders, Precision mental health">
 
     <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -190,10 +190,10 @@
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-10">
-<meta name="citation_cover_date" content="2026-03-10">
+<meta name="citation_publication_date" content="2026-03-11">
+<meta name="citation_cover_date" content="2026-03-11">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-10">
+<meta name="citation_online_date" content="2026-03-11">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Diagnostic and statistical manual of mental disorders : DSM-5-TR;,citation_abstract=lxix, 1050 pages ; 26 cm;,citation_author=American Psychiatric Association;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;">
 <meta name="citation_reference" content="citation_title=Center for high throughput computing;,citation_author=Center for High Throughput Computing;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_doi=10.21231/GNT1-HW21;,citation_publisher=Center for High Throughput Computing;">
@@ -271,7 +271,7 @@
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 10, 2026</p>
+              <p class="date">March 11, 2026</p>
             </div>
           </div>
           
@@ -347,11 +347,11 @@
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-✔ purrr     1.0.2     
+✔ dplyr     1.2.0     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.1     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -1137,7 +1137,7 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </section>
 <section id="calibration-and-overall-performance-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-and-overall-performance-1">Calibration and Overall Performance</h2>
-<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities, the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in those bins (only one prediction exceeded 0.6; left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities (i.e., &gt; .75), the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in that bin (left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-2">
 <div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-2" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cal <span class="op">&lt;-</span> preds_all_raw <span class="op">|&gt;</span> </span>
@@ -1212,7 +1212,7 @@ Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scale
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>global_panel <span class="op">+</span> local_panel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" width="768" height="480">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" height="480" width="768">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
 <a href="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: "><img src="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" id="fig-3" width="768" height="480" class="figure-img"></a>
@@ -1281,6 +1281,9 @@ Figure&nbsp;4: Feature importance partial dependence plots.
 <li><p>Although, classification and clinical utility are two other important domains for evaluating a model intended to make or inform a decision (e.g., whether to send a support message to an individual). In applications of our model there would be no decision to be made. Every day an individual would receive a message regardless of their lapse risk, equivalent to a treat all condition. Therefore, we have constrained our evaluation to focus on the probability estimates for evaluating performance. <!--this needs more info if you are going to include it.  Its not clear from this brief sentence how we are not making decisions or need to care about clinical utility.  I would also probably move that part to a footnote to note have it be as salient--><!--KW moved out of methods--></p></li>
 <li><p>Optimal thresholds depend on the setting, outcome prevalence, and the relative costs of misclassification, and should be addressed separately from discrimination evaluation (e.g., with a decision curve analysis). <!--JJC: and didnt you say we wouldnt recommend classifying at all?--></p></li>
 <li><p>Discussion about GPS data. No evidence that geolocation offered incremental predictive value. Hard to get. With better sensing features could be more important. 12% of gps features were imputed as median. Low leverage for predictions.</p></li>
+<li><p>If all you care about is prediction, you don’t need gps. If you desire a more nuanced understanding of risk across a more diverse array of risk features than gps is helpful.</p></li>
+<li><p>GPS may be better if we did not rely on only known locations but could passively contextualize locations. May be better with more robust sensing methods.</p></li>
+<li><p>Overall, GPS didn’t hurt predictions but also didn’t add any value above and beyond daily surveys. Appears to overlap with EMA.</p></li>
 <li><p>Daily surveys remain to be a feasible and predictive signal even when measured over a year.</p></li>
 </ul>
 </section>
