@@ -199,6 +199,8 @@ A second approach where we calculated the proportion of observations in which ea
 
 {{< embed notebooks/mak_figures.qmd#fig-3 >}} 
 
+To understand the direction in which these feature categories adjusted the lapse risk predictions, we plotted Shapley-feature value partial dependence plots for the top 30 feature categories (@fig-4).
+
 {{< embed notebooks/mak_figures.qmd#fig-4 >}} 
 
 
