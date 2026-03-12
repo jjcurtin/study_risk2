@@ -7,7 +7,7 @@
 
     <meta name="author" content="Kendra Wyant">
     <meta name="author" content="John J. Curtin">
-    <meta name="dcterms.date" content="2026-03-11">
+    <meta name="dcterms.date" content="2026-03-12">
     <meta name="keywords" content="Substance use disorders, Precision mental health">
 
     <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -190,10 +190,10 @@
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-11">
-<meta name="citation_cover_date" content="2026-03-11">
+<meta name="citation_publication_date" content="2026-03-12">
+<meta name="citation_cover_date" content="2026-03-12">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-11">
+<meta name="citation_online_date" content="2026-03-12">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Diagnostic and statistical manual of mental disorders : DSM-5-TR;,citation_abstract=lxix, 1050 pages ; 26 cm;,citation_author=American Psychiatric Association;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;">
 <meta name="citation_reference" content="citation_title=Center for high throughput computing;,citation_author=Center for High Throughput Computing;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_doi=10.21231/GNT1-HW21;,citation_publisher=Center for High Throughput Computing;">
@@ -271,7 +271,7 @@
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 11, 2026</p>
+              <p class="date">March 12, 2026</p>
             </div>
           </div>
           
@@ -465,7 +465,7 @@
 </section>
 <section id="feature-importance" class="level3">
 <h3 class="anchored" data-anchor-id="feature-importance">Feature Importance</h3>
-<p>Feature importance values provide insight into the features that have the most influence on the model’s predictions. For every prediction, we can extract feature importance values providing actionable insight into intervenable targets for lapse risk (i.e., for a specific individal at a specific moment). We used the same single 5-fold cross-validation procedure (see Calibration and Overall Performance section) to calculate raw Shapley values for each observation in held-out data <span class="citation" data-cites="lundbergUnifiedApproachInterpreting2017">(<a href="#ref-lundbergUnifiedApproachInterpreting2017" role="doc-biblioref">Lundberg &amp; Lee, 2017</a>)</span>. The magnitude of the raw Shapley value indicates how much the feature score for that observation adjusted the prediction (in log-odds units) relative to the mean prediction across all observations. Positive Shapley values indicate that the feature score increased the prediction for that observation and negative values indicate that the feature score decreased the prediction. In other words, higher Shapley values suggest the feature increases lapse risk and lower values suggest the feature decreases lapse risk. Shapley values are inherently additive. For any observation, Shapley values can be summed to create a total adjustment score for the predicted value. We created feature categories by collapsing features that differed only by scoring epoch into a single feature category. We plotted raw Shapley values and feature categories as partial dependence plots to illustrate these feature-risk relationships.</p>
+<p>Feature importance values provide insight into the features that have the most influence on the model’s predictions. For every prediction, we can extract feature importance values providing actionable insight into intervenable targets for lapse risk (i.e., for a specific individal at a specific moment). We used the same single 5-fold cross-validation procedure (see Calibration and Overall Performance section) to calculate raw Shapley values for each observation in held-out data <span class="citation" data-cites="lundbergUnifiedApproachInterpreting2017">(<a href="#ref-lundbergUnifiedApproachInterpreting2017" role="doc-biblioref">Lundberg &amp; Lee, 2017</a>)</span>. The magnitude of the raw Shapley value indicates how much the feature score for that observation adjusted the prediction (in log-odds units) relative to the mean prediction across all observations. Positive Shapley values indicate that the feature score increased the prediction for that observation and negative values indicate that the feature score decreased the prediction. In other words, higher Shapley values suggest the feature increases lapse risk and lower values suggest the feature decreases lapse risk. Shapley values are inherently additive. For any observation, Shapley values can be summed to create a total adjustment score for the predicted value. We created feature categories by collapsing features that differed only by scoring epoch and calculation into a single feature category (e.g., Raw features for most recent urge rating, and min, max, and mean urge rating in the 168 hours preceding the start of the prediction window were combined to form a “Urge, Raw” feature category). Raw and difference features were not combined as their relationship to risk were not uniform. We plotted individual Shapley values and feature categories as partial dependence plots to illustrate these feature-risk relationships.</p>
 <p>Feature importance values can also be aggregated across all participants and all observations to provide a relative rank ordering of the most important features. We calculated overall feature importance in two ways. First, we used a traditional approach in which we calculated the mean absolute Shapley value for each feature category across all observations. This approach summarizes overall feature importance by averaging the magnitude of each feature’s contribution. However, it can be skewed toward features that exhibit infrequent but very large Shapley values, potentially overstating the importance of features that are strongly associated with the outcome, but only come up in a small subset of observations. The second way we calculated feature importance was by calculating the proportion of observations in which each feature category had the highest Shapley value. This approach summarizes how frequently a feature category is influential across observations (i.e., considering both magnitude and prevalence). We provided a plot of the relative ranking of feature categories by their overall feature importance using these two methods.</p>
 </section>
 </section>
@@ -1205,9 +1205,8 @@ Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scale
 </section>
 <section id="feature-importance-1" class="level2">
 <h2 class="anchored" data-anchor-id="feature-importance-1">Feature Importance</h2>
-<p>Feature importance values can also be aggregated across all participants and all observations to provide a relative rank ordering of the most important features. A traditional mean absolute Shapley value approach revealed the most important features (i.e., largest magnitude of contribution to the prediction) to be differences in past opioid use.</p>
-<p>The second way we calculated feature importance was by calculating the proportion of observations in which each feature category had the highest Shapley value. This approach summarizes how frequently a feature category is influential across observations (i.e., considering both magnitude and prevalence). We provided a plot of the relative ranking of feature categories by their overall feature importance using these two methods.</p>
-<p>For brevity, we are only displaying the top 30 (out of 186) features, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.</p>
+<p>We aggregated individual Shapley values across all participants and all observations to provide a relative rank ordering of the most important features. A traditional mean absolute Shapley value approach revealed the most important feature (i.e., largest magnitude of change in log-odds) was differences in past opioid use. These feature was nearly two-fold more important than the next most important feature, raw urge ratings. <a href="#fig-3" class="quarto-xref">Figure&nbsp;3</a> displays the top 30 (out of 186) feature categories, as defined by the 30 largest absolute mean shapley values. In the supplement, we provide full figures of all possible feature categories.</p>
+<p>A second approach where we calculated the proportion of observations in which each feature category had the highest Shapley value (i.e., largest magnitude and prevalence), revealed the most important feature to be raw urge ratings, followed by raw abstinence confidence ratings. Differences in past opioid use was the third most important feature by this method, suggesting that while it has a strong relationship with lapse risk, it is not as prevalent across observations as other features. Notably, in this approach several additional comparably important features emerged, including differences in past pleasant experiences, differences in past stimulant use, and differences in time spent in helpful locations.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-3">
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>global_panel <span class="op">+</span> local_panel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1225,6 +1224,7 @@ Figure&nbsp;3
 </div>
 </div></div>
 </div>
+<p>To understand the direction in which these feature categories adjusted the lapse risk predictions, we plotted Shapley-feature value partial dependence plots for the top 30 feature categories (<a href="#fig-4" class="quarto-xref">Figure&nbsp;4</a>).</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-4">
 <div class="cell-container code-fold"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-fig-4" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
 <details class="code-fold">
