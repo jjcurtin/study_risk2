@@ -199,6 +199,8 @@ A second approach where we calculated the proportion of observations in which ea
 
 {{< embed notebooks/mak_figures.qmd#fig-3 >}} 
 
+
+
 To understand the direction in which these feature categories adjusted the lapse risk predictions, we plotted Shapley-feature value partial dependence plots for the top 30 feature categories (@fig-4). Differenes in past opioid use lowered lapse risk probability for participants who did not lapse on study (i.e., a feature score of 0). Lapse probability dramatically increased when participants had increased reported opioid use over the past 24 and 168 hours. Unsurprisingly, raw urge and abstinence confidence ratings had linear relationships to lapse risk, with higher urge ratings increasing lapse risk probability and higher abstinence confidence decreasing lapse risk probability. There was a more nuanced finding for stimulant use and opioid lapse risk probability. Raw rate counts of stimulant use increased lapse risk; however, participants were at highest risk when recent stimulant use decreased (i.e., Stimulant Use, Diff). 
 
 {{< embed notebooks/mak_figures.qmd#fig-4 >}} 
