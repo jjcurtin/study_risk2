@@ -7,7 +7,7 @@
 
     <meta name="author" content="Kendra Wyant">
     <meta name="author" content="John J. Curtin">
-    <meta name="dcterms.date" content="2026-03-12">
+    <meta name="dcterms.date" content="2026-03-13">
     <meta name="keywords" content="Substance use disorders, Precision mental health">
 
     <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -190,10 +190,10 @@
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-12">
-<meta name="citation_cover_date" content="2026-03-12">
+<meta name="citation_publication_date" content="2026-03-13">
+<meta name="citation_cover_date" content="2026-03-13">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-12">
+<meta name="citation_online_date" content="2026-03-13">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Diagnostic and statistical manual of mental disorders : DSM-5-TR;,citation_abstract=lxix, 1050 pages ; 26 cm;,citation_author=American Psychiatric Association;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;">
 <meta name="citation_reference" content="citation_title=Center for high throughput computing;,citation_author=Center for High Throughput Computing;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_doi=10.21231/GNT1-HW21;,citation_publisher=Center for High Throughput Computing;">
@@ -271,7 +271,7 @@
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 12, 2026</p>
+              <p class="date">March 13, 2026</p>
             </div>
           </div>
           
@@ -1137,7 +1137,7 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 </section>
 <section id="calibration-and-overall-performance-1" class="level2">
 <h2 class="anchored" data-anchor-id="calibration-and-overall-performance-1">Calibration and Overall Performance</h2>
-<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities (i.e., &gt; .75), the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in that bin (left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014; left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-2">
 <div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-2" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cal <span class="op">&lt;-</span> preds_all_raw <span class="op">|&gt;</span> </span>
@@ -1216,7 +1216,7 @@ Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scale
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>global_panel <span class="op">+</span> local_panel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" width="768" height="480">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" height="480" width="768">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
 <a href="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: "><img src="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" id="fig-3" width="768" height="480" class="figure-img"></a>
