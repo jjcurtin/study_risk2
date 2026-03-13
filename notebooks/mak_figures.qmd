@@ -101,7 +101,7 @@ guides(color = guide_legend(nrow = 2, byrow = TRUE))
 ```{r}
 #| echo: false
 
-bin_width = 0.25
+bin_width = 0.10
 
 preds_all_logi <- preds |> 
   mutate(bins = cut(prob_logi, breaks = seq(0, 1, bin_width)), 
@@ -113,7 +113,13 @@ preds_all_raw <- preds |>
          lapse = if_else(label == "Lapse", 1, 0),
          prob = "Raw (uncalibrated)") 
 
-rug_data <- preds_all_raw |> 
+rug_data_raw <- preds_all_raw |> 
+  mutate(
+    bins = as.numeric(bins),
+    rug_center = bin_width/2 + bin_width * (bins - 1),
+    rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
+  )
+rug_data_logi <- preds_all_logi |> 
   mutate(
     bins = as.numeric(bins),
     rug_center = bin_width/2 + bin_width * (bins - 1),
@@ -124,7 +130,7 @@ rug_data <- preds_all_raw |>
 
 ```{r}
 #| label: fig-2
-#| fig-cap: "The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plot along the x-axis depicts observation frequency in each bin. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome."
+#| fig-cap: "The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt scaled (top) probabilities. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome."
 #| fig-width: 8
 
 cal <- preds_all_raw |> 
@@ -133,7 +139,10 @@ cal <- preds_all_raw |>
                                         "Platt calibration"))) |> 
   group_by(bins,  prob)  |> 
   summarize(mean_lapse = mean(lapse),
+            n = n(),
             .groups = "drop") |> 
+  filter(n >= 10) |> 
+  select(-n) |> 
   mutate(
     bins = as.numeric(bins),
     midpoints = bin_width/2 + bin_width * (bins - 1)
@@ -148,8 +157,10 @@ cal <- preds_all_raw |>
     color = NULL,
     linetype = NULL
   ) +
-  geom_rug(data = rug_data, aes(x = rug_x), sides = "b", alpha = 0.3,
-           inherit.aes = FALSE) +
+  geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+           inherit.aes = FALSE, color = "#240e31") +
+  geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+           inherit.aes = FALSE, color = "#046B52") +
   scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
   scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
                      expand = c(0, 0)) +
