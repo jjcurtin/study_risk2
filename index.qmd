@@ -55,28 +55,18 @@ Medications for opioid use disorder (MOUD), including methadone and buprenorphin
 
 Lapses remain common even among individuals receiving MOUD and can increase the risk of treatment dropout, relapse, and overdose [@weinsteinLongtermRetentionOffice2017; @heinzLongitudinalObservationalStudy2025]. Opioid lapses are particularly high-risk events. Reduced opioid tolerance (e.g., after a period of abstinence) and increased prevalence of fentanyl and other synthetic opioids in the drug supply substantially increases the likelihood of fatal overdose. 
 
-Identifying when an individual is at high lapse risk could enable earlier clinical intervention and potentially prevent relapse and overdose. However, risk for opioid use and lapse is dynamic and fluctuates across time in response to stress, craving, environmental cues, and treatment engagement. Smartphone sensing methods, including brief daily self-report surveys and passive geolocation sensing, offer a .
+Identifying when an individual is at high lapse risk could enable earlier clinical intervention and potentially prevent relapse and overdose. However, risk for opioid lapse is dynamic and fluctuates in response to craving, affective states, environmental cues, and treatment adherence.
 
-<!-- - EMA acceptable for people in MOUD treatment [@alexanderUseEcologicalMomentary2023] -->
+Advances in smartphone sensing methods, including brief daily self-report surveys and passive geolocation sensing, offer a powerful way to collect densely sampled risk-relevant data. These data can be used as inputs into machine learning models to generate temporally precise predictions of lapse risk probability [@wyantMachineLearningModels2024; @heinzLongitudinalObservationalStudy2025].
 
-<!-- Prior related work  -->
-<!-- [@heinzLongitudinalObservationalStudy2025] - N=62, 12 weeks, Northern CA treatment center, buprenorphine -->
+Daily self-report surveys can reliably collect proximal risk factors for lapse, such as recent craving, abstinence self-efficacy, risky situations, and substance use behaviors. Research suggests that individuals can adhere to self-report sensing methods while using substances [@wyantAcceptabilityPersonalSensing2023; @jonesComplianceEcologicalMomentary2019]. However, it is less clear to what extent people in recovery from illicit substance use disorders can, or are willing to, report risk information accurately enough to develop prediction models. People with SUDs may experience greater instability in their day-to-day lives (e.g., stigma or legal consequences may make access to healthcare, stable housing, or supportive relationships more difficult). This instability could make it difficult to recall and report recent behaviors and events promptly or accurately. It may also skew baseline perceptions of what constitutes a risky or stressful experience.
 
-<!-- Old: -->
+Supplementing self-report data with passively sensed geolocation data could make up for imprecise reports of risk factors or be used for lapse prediction during periods of non-adherence to self-report surveys. Moreover, geolocation data could provide a complementary and distinct set of intervenable features. For example, geolocation data may provide insight into time spent in risky locations or changes in routine (e.g., job loss) that may indicate life stressors. These features may become even more powerful when combined with contextual information from public sources (e.g., census data, alcohol outlet density) or from self-report (e.g., self-evaluated riskiness of specific locations). Geolocation data have been demonstrated to contain sufficient signal for predicting craving [@epsteinPredictionStressDrug2020], a putative precursor to opioid lapse, and therefore represent a promising sensing method for predicting lapse risk.
 
-<!-- Studies show high agreement between recent (i.e., 1-4 days) self-report and biological markers (i.e., urine, saliva, hair) of drug use [@bharatAgreementSelfreportedIllicit2023]. This suggests people may be willing to report illicit substance use behaviors.  -->
+In the current study we 
 
-<!-- However, it is unclear if people in recovery from substance use disorders, other than alcohol, can sustain long-term adherence (e.g., one year or more) needed for a recovery monitoring support system that uses self-report data. Previous studies examining adherence to frequent self-report prompts among people with illicit substance use disorders have typically only prompted for 7-30 days [@jonesComplianceEcologicalMomentary2019] (except @kennedySexDifferencesCocaine2013 prompted for 175 days and found 75% adherence). -->
-
-<!-- It is also unclear whether people in recovery from illicit substance use disorders can, or are willing to, accurately report other risk information needed to develop accurate prediction models. For example, people with substance use disorders may experience greater instability in their day-to-day lives (e.g., stigma or legal consequences may make access to healthcare, stable housing, or supportive relationships more difficult). This instability could make it difficult to recall and report recent behaviors and events promptly or accurately. It may also skew their baseline perception of what constitutes a risky or stressful experience.  -->
-
-<!-- Supplementing self-report data with passively sensed data (e.g., geolocation) could make up for imprecise reports of risk factors or be used for lapse prediction during periods of non-adherence to self-report surveys. Additionally, more data will produce more features that could allow for better personalization of support recommendations. -->
-
-<!-- This study will use daily surveys and sensed geolocation for up to one year from a national sample of people with opioid use disorder to predict immediate (i.e., in the next 24 hours) lapses back to opioid use.  -->
-
-
-<!-- Aims of study -->
-<!-- - Individuals in an MOUD program -->
+Aims of study
+- Individuals in an MOUD program
 
 
 # Methods
