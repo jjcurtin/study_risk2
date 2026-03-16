@@ -51,18 +51,32 @@ probs <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.
 
 About 4.5 million adults in the United States met criteria for opioid use disorder (OUD) in 2024 [@substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed]. OUD is associated with elevated mortality and morbidity, including increased risk of infectious disease, psychiatric comorbidity, and disability [@hserHighMortalityPatients2017]. The societal burden of untreated OUD is substantial. The combined economic costs of lost productivity, health care expenditures, criminal justice involvement, loss of life, and reduced quality of life have been estimated to exceed $1 trillion [@florenceEconomicBurdenOpioid2021].
 
-Medications for opioid use disorder (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk [@maEffectsMedicationassistedTreatment2019]. Nevertheless, lapses remain common even among individuals receiving MOUD and can increase the risk of treatment dropout, relapse, and overdose [@weinsteinLongtermRetentionOffice2017; @heinzLongitudinalObservationalStudy2025].
+Medications for opioid use disorder (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk [@maEffectsMedicationassistedTreatment2019]. They are also associated with improvements in mental health and social functioning, particularly when maintained over extended periods. However, despite strong evidence for MOUD, access remains limited and treatment dropout is common. Sustained retention in treatment is a key determinant of positive outcomes.
 
-Relapse prevention constructs from literature associated with opioid lapse - Map onto EMA and GPS sensing features
-- environmental cues
-- EMA acceptable for people in MOUD treatment [@alexanderUseEcologicalMomentary2023]
+Lapses remain common even among individuals receiving MOUD and can increase the risk of treatment dropout, relapse, and overdose [@weinsteinLongtermRetentionOffice2017; @heinzLongitudinalObservationalStudy2025]. Opioid lapses are particularly high-risk events. Reduced opioid tolerance (e.g., after a period of abstinence) and increased prevalence of fentanyl and other synthetic opioids in the drug supply substantially increases the likelihood of fatal overdose. 
 
-Prior related work 
-[@heinzLongitudinalObservationalStudy2025] - N=62, 12 weeks, Northern CA treatment center, buprenorphine
+Identifying when an individual is at high lapse risk could enable earlier clinical intervention and potentially prevent relapse and overdose. However, risk for opioid use and lapse is dynamic and fluctuates across time in response to stress, craving, environmental cues, and treatment engagement. Smartphone sensing methods, including brief daily self-report surveys and passive geolocation sensing, offer a .
+
+<!-- - EMA acceptable for people in MOUD treatment [@alexanderUseEcologicalMomentary2023] -->
+
+<!-- Prior related work  -->
+<!-- [@heinzLongitudinalObservationalStudy2025] - N=62, 12 weeks, Northern CA treatment center, buprenorphine -->
+
+<!-- Old: -->
+
+<!-- Studies show high agreement between recent (i.e., 1-4 days) self-report and biological markers (i.e., urine, saliva, hair) of drug use [@bharatAgreementSelfreportedIllicit2023]. This suggests people may be willing to report illicit substance use behaviors.  -->
+
+<!-- However, it is unclear if people in recovery from substance use disorders, other than alcohol, can sustain long-term adherence (e.g., one year or more) needed for a recovery monitoring support system that uses self-report data. Previous studies examining adherence to frequent self-report prompts among people with illicit substance use disorders have typically only prompted for 7-30 days [@jonesComplianceEcologicalMomentary2019] (except @kennedySexDifferencesCocaine2013 prompted for 175 days and found 75% adherence). -->
+
+<!-- It is also unclear whether people in recovery from illicit substance use disorders can, or are willing to, accurately report other risk information needed to develop accurate prediction models. For example, people with substance use disorders may experience greater instability in their day-to-day lives (e.g., stigma or legal consequences may make access to healthcare, stable housing, or supportive relationships more difficult). This instability could make it difficult to recall and report recent behaviors and events promptly or accurately. It may also skew their baseline perception of what constitutes a risky or stressful experience.  -->
+
+<!-- Supplementing self-report data with passively sensed data (e.g., geolocation) could make up for imprecise reports of risk factors or be used for lapse prediction during periods of non-adherence to self-report surveys. Additionally, more data will produce more features that could allow for better personalization of support recommendations. -->
+
+<!-- This study will use daily surveys and sensed geolocation for up to one year from a national sample of people with opioid use disorder to predict immediate (i.e., in the next 24 hours) lapses back to opioid use.  -->
 
 
-Aims of study
-- Individuals in an MOUD program
+<!-- Aims of study -->
+<!-- - Individuals in an MOUD program -->
 
 
 # Methods
