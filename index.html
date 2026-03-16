@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kendra Wyant">
 <meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2026-03-13">
+<meta name="dcterms.date" content="2026-03-16">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
 <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -68,10 +68,10 @@ div.csl-indent {
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-13">
-<meta name="citation_cover_date" content="2026-03-13">
+<meta name="citation_publication_date" content="2026-03-16">
+<meta name="citation_cover_date" content="2026-03-16">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-13">
+<meta name="citation_online_date" content="2026-03-16">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Diagnostic and statistical manual of mental disorders : DSM-5-TR;,citation_abstract=lxix, 1050 pages ; 26 cm;,citation_author=American Psychiatric Association;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;">
 <meta name="citation_reference" content="citation_title=Center for high throughput computing;,citation_author=Center for High Throughput Computing;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_doi=10.21231/GNT1-HW21;,citation_publisher=Center for High Throughput Computing;">
@@ -142,7 +142,7 @@ div.csl-indent {
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 13, 2026</p>
+              <p class="date">March 16, 2026</p>
             </div>
           </div>
           
@@ -221,14 +221,11 @@ div.csl-indent {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Opioid use disorder - Prevalence - harms - cost - When also accounting for costs associated with loss of life and reduced quality of life, one research group estimated that in 2017 the cost of opioid use disorder alone exceeded $1 trillion (Florence et al., 2021).</p>
-<p>MOUD is efficacious.</p>
-<p>Lapses are still frequent even with MOUD maintenance and put individual at high risk of relapse and overdose.</p>
-<p>Relapse prevention constructs from literature associated with opioid lapse <!-- - pain [@pappRealtimeAssociationsYoung2020] --></p>
-<p>Map onto EMA and GPS sensing features</p>
-<p>Prior related work</p>
-<p>Importance of predicting when and why someone is at risk</p>
-<p>Aims of study</p>
+<p>About 4.5 million adults in the United States met criteria for opioid use disorder (OUD) in 2024 <span class="citation" data-cites="substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed">(<a href="#ref-substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed" role="doc-biblioref"><strong>substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed?</strong></a>)</span>. OUD is associated with elevated mortality and morbidity, including increased risk of infectious disease, psychiatric comorbidity, and disability <span class="citation" data-cites="hserHighMortalityPatients2017">(<a href="#ref-hserHighMortalityPatients2017" role="doc-biblioref"><strong>hserHighMortalityPatients2017?</strong></a>)</span>. The societal burden of untreated OUD is substantial. The combined economic costs of lost productivity, health care expenditures, criminal justice involvement, loss of life, and reduced quality of life have been estimated to exceed $1 trillion <span class="citation" data-cites="florenceEconomicBurdenOpioid2021">(<a href="#ref-florenceEconomicBurdenOpioid2021" role="doc-biblioref"><strong>florenceEconomicBurdenOpioid2021?</strong></a>)</span>.</p>
+<p>Medications for opioid use disorder (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk <span class="citation" data-cites="maEffectsMedicationassistedTreatment2019">(<a href="#ref-maEffectsMedicationassistedTreatment2019" role="doc-biblioref"><strong>maEffectsMedicationassistedTreatment2019?</strong></a>)</span>. Nevertheless, lapses remain common even among individuals receiving MOUD and can increase the risk of treatment dropout, relapse, and overdose <span class="citation" data-cites="weinsteinLongtermRetentionOffice2017 heinzLongitudinalObservationalStudy2025">(<a href="#ref-weinsteinLongtermRetentionOffice2017" role="doc-biblioref"><strong>weinsteinLongtermRetentionOffice2017?</strong></a>; <a href="#ref-heinzLongitudinalObservationalStudy2025" role="doc-biblioref"><strong>heinzLongitudinalObservationalStudy2025?</strong></a>)</span>.</p>
+<p>Relapse prevention constructs from literature associated with opioid lapse - Map onto EMA and GPS sensing features - environmental cues - EMA acceptable for people in MOUD treatment <span class="citation" data-cites="alexanderUseEcologicalMomentary2023">(<a href="#ref-alexanderUseEcologicalMomentary2023" role="doc-biblioref"><strong>alexanderUseEcologicalMomentary2023?</strong></a>)</span></p>
+<p>Prior related work <span class="citation" data-cites="heinzLongitudinalObservationalStudy2025">(<a href="#ref-heinzLongitudinalObservationalStudy2025" role="doc-biblioref"><strong>heinzLongitudinalObservationalStudy2025?</strong></a>)</span> - N=62, 12 weeks, Northern CA treatment center, buprenorphine</p>
+<p>Aims of study - Individuals in an MOUD program</p>
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
@@ -978,6 +975,8 @@ Figure&nbsp;4: Feature importance partial dependence plots.
 <li><p>GPS may be better if we did not rely on only known locations but could passively contextualize locations. May be better with more robust sensing methods.</p></li>
 <li><p>Overall, GPS didn’t hurt predictions but also didn’t add any value above and beyond daily surveys. Appears to overlap with EMA.</p></li>
 <li><p>Daily surveys remain to be a feasible and predictive signal even when measured over a year.</p></li>
+<li><p>Participants provided data for up to 12 months. This extended window of recovery (12 months vs.&nbsp;3 months) is critical for evaluating the value of an algorithm intended for ongoing continuing care support and understanding how lapse risk evolves as people progress in their recovery (i.e., past 3 months). Unfortunately, our ability to address explanatory questions about the time course of lapse risk, and how individuals might cluster on different recovery trajectories is limited with traditional machine learning methods. These methods do not capture the repeated nature of sensing data. Each lapse prediction is treated as a new independent observation. We can account for the repeated observations in our sensing data by engineering features that capture individual changes over time to produce unbiased and precise estimates of predictive performance. However, more traditional time series models are better suited for understanding the temporal dynamics of lapse risk over long periods of recovery.</p></li>
+<li><p>The longer duration of participation also provides the opportunity to experiment with lagged prediction windows further than two weeks into the future (i.e., 1 month). However, in a machine learning framework, different models must be built to predict lapses at varying times in the future. For example, a recovery monitoring support system that detects both immediate lapse risk (i.e., in the next 24 hours) and future lapse risk (i.e, in the next 2 weeks and in the next month) would need three models. This approach is time consuming, cumbersome, and still only provides coarse understanding of time-course. Therefore, this study will only predict immediate lapse risk.</p></li>
 </ul>
 </section>
 <section id="references" class="level1">
