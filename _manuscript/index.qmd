@@ -49,28 +49,24 @@ probs <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.
 
 # Introduction
 
-Opioid use disorder
-- Prevalence
-- harms
-- cost
-- When also accounting for costs associated with loss of life and reduced quality of life, one research group estimated that in 2017 the cost of opioid use disorder alone exceeded $1 trillion (Florence et al., 2021).
+About 4.5 million adults in the United States met criteria for opioid use disorder (OUD) in 2024 [@substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed]. OUD is associated with elevated mortality and morbidity, including increased risk of infectious disease, psychiatric comorbidity, and disability [@hserHighMortalityPatients2017]. The societal burden of untreated OUD is substantial. The combined economic costs of lost productivity, health care expenditures, criminal justice involvement, loss of life, and reduced quality of life have been estimated to exceed $1 trillion [@florenceEconomicBurdenOpioid2021].
 
-MOUD is efficacious.
+Medications for opioid use disorder (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk [@maEffectsMedicationassistedTreatment2019]. They are also associated with improvements in mental health and social functioning, particularly when maintained over extended periods. However, despite strong evidence for MOUD, access remains limited and treatment dropout is common. Sustained retention in treatment is a key determinant of positive outcomes.
 
-Lapses are still frequent even with MOUD maintenance and put individual at high risk of relapse and overdose.
+Lapses remain common even among individuals receiving MOUD and can increase the risk of treatment dropout, relapse, and overdose [@weinsteinLongtermRetentionOffice2017; @heinzLongitudinalObservationalStudy2025]. Opioid lapses are particularly high-risk events. Reduced opioid tolerance (e.g., after a period of abstinence) and increased prevalence of fentanyl and other synthetic opioids in the drug supply substantially increases the likelihood of fatal overdose. 
 
-Relapse prevention constructs from literature associated with opioid lapse 
-<!-- - pain [@pappRealtimeAssociationsYoung2020] -->
+Identifying when an individual is at high lapse risk could enable earlier clinical intervention and potentially prevent relapse and overdose. However, risk for opioid lapse is dynamic and fluctuates in response to craving, affective states, environmental cues, and treatment adherence.
 
-Map onto EMA and GPS sensing features
+Advances in smartphone sensing methods, including brief daily self-report surveys and passive geolocation sensing, offer a powerful way to collect densely sampled risk-relevant data. These data can be used as inputs into machine learning models to generate temporally precise predictions of lapse risk probability [@wyantMachineLearningModels2024; @heinzLongitudinalObservationalStudy2025].
 
-Prior related work 
+Daily self-report surveys can reliably collect proximal risk factors for lapse, such as recent craving, abstinence self-efficacy, risky situations, and substance use behaviors. Research suggests that individuals can adhere to self-report sensing methods while using substances [@wyantAcceptabilityPersonalSensing2023; @jonesComplianceEcologicalMomentary2019]. However, it is less clear to what extent people in recovery from illicit substance use disorders can, or are willing to, report risk information accurately enough to develop prediction models. People with SUDs may experience greater instability in their day-to-day lives (e.g., stigma or legal consequences may make access to healthcare, stable housing, or supportive relationships more difficult). This instability could make it difficult to recall and report recent behaviors and events promptly or accurately. It may also skew baseline perceptions of what constitutes a risky or stressful experience.
 
-Importance of predicting when and why someone is at risk 
+Supplementing self-report data with passively sensed geolocation data could make up for imprecise reports of risk factors or be used for lapse prediction during periods of non-adherence to self-report surveys. Moreover, geolocation data could provide a complementary and distinct set of intervenable features. For example, geolocation data may provide insight into time spent in risky locations or changes in routine (e.g., job loss) that may indicate life stressors. These features may become even more powerful when combined with contextual information from public sources (e.g., census data, alcohol outlet density) or from self-report (e.g., self-evaluated riskiness of specific locations). Geolocation data have been demonstrated to contain sufficient signal for predicting craving [@epsteinPredictionStressDrug2020], a putative precursor to opioid lapse, and therefore represent a promising sensing method for predicting lapse risk.
 
+In the current study we 
 
 Aims of study
-
+- Individuals in an MOUD program
 
 
 # Methods
@@ -186,7 +182,7 @@ Our fairness subgroup comparisons for the full model revealed strong evidence th
 
 
 ## Calibration and Overall Performance
-The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). A Calibration plot revealed that our raw model predictions were better aligned with observed lapse frequencies than the Platt-scaled scores across most of the probability range. At higher predicted probabilities (i.e., > .75), the model exhibited high-variance estimates and therefore poor calibration, driven by very few observations in that bin (left panel of @fig-2). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of @fig-2.
+The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.^[The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.] This model produced generally well-calibrated raw probabilities (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_raw)$.estimate, 3)`; left panel of @fig-2). We attempted to improve calibration with Platt scaling and results were comparable (brier score = `r round(yardstick::brier_class(probs, truth = label, prob_logi)$.estimate, 3)`). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of @fig-2.
 
 {{< embed notebooks/mak_figures.qmd#fig-2 >}}
 
@@ -198,7 +194,6 @@ A second approach where we calculated the proportion of observations in which ea
 
 
 {{< embed notebooks/mak_figures.qmd#fig-3 >}} 
-
 
 
 To understand the direction in which these feature categories adjusted the lapse risk predictions, we plotted Shapley-feature value partial dependence plots for the top 30 feature categories (@fig-4). Differenes in past opioid use lowered lapse risk probability for participants who did not lapse on study (i.e., a feature score of 0). Lapse probability dramatically increased when participants had increased reported opioid use over the past 24 and 168 hours. Unsurprisingly, raw urge and abstinence confidence ratings had linear relationships to lapse risk, with higher urge ratings increasing lapse risk probability and higher abstinence confidence decreasing lapse risk probability. There was a more nuanced finding for stimulant use and opioid lapse risk probability. Raw rate counts of stimulant use increased lapse risk; however, participants were at highest risk when recent stimulant use decreased (i.e., Stimulant Use, Diff). 
@@ -232,6 +227,10 @@ To understand the direction in which these feature categories adjusted the lapse
 - Overall, GPS didn't hurt predictions but also didn't add any value above and beyond daily surveys. Appears to overlap with EMA. 
 
 - Daily surveys remain to be a feasible and predictive signal even when measured over a year.
+
+- Participants provided data for up to 12 months. This extended window of recovery (12 months vs. 3 months) is critical for evaluating the value of an algorithm intended for ongoing continuing care support and understanding how lapse risk evolves as people progress in their recovery (i.e., past 3 months). Unfortunately, our ability to address explanatory questions about the time course of lapse risk, and how individuals might cluster on different recovery trajectories is limited with traditional machine learning methods. These methods do not capture the repeated nature of sensing data. Each lapse prediction is treated as a new independent observation. We can account for the repeated observations in our sensing data by engineering features that capture individual changes over time to produce unbiased and precise estimates of predictive performance. However, more traditional time series models are better suited for understanding the temporal dynamics of lapse risk over long periods of recovery.
+
+- The longer duration of participation also provides the opportunity to experiment with lagged prediction windows further than two weeks into the future (i.e., 1 month). However, in a machine learning framework, different models must be built to predict lapses at varying times in the future. For example, a recovery monitoring support system that detects both immediate lapse risk (i.e., in the next 24 hours) and future lapse risk (i.e, in the next 2 weeks and in the next month) would need three models. This approach is time consuming, cumbersome, and still only provides coarse understanding of time-course. Therefore, this study will only predict immediate lapse risk.
 
 
 # References
