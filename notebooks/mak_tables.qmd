@@ -35,7 +35,8 @@ study_dates <- read_csv(file.path(path_shared, "study_dates_gps.csv"),
                         show_col_types = FALSE)
 
 location <- read_csv(file.path(path_shared, "features_fairness.csv"), 
-                        show_col_types = FALSE)
+                        show_col_types = FALSE) |>
+  filter(subid %in% study_dates$subid) 
 
 intake <- read_csv(file.path(path_shared, "survey_intake.csv"), 
                    show_col_types = FALSE) |>
