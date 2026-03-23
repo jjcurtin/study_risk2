@@ -224,11 +224,7 @@ A final limitation of our study is that participants were compensated for comple
 
 Additionally, we implemented daily survey compliance thresholds to exclude participants and adjust study end dates. This criterion was important because we generated our lapse labels from the daily survey data and thus we required consistent collection of this data stream for accurate observation labels. As a result, our estimates of adherence and model performance may be slightly optimistic. Still, even with this criterion, nearly 78% of participants remained in the study for at least six months, suggesting that long-term monitoring with daily surveys is feasible for a substantial proportion of individuals in this population. 
 
-In conclusion, it is possible to predict future lapses back to opioid use using smartphone sensing data. 
-
-
-
-
+In conclusion, it is possible to predict future lapses back to opioid use using smartphone sensing data. Daily surveys and geolocation sensing provide diverse coverage of important risk factors for lapse. Daily recovery recommendations can be mapped onto these factors to deliver support that is personalized to both the person and the moment. While this model was evaluated in a research setting, our use of a national clinical sample of individuals with opioid use disorder suggests it represents a promising step toward future real‑world implementation and evaluation.
 
 
 
