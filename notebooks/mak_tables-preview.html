@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
     <meta name="author" content="Kendra Wyant">
-    <meta name="dcterms.date" content="2026-03-10">
+    <meta name="dcterms.date" content="2026-03-23">
 
     <title>Make All Tables for Main Manuscript</title>
     <style>
@@ -3424,7 +3424,7 @@ border: 0;
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 10, 2026</p>
+              <p class="date">March 23, 2026</p>
             </div>
           </div>
           
@@ -3477,74 +3477,75 @@ Attaching package: &#39;kableExtra&#39;</code></pre>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>location <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;features_fairness.csv&quot;</span>), </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>intake <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;survey_intake.csv&quot;</span>), </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(subid <span class="sc">%in%</span> study_dates<span class="sc">$</span>subid) </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(subid <span class="sc">%in%</span> study_dates<span class="sc">$</span>subid) </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>intake <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(path_shared, <span class="st">&quot;survey_intake.csv&quot;</span>), </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(subid <span class="sc">%in%</span> study_dates<span class="sc">$</span>subid) </span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcs to make df for table 1 (demographics and clinical characteristics)</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>n_total <span class="ot">&lt;-</span> <span class="fu">nrow</span>(study_dates)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>dem_age <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> age) <span class="sc">|&gt;</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>dem_gender <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> gender) <span class="sc">|&gt;</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(var <span class="sc">!=</span> <span class="st">&quot;Prefer not to say&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Man&quot;</span>,</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Woman&quot;</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Non-binary&quot;</span>,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Gender&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>dem_orientation <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> orientation) <span class="sc">|&gt;</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Straight, that is, not gay or lesbian&quot;</span>,</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Lesbian or gay&quot;</span>,</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Bisexual&quot;</span>,</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not sure&quot;</span>,</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Orientation&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>dem_race <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">&quot;race_&quot;</span>), <span class="sc">-</span>race_other_text) <span class="sc">|&gt;</span> </span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;var&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">case_match</span>(var,</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_ai_an&quot;</span> <span class="sc">~</span> <span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_asian&quot;</span> <span class="sc">~</span> <span class="st">&quot;Asian&quot;</span>,</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_black&quot;</span> <span class="sc">~</span> <span class="st">&quot;Black/African American&quot;</span>,</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_nat_hi&quot;</span> <span class="sc">~</span> <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_white&quot;</span> <span class="sc">~</span> <span class="st">&quot;White/Caucasian&quot;</span>,</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_hispanic&quot;</span> <span class="sc">~</span> <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_other&quot;</span> <span class="sc">~</span> <span class="st">&quot;Not listed above&quot;</span>),</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>         <span class="at">var =</span> <span class="fu">factor</span>(var,<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Asian&quot;</span>,</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Black/African American&quot;</span>,</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;White/Caucasian&quot;</span>,</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(value) <span class="sc">|&gt;</span> </span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>value) <span class="sc">|&gt;</span> </span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Race and Ethnicity (select all that apply)&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcs to make df for table 1 (demographics and clinical characteristics)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>n_total <span class="ot">&lt;-</span> <span class="fu">nrow</span>(study_dates)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>dem_age <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> age) <span class="sc">|&gt;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Age&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>dem_gender <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> gender) <span class="sc">|&gt;</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(var <span class="sc">!=</span> <span class="st">&quot;Prefer not to say&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Man&quot;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Woman&quot;</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Non-binary&quot;</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Gender&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>dem_orientation <span class="ot">&lt;-</span>  intake <span class="sc">|&gt;</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">var =</span> orientation) <span class="sc">|&gt;</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(var)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">factor</span>(var, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Straight, that is, not gay or lesbian&quot;</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Lesbian or gay&quot;</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Bisexual&quot;</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not sure&quot;</span>,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Orientation&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>dem_race <span class="ot">&lt;-</span> intake <span class="sc">|&gt;</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">&quot;race_&quot;</span>), <span class="sc">-</span>race_other_text) <span class="sc">|&gt;</span> </span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="at">names_to =</span> <span class="st">&quot;var&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var =</span> <span class="fu">case_match</span>(var,</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_ai_an&quot;</span> <span class="sc">~</span> <span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_asian&quot;</span> <span class="sc">~</span> <span class="st">&quot;Asian&quot;</span>,</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_black&quot;</span> <span class="sc">~</span> <span class="st">&quot;Black/African American&quot;</span>,</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_nat_hi&quot;</span> <span class="sc">~</span> <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_white&quot;</span> <span class="sc">~</span> <span class="st">&quot;White/Caucasian&quot;</span>,</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_hispanic&quot;</span> <span class="sc">~</span> <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>                           <span class="st">&quot;race_other&quot;</span> <span class="sc">~</span> <span class="st">&quot;Not listed above&quot;</span>),</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>         <span class="at">var =</span> <span class="fu">factor</span>(var,<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;American Indian/Alaskan Native&quot;</span>,</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Asian&quot;</span>,</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Black/African American&quot;</span>,</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Native Hawaiian/Other Pacific Islander&quot;</span>,</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;White/Caucasian&quot;</span>,</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Hispanic, Latino, or Spanish origin&quot;</span>,</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">&quot;Not listed above&quot;</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(var) <span class="sc">|&gt;</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(value) <span class="sc">|&gt;</span> </span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(value <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>value) <span class="sc">|&gt;</span> </span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> (n <span class="sc">/</span> n_total) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">var =</span> <span class="st">&quot;Race and Ethnicity (select all that apply)&quot;</span>, <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `var = case_match(...)`.
@@ -3938,13 +3939,13 @@ Demographic and Clinical Characteristics
   <tr grouplength="2"><td colspan="3" style="border-bottom: 0;"><strong></strong></td></tr>
 <tr>
    <td style="text-align:left;padding-left: 2em;" indentlevel="1"> rural </td>
-   <td style="text-align:right;"> 62 </td>
-   <td style="text-align:right;"> 20.9 </td>
+   <td style="text-align:right;"> 57 </td>
+   <td style="text-align:right;"> 19.3 </td>
   </tr>
   <tr>
    <td style="text-align:left;padding-left: 2em;" indentlevel="1"> urban </td>
-   <td style="text-align:right;"> 274 </td>
-   <td style="text-align:right;"> 92.6 </td>
+   <td style="text-align:right;"> 239 </td>
+   <td style="text-align:right;"> 80.7 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Education </td>

@@ -7,7 +7,7 @@
 
     <meta name="author" content="Kendra Wyant">
     <meta name="author" content="John J. Curtin">
-    <meta name="dcterms.date" content="2026-03-17">
+    <meta name="dcterms.date" content="2026-03-23">
     <meta name="keywords" content="Substance use disorders, Precision mental health">
 
     <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -190,10 +190,10 @@
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-17">
-<meta name="citation_cover_date" content="2026-03-17">
+<meta name="citation_publication_date" content="2026-03-23">
+<meta name="citation_cover_date" content="2026-03-23">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-17">
+<meta name="citation_online_date" content="2026-03-23">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Drug Overdose Death Rates  National Institute on Drug Abuse (NIDA);,citation_abstract=The Centers for Disease Control and Prevention collects information on deaths involving many commonly used drugs The CDC’s reporting on deaths by overdose.;,citation_author=National Institute on Drug Abuse;,citation_publication_date=2023-06;,citation_cover_date=2023-06;,citation_year=2023;,citation_language=en-US;,citation_publisher=https://nida.nih.gov/research-topics/trends-statistics/overdose-death-rates;">
 <meta name="citation_reference" content="citation_title=Disparities in the Treatment of Substance Use Disorders: Does Where You Live Matter?;,citation_abstract=This study focused on (1) whether disparities in timely receipt of substance use services can be explained in part by the characteristics of the community in which the clients reside and (2) whether the effect of community characteristics on timely receipt of services was similar across racial/ethnic groups. The sample was composed of adults receiving publicly funded outpatient treatment in Washington State. Treatment data were linked to data from the US census. The outcome studied was “Initiation and Engagement” in treatment (IET), a measure noting timely receipt of services at the beginning of treatment. Community characteristics studied included community level economic disadvantage and concentration of American Indian, Latino, and Black residents in the community. Black and American Indian clients were less likely to initiate or engage in treatment compared to non-Latino white clients, and American Indian clients living in economically disadvantaged communities were at even greater risk of not initiating treatment. Community economic disadvantage and racial/ethnic makeup of the community were associated with treatment initiation, but not engagement, although they did not entirely explain the disparities found in IET.;,citation_author=Andrea Acevedo;,citation_author=Lee Panas;,citation_author=Deborah Garnick;,citation_author=Dolores Acevedo-Garcia;,citation_author=Jennifer Miles;,citation_author=Grant Ritter;,citation_author=Kevin Campbell;,citation_publication_date=2018-10;,citation_cover_date=2018-10;,citation_year=2018;,citation_issue=4;,citation_doi=10.1007/s11414-018-9586-y;,citation_issn=1556-3308;,citation_volume=45;,citation_language=en-US;,citation_journal_title=The Journal of Behavioral Health Services &amp;amp;amp; Research;">
@@ -505,7 +505,7 @@
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 17, 2026</p>
+              <p class="date">March 23, 2026</p>
             </div>
           </div>
           
@@ -901,13 +901,13 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 </tr>
 <tr class="odd">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">rural</td>
-<td style="text-align: right;">62</td>
-<td style="text-align: right;">20.9</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">19.3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; padding-left: 2em;" data-indentlevel="1">urban</td>
-<td style="text-align: right;">274</td>
-<td style="text-align: right;">92.6</td>
+<td style="text-align: right;">239</td>
+<td style="text-align: right;">80.7</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Education</td>
@@ -1511,22 +1511,23 @@ Figure&nbsp;4: Feature importance partial dependence plots.
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
+<p>Our full model demonstrated that it is possible to predict future next-day lapses back to opioid use with high accuracy using smartphone sensing methods (auROC = 0.94). Our model’s predictions were well-calibrated, meaning that our probabilities closely matched true observed lapse rates. This is exciting given that our goal was to build a model that could provide insight into lapse risk.</p>
+<p>Ablation model comparisons revealed that daily surveys alone captured nearly all of this predictive signal (auROC = 0.94). To our knowledge, no other published substance use studies have collected daily survey data from participants continuously over the course of one year. Survey adherence rates in our sample were comparable to those observed in other clinical populations, suggesting that self‑report surveys are a feasible and scalable sensing method for long‑term monitoring in this population.</p>
+<p>When daily surveys were ablated from the model, predictive performance dropped substantially (auROC = 0.63). Although this performance remained above chance and exceeded that of a demographics‑only model (with both geolocation and daily surveys ablated; auROC = 0.55), it indicates that geolocation features captured only modest independent predictive signal. Moreover, given that ablating geolocation features did not result in any drop in performance, this signal likely overlaps with information already captured with the daily surveys. It is possible that the relatively low predictive value of geolocation sensing in this study was due to methodological limitations.</p>
+<p>Although geolocation data can, in principle, be collected continuously moment‑by‑moment, in practice these data are difficult to collect reliably. In our study, geolocation features had substantially higher rates of missingness compared to daily surveys. Consequently, approximately 12% of geolocation features were imputed using median values derived from other individuals in the training dataset. Median values are by definition near the center of the feature distribution. These values are common and have limited influence on model predictions (i.e., low leverage). This was a purposeful decision in our design to ensure that missing data would not systematically influence predictions in either direction. However, this conservative approach likely contributed to reduced predictive performance of geolocation features, as imputations that minimize influence also limit the ability of those features to contribute risk‑relevant signal. Lastly, these median imputations are also not person-specific and as a result may not accurately represent typical values for the individual whose data are being imputed. As geolocation sensing methods become more robust and missingness is reduced, these features may become more powerful for lapse prediction.</p>
+<p>A second limitation of our sensing method, was that we relied on known locations with self-reported context. While this method provides meaningful contextual information, it is limited in its ability to capture the full range of locations participants visit (without substantially increasing participant burden). Passive methods for contextualizing location could address this limitation by providing risk-relevant contextual information across all locations. For example, latitude and longitude coordinates could be contextualized using publicly available datasets, such as alcohol outlet density, area deprivation index, and Narcotics Annonymous meeting times and locations. Increasing the number of locations would allow for potentially more variance in feature distributions within and between individuals.</p>
+<p>To summarize, if the goal is prediction, geolocation sensing features are not necessary as they do not offer any unique incremental predictive value. However, if the goal is to have a more nuanced understanding of lapse risk across a more diverse array of risk features than geolocation is helpful. Adding geolocation features did not hurt model performance, and more data sources provides more opportunities for identifying intervenable targets specific to a person and moment in time.</p>
+<p>We were excited to see that fairness discrepancies in model performance were minimal. In all subgroups, our model had a median auROC above 0.90, which is generally considered to be a benchmark of excellent performance. Nevertheless, differences of 0.02 - 0.03 (favoring the advantaged group) were present in race and ethnicity, sexual orientation, and geographic location comparisons.</p>
+<p>Research should look into additional risk factors that may better predict risk of lapse in minority populations.</p>
 <ul>
-<li><p>Discuss contrast between top global features and “actual” important features (i.e., what comes up day to day as being important). What does this mean for how we traditionally conceptualize feature importance?</p></li>
-<li><p>day of prediction window not important for oud but important for aud (add supplemental figure of lapses by day of week and hour?)</p></li>
 <li><p>When discussing fairness - we don’t look at age. People over 65 is an important group to look at but they were not in our sample</p></li>
-<li><p>Acknowledge fairness differences still exist. Research should look into additional risk factors that may better predict risk of lapse in minority populations.</p></li>
+<li><p>Top features</p></li>
+<li><p>paid, and withdrawn for adherence, stillk nearly 78% of paprticipnat rmeainf on study for 6 months with this exckludion criteia</p></li>
 <li><p>Decision not include misclassification cost analyses: acknowledge that discrimination and calibration don’t equate to clinical utilility. Decision analysis tools, such as net benefit curves could be used to quantify clinical benefit at relevant probability thresholds. Our model is designed to not be used to make decisions about whether or not to treat but to provide model feedback to individuals each day to help them monitor their risk for lapse. Therefore the decision has already been made to always treat. Should these models be used to inform when to deploy more cost-intensive interventions (e.g., communicating risk level to a therapist to initiate contact) these analyses will be important next steps.</p></li>
-<li><p>Although, classification and clinical utility are two other important domains for evaluating a model intended to make or inform a decision (e.g., whether to send a support message to an individual). In applications of our model there would be no decision to be made. Every day an individual would receive a message regardless of their lapse risk, equivalent to a treat all condition. Therefore, we have constrained our evaluation to focus on the probability estimates for evaluating performance. <!--this needs more info if you are going to include it.  Its not clear from this brief sentence how we are not making decisions or need to care about clinical utility.  I would also probably move that part to a footnote to note have it be as salient--><!--KW moved out of methods--></p></li>
-<li><p>Optimal thresholds depend on the setting, outcome prevalence, and the relative costs of misclassification, and should be addressed separately from discrimination evaluation (e.g., with a decision curve analysis). <!--JJC: and didnt you say we wouldnt recommend classifying at all?--></p></li>
-<li><p>Discussion about GPS data. No evidence that geolocation offered incremental predictive value. Hard to get. With better sensing features could be more important. 12% of gps features were imputed as median. Low leverage for predictions.</p></li>
-<li><p>If all you care about is prediction, you don’t need gps. If you desire a more nuanced understanding of risk across a more diverse array of risk features than gps is helpful.</p></li>
-<li><p>GPS may be better if we did not rely on only known locations but could passively contextualize locations. May be better with more robust sensing methods.</p></li>
-<li><p>Overall, GPS didn’t hurt predictions but also didn’t add any value above and beyond daily surveys. Appears to overlap with EMA.</p></li>
-<li><p>Daily surveys remain to be a feasible and predictive signal even when measured over a year.</p></li>
-<li><p>Participants provided data for up to 12 months. This extended window of recovery (12 months vs.&nbsp;3 months) is critical for evaluating the value of an algorithm intended for ongoing continuing care support and understanding how lapse risk evolves as people progress in their recovery (i.e., past 3 months). Unfortunately, our ability to address explanatory questions about the time course of lapse risk, and how individuals might cluster on different recovery trajectories is limited with traditional machine learning methods. These methods do not capture the repeated nature of sensing data. Each lapse prediction is treated as a new independent observation. We can account for the repeated observations in our sensing data by engineering features that capture individual changes over time to produce unbiased and precise estimates of predictive performance. However, more traditional time series models are better suited for understanding the temporal dynamics of lapse risk over long periods of recovery.</p></li>
-<li><p>The longer duration of participation also provides the opportunity to experiment with lagged prediction windows further than two weeks into the future (i.e., 1 month). However, in a machine learning framework, different models must be built to predict lapses at varying times in the future. For example, a recovery monitoring support system that detects both immediate lapse risk (i.e., in the next 24 hours) and future lapse risk (i.e, in the next 2 weeks and in the next month) would need three models. This approach is time consuming, cumbersome, and still only provides coarse understanding of time-course. Therefore, this study will only predict immediate lapse risk.</p></li>
+<li><p>Although, classification and clinical utility are two other important domains for evaluating a model intended to make or inform a decision (e.g., whether to send a support message to an individual). In applications of our model there would be no decision to be made. Every day an individual would receive a message regardless of their lapse risk, equivalent to a treat all condition. Therefore, we have constrained our evaluation to focus on the probability estimates for evaluating performance.</p></li>
+<li><p>Optimal thresholds depend on the setting, outcome prevalence, and the relative costs of misclassification, and should be addressed separately from discrimination evaluation (e.g., with a decision curve analysis).</p></li>
 </ul>
+<p>Time series models - Participants provided data for up to 12 months. This extended window of recovery (12 months vs.&nbsp;3 months) is critical for evaluating the value of an algorithm intended for ongoing continuing care support and understanding how lapse risk evolves as people progress in their recovery (i.e., past 3 months). Unfortunately, our ability to address explanatory questions about the time course of lapse risk, and how individuals might cluster on different recovery trajectories is limited with traditional machine learning methods. These methods do not capture the repeated nature of sensing data. Each lapse prediction is treated as a new independent observation. We can account for the repeated observations in our sensing data by engineering features that capture individual changes over time to produce unbiased and precise estimates of predictive performance. However, more traditional time series models are better suited for understanding the temporal dynamics of lapse risk over long periods of recovery.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
