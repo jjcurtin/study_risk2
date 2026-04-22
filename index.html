@@ -2,17 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Kendra Wyant">
 <meta name="author" content="John J. Curtin">
-<meta name="dcterms.date" content="2026-03-26">
+<meta name="dcterms.date" content="2026-04-22">
 <meta name="keywords" content="Substance use disorders, Precision mental health">
 
 <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -48,15 +51,16 @@ div.csl-indent {
 
 
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a1ff8711b79ae3724c050874b28d9907.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-67270d1595a62d14f123c043d4fb2f18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -68,10 +72,10 @@ div.csl-indent {
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-03-26">
-<meta name="citation_cover_date" content="2026-03-26">
+<meta name="citation_publication_date" content="2026-04-22">
+<meta name="citation_cover_date" content="2026-04-22">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-03-26">
+<meta name="citation_online_date" content="2026-04-22">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Drug Overdose Death Rates  National Institute on Drug Abuse (NIDA);,citation_abstract=The Centers for Disease Control and Prevention collects information on deaths involving many commonly used drugs The CDC’s reporting on deaths by overdose.;,citation_author=National Institute on Drug Abuse;,citation_publication_date=2023-06;,citation_cover_date=2023-06;,citation_year=2023;,citation_language=en-US;,citation_publisher=https://nida.nih.gov/research-topics/trends-statistics/overdose-death-rates;">
 <meta name="citation_reference" content="citation_title=Disparities in the Treatment of Substance Use Disorders: Does Where You Live Matter?;,citation_abstract=This study focused on (1) whether disparities in timely receipt of substance use services can be explained in part by the characteristics of the community in which the clients reside and (2) whether the effect of community characteristics on timely receipt of services was similar across racial/ethnic groups. The sample was composed of adults receiving publicly funded outpatient treatment in Washington State. Treatment data were linked to data from the US census. The outcome studied was “Initiation and Engagement” in treatment (IET), a measure noting timely receipt of services at the beginning of treatment. Community characteristics studied included community level economic disadvantage and concentration of American Indian, Latino, and Black residents in the community. Black and American Indian clients were less likely to initiate or engage in treatment compared to non-Latino white clients, and American Indian clients living in economically disadvantaged communities were at even greater risk of not initiating treatment. Community economic disadvantage and racial/ethnic makeup of the community were associated with treatment initiation, but not engagement, although they did not entirely explain the disparities found in IET.;,citation_author=Andrea Acevedo;,citation_author=Lee Panas;,citation_author=Deborah Garnick;,citation_author=Dolores Acevedo-Garcia;,citation_author=Jennifer Miles;,citation_author=Grant Ritter;,citation_author=Kevin Campbell;,citation_publication_date=2018-10;,citation_cover_date=2018-10;,citation_year=2018;,citation_issue=4;,citation_doi=10.1007/s11414-018-9586-y;,citation_issn=1556-3308;,citation_volume=45;,citation_language=en-US;,citation_journal_title=The Journal of Behavioral Health Services &amp;amp;amp; Research;">
@@ -145,7 +149,7 @@ div.csl-indent {
 <meta name="citation_reference" content="citation_title=Estimated Deaths Attributable to Excessive Alcohol Use Among US Adults Aged 20 to 64 Years, 2015 to 2019;,citation_abstract=Alcohol consumption is a leading preventable cause of death in the US, and death rates from fully alcohol-attributable causes (eg, alcoholic liver disease) have increased in the past decade, including among adults aged 20 to 64 years. However, a comprehensive assessment of alcohol-attributable deaths among this population, including from partially alcohol-attributable causes, is lacking.To estimate the mean annual number of deaths from excessive alcohol use relative to total deaths among adults aged 20 to 64 years overall; by sex, age group, and state; and as a proportion of total deaths.This population-based cross-sectional study of mean annual alcohol-attributable deaths among US residents between January 1, 2015, and December 31, 2019, used population-attributable fractions. Data were analyzed from January 6, 2021, to May 2, 2022.Mean daily alcohol consumption among the 2 089 287 respondents to the 2015-2019 Behavioral Risk Factor Surveillance System was adjusted using national per capita alcohol sales to correct for underreporting. Adjusted mean daily alcohol consumption prevalence estimates were applied to relative risks to generate alcohol-attributable fractions for chronic partially alcohol-attributable conditions. Alcohol-attributable fractions based on blood alcohol concentrations were used to assess acute partially alcohol-attributable deaths.Alcohol-attributable deaths for 58 causes of death, as defined in the Centers for Disease Control and Prevention’s Alcohol-Related Disease Impact application. Mortality data were from the National Vital Statistics System.During the 2015-2019 study period, of 694 660 mean deaths per year among adults aged 20 to 64 years (men: 432 575 [66.3%]; women: 262 085 [37.7%]), an estimated 12.9% (89 697 per year) were attributable to excessive alcohol consumption. This percentage was higher among men (15.0%) than women (9.4%). By state, alcohol-attributable deaths ranged from 9.3% of total deaths in Mississippi to 21.7% in New Mexico. Among adults aged 20 to 49 years, alcohol-attributable deaths (44 981 mean annual deaths) accounted for an estimated 20.3% of total deaths.The findings of this cross-sectional study suggest that an estimated 1 in 8 total deaths among US adults aged 20 to 64 years were attributable to excessive alcohol use, including 1 in 5 deaths among adults aged 20 to 49 years. The number of premature deaths could be reduced with increased implementation of evidenced-based, population-level alcohol policies, such as increasing alcohol taxes or regulating alcohol outlet density.;,citation_author=Marissa B. Esser;,citation_author=Gregory Leung;,citation_author=Adam Sherk;,citation_author=Michele K. Bohm;,citation_author=Yong Liu;,citation_author=Hua Lu;,citation_author=Timothy S. Naimi;,citation_publication_date=2022-11;,citation_cover_date=2022-11;,citation_year=2022;,citation_issue=11;,citation_doi=10.1001/jamanetworkopen.2022.39485;,citation_issn=2574-3805;,citation_pmid=36318209;,citation_volume=5;,citation_journal_title=JAMA Network Open;">
 <meta name="citation_reference" content="citation_title=Drinking context, alcohol use, and subjective responses during binge drinking episodes measured by high-resolution ecological momentary assessment (HR-EMA);,citation_abstract=Objective: Subjective responses to alcohol play a key role in the development and maintenance of risky drinking and alcohol use disorder (AUD). The social and environmental context where drinking occurs may moderate alcohol’s subjective effects, but ecologically valid studies of these associations are limited. The present study used high-resolution ecological momentary assessment (HR-EMA) targeting real-world binge drinking episodes to examine associations among drinking context, alcohol consumption, and subjective responses to alcohol. Method: Young adult heavy drinkers (N = 61; 57% male) completed two smartphone-based, 3-hr HR-EMA of drinking context (social context and location), alcohol use, and subjective responses (alcohol stimulation, sedation, feeling, liking, and wanting more). Analyses examined the associations between drinking context and subjective alcohol responses, accounting for demographic characteristics and individual differences in alcohol consumption. Results: Most (85%) participants reported binge drinking during real-world drinking events. Estimated blood alcohol concentration (eBAC) and alcohol stimulation and reward (liking, wanting) were greater when participants drank with others (vs. alone) and in a bar/restaurant (vs. other location). Sedation was higher when drinking alone versus with others. Conclusions: The present study extends prior laboratory-based research and shows that subjective responses during naturalistic binge drinking episodes may be influenced by drinking context. Drinking with others and in bars and restaurants may increase alcohol consumption, enhance alcohol’s rewarding effects, and lead to more alcohol-related harm in at-risk drinkers. (PsycInfo Database Record (c) 2023 APA, all rights reserved);,citation_author=Andrew M. Fischer;,citation_author=Andrea C. King;,citation_author=Dingcai Cao;,citation_author=Daniel J. Fridberg;,citation_publication_date=2023-03;,citation_cover_date=2023-03;,citation_year=2023;,citation_issue=2;,citation_doi=10.1037/adb0000887;,citation_issn=0893-164X;,citation_volume=37;,citation_journal_title=Psychology of Addictive Behaviors;,citation_publisher=American Psychological Association;">
 <meta name="citation_reference" content="citation_title=Open trial of a personalized modular treatment for mood and anxiety;,citation_abstract=Psychosocial treatments for mood and anxiety disorders are generally effective, however, a number of treated individuals fail to demonstrate clinically-significant change. Consistent with the decades-old aim to identify “what works for whom,” personalized and precision treatments have become a recent area of interest in medicine and psychology. The present study followed the recommendations of Fisher (2015) to employ a personalized modular model of cognitive-behavioral therapy. Employing the algorithms provided by Fernandez, Fisher, and Chi (2017), the present study collected intensive repeated measures data prior to therapy in order to perform person-specific factor analysis and dynamic factor modeling. The results of these analyses were then used to generated personalized modular treatment plans on a person-by-person basis. Thirty-two participants completed therapy. The average number of sessions was 10.38. Hedges g’s for the Hamilton Rating Scale for Depression (HRSD) and Hamilton Anxiety Rating Scale (HARS) were 2.33 and 1.62, respectively. The change per unit time was g = .24/session for the HRSD and g = 0.17/session for the HARS. The current open trial provides promising data in support of personalization, modularization, and idiographic research paradigms.;,citation_author=Aaron J. Fisher;,citation_author=Hannah G. Bosley;,citation_author=Katya C. Fernandez;,citation_author=Jonathan W. Reeves;,citation_author=Peter D. Soyster;,citation_author=Allison E. Diamond;,citation_author=Jonathan Barkin;,citation_publication_date=2019-05;,citation_cover_date=2019-05;,citation_year=2019;,citation_doi=10.1016/j.brat.2019.01.010;,citation_issn=0005-7967;,citation_volume=116;,citation_language=en-US;,citation_journal_title=Behaviour Research and Therapy;">
-<meta name="citation_reference" content="citation_title=Availability of Buprenorphine Treatment in the 10 States With the Highest Drug Overdose Death Rates in the United States;,citation_abstract=Objective:&nbsp; The objective of this study was to assess the accuracy of the Substance Abuse and Mental Health Services Administration (SAMHSA) database for patients who use it to seek buprenorphine treatment. Design and Measurements:&nbsp; Buprenorphine providers within a 25-mile radius of the county with the highest drug-related death rates within the 10 states with the highest drug-related death rates were identified and called to determine whether the provider worked there, prescribed buprenorphine, accepted insurance, had appointments, or charged for visits. Results:&nbsp; The number of providers listed in each county ranged from 1 to 166, with 5 counties having $&amp;amp;amp;lt;$10 providers. In 3 counties no appointments were obtained, and another 3 counties had $\leq$3 providers with availability. Of the 505 providers listed, 355 providers (70.3%) were reached, 310 (61.4%) of the 505 listings were correct numbers, and 195 (38.6%) of the 505 providers in the listings provided buprenorphine. Of the 173 clinics that provided buprenorphine and were asked about insurance, 131 (75.7%) accepted insurance. Of the 167 clinics that provided buprenorphine and were asked about Medicaid, 105 (62.9%) accepted it. Wait times for appointments ranged from 1 to 120 days, with an average of 16.8 days for those that had a waitlist. Among the 39 providers who reported out-of-pocket costs, the average cost was $231 (range: $90 to $600). One hundred forty of the 505 providers listed in the database had appointments available (27.7%). Three hundred sixty-five of the 505 providers did not have appointments available (72.3%) for various reasons, including the fact that 120 providers (32.9% of the 365 providers) could not be reached, and 137 of the numbers (37.5% of the 365 listed numbers) were wrong. Other reasons appointments could not be obtained included the fact that providers did not treat outpatients, were not accepting new patients, were out of office, or required a referral. Conclusion:&nbsp; Although the SAMHSA buprenorphine practitioner locator is used by patients and providers to locate treatment options, only a small portion of clinicians in the database ultimately offered initial appointments, implying that the database is only marginally useful for patients.;,citation_author=Lila Flavin;,citation_author=Monica Malowney;,citation_author=Nikhil A. Patel;,citation_author=Michael D. Alpert;,citation_author=Elisa Cheng;,citation_author=Gaddy Noy;,citation_author=Sarah Samuelson;,citation_author=Nina Sreshta;,citation_author=J. Wesley Boyd;,citation_publication_date=2020-01;,citation_cover_date=2020-01;,citation_year=2020;,citation_issue=1;,citation_doi=10.1097/PRA.0000000000000437;,citation_issn=1527-4160;,citation_volume=26;,citation_language=en-US;,citation_journal_title=Journal of Psychiatric Practice;">
+<meta name="citation_reference" content="citation_title=Availability of Buprenorphine Treatment in the 10 States With the Highest Drug Overdose Death Rates in the United States;,citation_abstract=Objective:&nbsp; The objective of this study was to assess the accuracy of the Substance Abuse and Mental Health Services Administration (SAMHSA) database for patients who use it to seek buprenorphine treatment. Design and Measurements:&nbsp; Buprenorphine providers within a 25-mile radius of the county with the highest drug-related death rates within the 10 states with the highest drug-related death rates were identified and called to determine whether the provider worked there, prescribed buprenorphine, accepted insurance, had appointments, or charged for visits. Results:&nbsp; The number of providers listed in each county ranged from 1 to 166, with 5 counties having $&amp;amp;amp;lt;$10 providers. In 3 counties no appointments were obtained, and another 3 counties had $\leq$3 providers with availability. Of the 505 providers listed, 355 providers (70.3%) were reached, 310 (61.4%) of the 505 listings were correct numbers, and 195 (38.6%) of the 505 providers in the listings provided buprenorphine. Of the 173 clinics that provided buprenorphine and were asked about insurance, 131 (75.7%) accepted insurance. Of the 167 clinics that provided buprenorphine and were asked about Medicaid, 105 (62.9%) accepted it. Wait times for appointments ranged from 1 to 120 days, with an average of 16.8 days for those that had a waitlist. Among the 39 providers who reported out-of-pocket costs, the average cost was $231 (range: $90 to $600). One hundred forty of the 505 providers listed in the database had appointments available (27.7%). Three hundred sixty-five of the 505 providers did not have appointments available (72.3%) for various reasons, including the fact that 120 providers (32.9% of the 365 providers) could not be reached, and 137 of the numbers (37.5% of the 365 listed numbers) were wrong. Other reasons appointments could not be obtained included the fact that providers did not treat outpatients, were not accepting new patients, were out of office, or required a referral. Conclusion:&nbsp; Although the SAMHSA buprenorphine practitioner locator is used by patients and providers to locate treatment options, only a small portion of clinicians in the database ultimately offered initial appointments, implying that the database is only marginally useful for patients.;,citation_author=Lila Flavin;,citation_author=Monica Malowney;,citation_author=Nikhil A. Patel;,citation_author=Michael D. Alpert;,citation_author=Elisa Cheng;,citation_author=Gaddy Noy;,citation_author=Sarah Samuelson;,citation_author=Nina Sreshta;,citation_author=J. Wesley Boyd;,citation_publication_date=2020-01;,citation_cover_date=2020-01;,citation_year=2020;,citation_issue=1;,citation_doi=10.1097/PRA.0000000000000437;,citation_issn=1527-4160;,citation_volume=26;,citation_language=en-US;,citation_journal_title=Journal of Psychiatric Practice®;">
 <meta name="citation_reference" content="citation_title=The economic burden of opioid use disorder and fatal opioid overdose in the United States, 2017;,citation_abstract=Background The United States (U.S.) is experiencing an ongoing opioid crisis. Economic burden estimates that describe the impact of the crisis are needed when considering federal and state resources devoted to addressing overdoses. In this study, we estimate the societal costs for opioid use disorder and fatal overdose from all opioids in 2017. Methods We estimated costs of fatal overdose from all opioids and opioid use disorder based on the incidence of overdose deaths and the prevalence of past-year opioid use disorder for 2017. Incidence of fatal opioid overdose was obtained from the National Vital Statistics System; prevalence of past-year opioid use disorder was estimated from the National Survey of Drug Use and Health. Costs were estimated for health care, criminal justice and lost productivity. Costs for the reduced quality of life for opioid use disorder and life lost due to fatal opioid overdose were valued using U.S. Department of Health and Human Services guidelines for valuing reductions in morbidity and mortality. Results Costs for opioid use disorder and fatal opioid overdose in 2017 were estimated to be $1.02 trillion. The majority of the economic burden is due to reduced quality of life from opioid use disorder and the value of life lost due to fatal opioid overdose. Conclusions These estimates can assist decision makers in understanding the magnitude of opioid use disorder and fatal overdose. Knowing the magnitude and distribution of the economic burden can inform public policy, clinical practice, research, and prevention and response activities.;,citation_author=Curtis Florence;,citation_author=Feijun Luo;,citation_author=Ketra Rice;,citation_publication_date=2021-01;,citation_cover_date=2021-01;,citation_year=2021;,citation_doi=10.1016/j.drugalcdep.2020.108350;,citation_issn=0376-8716;,citation_volume=218;,citation_journal_title=Drug and Alcohol Dependence;">
 <meta name="citation_reference" content="citation_title=Variations in Substance Use and Disorders Among Sexual Minorities by Race/Ethnicity;,citation_abstract=Little is known about racial/ethnic minority substance use and disorder-related disparities among sexual minorities as compared to their heterosexual counterparts. This study aimed to understand the associations between sexual minority status and substance use and disorders among U.S. adults stratified by race/ethnicity. Methods: We analyzed data from a sample of U.S. adults (n = 35,981) surveyed during the 2012-2013 National Epidemiological Survey on Alcohol and Related Conditions-III. Respondents were categorized into four sexual minority statuses: heterosexual, gay/lesbian, bisexual, and conflicting. Respondents’ substance (tobacco, alcohol, and marijuana) use and disorders were also assessed using standard measures. Weighted multivariable logistic regressions were used to examine the relationships between sexual minority status and substance use and disorders, stratified by race/ethnicity, adjusting for socio-demographic characteristics. Results: Sexual minority adults experienced a higher prevalence of substance use and disorders than heterosexuals. For example, bisexuals were more likely than heterosexuals to use marijuana (AOR = 3.45, 95% CI = 2.64-4.50) and have tobacco use disorders (AOR = 2.58, 95% CI = 2.02-3.28). These associations were stronger among racial/ethnic minorities. For instance, bisexual non-Hispanic Blacks were more than twice as likely (AOR = 3.17, 95% CI = 2.16-4.65) to be current tobacco users than their heterosexual counterparts; while this association was weaker for bisexual non-Hispanic Whites (AOR = 1.99, 95% CI = 1.47-2.71). Conclusion: Sexual minority adults, especially those who are also racial/ethnic minorities, experience a significantly higher burden of substance use and disorders than heterosexuals. Efforts to screen and treat substance use and disorders among this particular population are critically needed to improve their health outcomes and reduce health disparities.;,citation_author=Thomas M. Freitag;,citation_author=Julia C. Chen-Sankey;,citation_author=Danielle A. Duarte;,citation_author=Michael W. Ramsey;,citation_author=Kelvin Choi;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_issue=7;,citation_doi=10.1080/10826084.2021.1899225;,citation_issn=1532-2491;,citation_pmid=33821743;,citation_volume=56;,citation_language=en-US;,citation_journal_title=Substance Use &amp;amp;amp; Misuse;">
 <meta name="citation_reference" content="citation_title=Alcohol subjective responses in heavy drinkers: Measuring acute effects in the natural environment versus the controlled laboratory setting;,citation_abstract=BACKGROUND: For decades, laboratory alcohol challenges have been the &amp;amp;amp;quot;gold standard&amp;quot; for measuring individual differences in alcohol’s subjective effects. However, these approaches are expensive and labor-intensive, making them impractical for large-scale use. This study examined the reliability and validity of a new high-resolution EMA (HR-EMA) ambulatory approach to assessing alcohol use and subjective responses in drinkers’ natural environments. METHODS: Participants were 83 young adult heavy social drinkers (58% male; mean&nbsp;&nbsp;SD age&nbsp;=&nbsp;25.4&nbsp;&nbsp;2.6&nbsp;years) who completed up to two smartphone-based, 3-h HR-EMA assessments of alcohol use and related subjective responses in their typical drinking environments. Reported alcohol consumption during the HR-EMA periods was used to calculate estimated blood alcohol concentration (eBAC). Subjective effects were measured using the Brief Biphasic Alcohol Effects Scale (B-BAES) and Drug Effects Questionnaire (DEQ). All participants also completed identical measures during a separate, 4 to 5-h laboratory session in which they received a 0.8&nbsp;g/kg alcohol challenge. RESULTS: Most natural environment drinking episodes (87%) met or exceeded the threshold for binge drinking (final mean eBAC&nbsp;=&nbsp;0.12&nbsp;g/dl). Associations between reported alcohol use and subjective responses on the B-BAES and DEQ were strongest earlier in the drinking events, with fair reliability of reported subjective effects across two HR-EMA episodes (intraclass correlation [ICC] range = 0.46-0.49). There was fair-to-good correspondence between HR-EMA- and laboratory-derived subjective responses (ICC range = 0.49-0.74), even after accounting for differences in alcohol consumption and drinking context. Reported stimulating and rewarding alcohol effects were higher in the ambulatory than laboratory setting, and vice versa for sedating effects. CONCLUSIONS: This study supports the reliability and validity of smartphone-based HR-EMA to measure alcohol use and subjective responses in heavy drinkers’ natural environments. These findings lend support to the use of ambulatory HR-EMA as a measure of alcohol subjective responses in risky drinkers when a laboratory protocol is not practical, feasible, or safe.;,citation_author=Daniel J. Fridberg;,citation_author=Dingcai Cao;,citation_author=Andrea C. King;,citation_publication_date=2021-06;,citation_cover_date=2021-06;,citation_year=2021;,citation_issue=6;,citation_doi=10.1111/acer.14616;,citation_issn=1530-0277;,citation_pmid=33864396;,citation_volume=45;,citation_language=en-US;,citation_journal_title=Alcoholism, Clinical and Experimental Research;">
@@ -217,7 +221,7 @@ div.csl-indent {
 <meta name="citation_reference" content="citation_title=Tracking the quality of addiction treatment over time and across states;,citation_abstract=The objective of this study was to track trends in the signs of higher-quality addiction treatment as defined by the National Institute on Drug Abuse, the National Institute on Alcohol Abuse and Addiction, and the Substance Abuse and Mental Health Services Administration. We analyzed the National Survey of Substance Abuse Treatment Services from 2007 through 2017 to determine the percent of facilities having the characteristics of higher quality. We analyzed the percent by state and over time.$\bullet$ We found improvements between 2007 and 2017 on most measures, but performance on several measures remained low.$\bullet$ Most programs reported providing evidence-based behavioral therapies.$\bullet$ Half or fewer facilities offered medications for opioid use disorder; mental health assessments; testing for hepatitis C, HIV, and sexually transmitted diseases; self-help groups; employment assistance; and transportation assistance.$\bullet$ There was significant state-level variation across the measures.;,citation_author=Tami Mark;,citation_author=William N. Dowd;,citation_author=Carol L. Council;,citation_publication_date=2020-07;,citation_cover_date=2020-07;,citation_year=2020;,citation_language=en-US;">
 <meta name="citation_reference" content="citation_title=Relapse Prevention: Maintenance Strategies in the Treatment of Addictive Behaviors;,citation_editor=G. Alan Marlatt;,citation_editor=Judith R. Gordon;,citation_publication_date=1985-02;,citation_cover_date=1985-02;,citation_year=1985;,citation_isbn=978-0-89862-009-2;,citation_language=en-US;">
 <meta name="citation_reference" content="citation_title=Relapse Prevention, Second Edition: Maintenance Strategies in the Treatment of Addictive Behaviors;,citation_editor=G. Alan Marlatt;,citation_editor=Dennis M. Donovan;,citation_publication_date=2007-12;,citation_cover_date=2007-12;,citation_year=2007;,citation_isbn=978-1-59385-641-0;,citation_language=en-US;">
-<meta name="citation_reference" content="citation_title=Need for and Receipt of Substance Use Disorder Treatment Among Adults, by Gender, in the United States;,citation_abstract=ObjectivesDisparities in substance use disorder (SUD) treatment use persist across groups, including gender. Using a gender-informed approach to expand treatment capacity and reduce barriers to treatment engagement is vital. We examined SUD treatment need and receipt among people with SUD in the United States, by gender, and assessed gender-specific sociodemographic factors associated with unmet need for SUD treatment and reported treatment barriers.MethodsWe conducted an analysis of data among adults aged $\geq$18 with a past-year SUD from the National Survey on Drug Use and Health (2015-2018). We computed population-adjusted frequencies and proportions for SUD treatment need and receipt and assessed gender differences. Multivariate logistic regression assessed gender-specific sociodemographic variables associated with SUD treatment receipt.ResultsAmong adults with a past-year SUD, 63.4% were men and 36.6% were women (P $&amp;amp;amp;lt;$ .001), only 10.6% received SUD treatment, and a greater percentage of women than men needed treatment for opioid use disorder (11.9% vs 9.9%; P = .002). Receipt of SUD treatment was lowest among women with alcohol use disorder followed by men with alcohol use disorder (7.5% vs 8.9%; P = .052). Non-Latinx Black men had fewer than half the adjusted odds of receiving SUD treatment than non-Latinx White men (adjusted odds ratio [aOR] = 0.44; 95% CI, 0.27-0.71). Latinx women (aOR = 0.37; 95% CI, 0.18-0.73) and non-Latinx Black women (aOR = 0.51; 95% CI, 0.27-0.94) had significantly lower odds of receiving SUD treatment than non-Latinx White women.ConclusionsAs public health efforts target expanding SUD treatment capacity and addressing disparities in use of SUD treatment, interventions informed by gender and culture should be prioritized.;,citation_author=Caitlin E. Martin;,citation_author=Anna Beth Parlier-Ahmad;,citation_author=Lori Beck;,citation_author=Anna Scialli;,citation_author=Mishka Terplan;,citation_publication_date=2022-09;,citation_cover_date=2022-09;,citation_year=2022;,citation_issue=5;,citation_doi=10.1177/00333549211041554;,citation_issn=0033-3549;,citation_volume=137;,citation_language=en-US;,citation_journal_title=Public Health Reports;,citation_publisher=SAGE Publications Inc;">
+<meta name="citation_reference" content="citation_title=Need for and Receipt of Substance Use Disorder Treatment Among Adults, by Gender, in the United States;,citation_abstract=ObjectivesDisparities in substance use disorder (SUD) treatment use persist across groups, including gender. Using a gender-informed approach to expand treatment capacity and reduce barriers to treatment engagement is vital. We examined SUD treatment need and receipt among people with SUD in the United States, by gender, and assessed gender-specific sociodemographic factors associated with unmet need for SUD treatment and reported treatment barriers.MethodsWe conducted an analysis of data among adults aged $\geq$18 with a past-year SUD from the National Survey on Drug Use and Health (2015-2018). We computed population-adjusted frequencies and proportions for SUD treatment need and receipt and assessed gender differences. Multivariate logistic regression assessed gender-specific sociodemographic variables associated with SUD treatment receipt.ResultsAmong adults with a past-year SUD, 63.4% were men and 36.6% were women (P $&amp;amp;amp;lt;$ .001), only 10.6% received SUD treatment, and a greater percentage of women than men needed treatment for opioid use disorder (11.9% vs 9.9%; P = .002). Receipt of SUD treatment was lowest among women with alcohol use disorder followed by men with alcohol use disorder (7.5% vs 8.9%; P = .052). Non-Latinx Black men had fewer than half the adjusted odds of receiving SUD treatment than non-Latinx White men (adjusted odds ratio [aOR] = 0.44; 95% CI, 0.27-0.71). Latinx women (aOR = 0.37; 95% CI, 0.18-0.73) and non-Latinx Black women (aOR = 0.51; 95% CI, 0.27-0.94) had significantly lower odds of receiving SUD treatment than non-Latinx White women.ConclusionsAs public health efforts target expanding SUD treatment capacity and addressing disparities in use of SUD treatment, interventions informed by gender and culture should be prioritized.;,citation_author=Caitlin E. Martin;,citation_author=Anna Beth Parlier-Ahmad;,citation_author=Lori Beck;,citation_author=Anna Scialli;,citation_author=Mishka Terplan;,citation_publication_date=2022-09;,citation_cover_date=2022-09;,citation_year=2022;,citation_issue=5;,citation_doi=10.1177/00333549211041554;,citation_issn=0033-3549;,citation_volume=137;,citation_language=en-US;,citation_journal_title=Public Health Reports®;,citation_publisher=SAGE Publications Inc;">
 <meta name="citation_reference" content="citation_title=Privacy at the Margins Understanding Privacy at the Margins—Introduction;,citation_abstract=While privacy and surveillance affect different populations in disparate ways, they are often treated as monolithic concepts by journalists, privacy advocates, and researchers. Achieving privacy is especially difficult for those who are marginalized in other areas of life. This special issue interrogates what privacy looks like at the margins, investigating a broad spectrum of issues, methodologies, and contexts. Many make an intervention into mainstream theories of privacy and surveillance, showing how examining the experiences of individuals outside the normative white, American, middle-class subject often complicates assumptions about how privacy operates. Others examine the mundane and the banal in order to analyze how power relations play out in everyday life. By incorporating research outside the canon of privacy research, and by advocating for projects that discuss more diverse conceptualizations of “the user” or the subject, we can envision a future for privacy scholarship that incorporates a wider set of harms and needs, and encompasses the concerns of a larger base of citizens.;,citation_author=Alice E. Marwick;,citation_author=Danah Boyd;,citation_publication_date=2018-03;,citation_cover_date=2018-03;,citation_year=2018;,citation_issue=0;,citation_issn=1932-8036;,citation_volume=12;,citation_language=en-US;,citation_journal_title=International Journal of Communication;">
 <meta name="citation_reference" content="citation_title=Machine Bias;,citation_abstract=There’s software used across the country to predict future criminals. And it’s biased against blacks.;,citation_author=Lauren Kirchner Mattu;,citation_language=en-US;,citation_journal_title=ProPublica;,citation_publisher=https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing;">
 <meta name="citation_reference" content="citation_title=Mental Health Disparities, Treatment Engagement, and Attrition Among Racial/Ethnic Minorities with Severe Mental Illness: A Review;,citation_abstract=Mounting evidence indicates that there are mental health disparities in the United States that disadvantage racial/ethnic minorities in medical and mental health settings. Less is known, however, about how these findings apply to a particularly vulnerable population, individuals with severe mental illness (SMI). The aim of this paper is to (1) provide a critical review of the literature on racial/ethnic disparities in mental health care among individuals with SMI; (2) identify factors which may contribute to the observed disparities; and (3) generate recommendations on how best to address these disparities. Specifically, this article provides an in-depth review of sociocultural factors that may contribute to differences in treatment engagement and rates of attrition from treatment among racial/ethnic minorities with SMI who present at medical and mental health facilities. This review is followed by a discussion of specific strategies that may promote engagement in mental health services and therefore reduce racial/ethnic disparities in SMI.;,citation_author=Jessica Maura;,citation_author=Amy Weisman de Mamani;,citation_publication_date=2017-12;,citation_cover_date=2017-12;,citation_year=2017;,citation_issue=3;,citation_doi=10.1007/s10880-017-9510-2;,citation_issn=1573-3572;,citation_volume=24;,citation_language=en-US;,citation_journal_title=Journal of Clinical Psychology in Medical Settings;">
@@ -343,7 +347,7 @@ div.csl-indent {
 <meta name="citation_reference" content="citation_title=A psychiatry wait list had 880 patients; a hospital couldn’t keep up;,citation_abstract=Therapists are reporting long waiting lists as demand for mental health care to treat depression and anxiety surges.;,citation_author=Rachel Zimmerman;,citation_publication_date=2022-11;,citation_cover_date=2022-11;,citation_year=2022;,citation_language=en-US;,citation_journal_title=Washington Post;,citation_publisher=https://www.washingtonpost.com/wellness/2022/10/29/therapists-waiting-lists-depression-anxiety/;">
 </head>
 
-<body>
+<body class="quarto-light">
 
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
@@ -382,7 +386,7 @@ div.csl-indent {
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 26, 2026</p>
+              <p class="date">April 22, 2026</p>
             </div>
           </div>
           
@@ -390,7 +394,7 @@ div.csl-indent {
               </div>
       </div>
       <div class="quarto-title-meta-column-end quarto-other-formats-target">
-      <div class="quarto-alternate-formats"><div class="quarto-title-meta-heading">Other Formats</div><div class="quarto-title-meta-contents"><p><a href="index.docx"><i class="bi bi-file-word"></i>MS Word</a></p></div><div class="quarto-title-meta-contents"><p><a href="index.pdf"><i class="bi bi-file-pdf"></i>Typst (apaish)</a></p></div></div></div>
+      <div class="quarto-alternate-formats"><div class="quarto-title-meta-heading">Other Formats</div><div class="quarto-title-meta-contents"><p><a href="index.docx"><i class="bi bi-file-word"></i>MS Word</a></p></div></div></div>
     </div>
 
     <div>
@@ -462,7 +466,7 @@ div.csl-indent {
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>About 4.5 million adults in the United States met criteria for opioid use disorder (OUD) in 2024 <span class="citation" data-cites="substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed">(<a href="#ref-substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed" role="doc-biblioref">Substance Abuse and Mental Health Services Administration, n.d.</a>)</span>. OUD is associated with increased rates of mortality and morbidity, including infectious disease, psychiatric comorbidity, and disability <span class="citation" data-cites="hserHighMortalityPatients2017">(<a href="#ref-hserHighMortalityPatients2017" role="doc-biblioref">Hser et al., 2017</a>)</span>. The societal burden of untreated OUD is substantial. The combined economic costs of lost productivity, health care expenditures, criminal justice involvement, loss of life, and reduced quality of life have been estimated to exceed $1 trillion <span class="citation" data-cites="florenceEconomicBurdenOpioid2021">(<a href="#ref-florenceEconomicBurdenOpioid2021" role="doc-biblioref">Florence et al., 2021</a>)</span>.</p>
-<p>Medications for opioid use disorder (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk <span class="citation" data-cites="maEffectsMedicationassistedTreatment2019">(<a href="#ref-maEffectsMedicationassistedTreatment2019" role="doc-biblioref">Ma et al., 2019</a>)</span>. They are also associated with improvements in mental health and social functioning, particularly when maintained over extended periods. However, despite strong evidence for MOUD, access remains limited.</p>
+<p>Medications for OUD (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk <span class="citation" data-cites="maEffectsMedicationassistedTreatment2019">(<a href="#ref-maEffectsMedicationassistedTreatment2019" role="doc-biblioref">Ma et al., 2019</a>)</span>. They are also associated with improvements in mental health and social functioning, particularly when maintained over extended periods. However, despite strong evidence for MOUD, access remains limited.</p>
 <p>Even among individuals retained in treatment, lapses are frequent and confer a critical period of risk for treatment dropout, relapse, and overdose <span class="citation" data-cites="weinsteinLongtermRetentionOffice2017 heinzLongitudinalObservationalStudy2025">(<a href="#ref-heinzLongitudinalObservationalStudy2025" role="doc-biblioref">Heinz et al., 2025</a>; <a href="#ref-weinsteinLongtermRetentionOffice2017" role="doc-biblioref">Weinstein et al., 2017</a>)</span>. Opioid lapses are particularly high-risk events. Reduced opioid tolerance (e.g., after a period of abstinence) and the increasing prevalence of fentanyl and other synthetic opioids in the drug supply substantially increase the likelihood of fatal overdose.</p>
 <p>Identifying vulnerable periods of high lapse risk and contextualizing that risk (i.e., <em>Why</em> risk is high) could enable individuals to take proactive action to prevent lapse. However, the risk factors that precipitate lapses are highly individualized, numerous, dynamic, and interactive. The optimal supports to address these risks vary both across individuals and within individuals over time. Thus, effective interventions must be personalized to both the individual and the moment to meet the complex and changing needs of people in recovery.</p>
 <p>Advances in smartphone sensing methods, including brief daily self-report surveys and passive geolocation sensing, offer a powerful way to collect densely sampled risk-relevant data <span class="citation" data-cites="mohrPersonalSensingUnderstanding2017">(<a href="#ref-mohrPersonalSensingUnderstanding2017" role="doc-biblioref">Mohr et al., 2017</a>)</span>. These data can be used as inputs into machine learning models to generate temporally precise predictions of lapse risk <span class="citation" data-cites="wyantMachineLearningModels2024 heinzLongitudinalObservationalStudy2025">(<a href="#ref-heinzLongitudinalObservationalStudy2025" role="doc-biblioref">Heinz et al., 2025</a>; <a href="#ref-wyantMachineLearningModels2024" role="doc-biblioref">Wyant et al., 2024</a>)</span>. Methods from interpretable machine learning can be used to identify personalized predictors of risk at any moment in time <span class="citation" data-cites="molnarInterpretableMachineLearning2022">(<a href="#ref-molnarInterpretableMachineLearning2022" role="doc-biblioref">Molnar, 2022</a>)</span>.</p>
@@ -478,7 +482,7 @@ div.csl-indent {
 </section>
 <section id="participants" class="level2">
 <h2 class="anchored" data-anchor-id="participants">Participants</h2>
-<p>We recruited participants in early recovery from opioid use disorder from across the United States. We recruited through national digital advertising and collaborations with treatment providers at MOUD clinics. Our recruitment strategy was designed to create a diverse sample with respect to demographics (gender, age, race, and ethnicity), and geographic location (urban and rural). We required participants:</p>
+<p>We recruited participants in early recovery from OUD from across the United States. We recruited through national digital advertising and collaborations with treatment providers at MOUD clinics. Our recruitment strategy was designed to create a diverse sample with respect to demographics (gender, age, race, and ethnicity), and geographic location (urban and rural). We required participants:</p>
 <ul>
 <li>were age 18 or older,</li>
 <li>could read, write, and speak in English,</li>
@@ -575,7 +579,7 @@ Table&nbsp;1: Demographic and Clinical Characteristics
 </figcaption>
 <div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display">
-<table class="lightable-classic do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-classic cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
@@ -1082,7 +1086,7 @@ Table&nbsp;2: Median difference in auROC, 95% Bayesian credible interval (CI), a
 </figcaption>
 <div aria-describedby="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display">
-<table class="lightable-classic do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="lightable-classic cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
@@ -1148,15 +1152,15 @@ Figure&nbsp;1: Posterior probabilities for area under the receiver operating cur
 <h2 class="anchored" data-anchor-id="calibration-and-overall-performance-1">Calibration and Overall Performance</h2>
 <p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014; left panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-fig-2" class="cell" data-fig-width="8">
+<div id="cell-fig-2" class="cell" data-fig-width="7" data-fig-height="8">
 <div class="cell-output cell-output-display">
 <div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<a href="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt scaled (top) probabilities. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome."><img src="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" width="768" height="480" class="figure-img"></a>
+<a href="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: The top panel presents a calibration plot of raw and Platt calibrated risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt calibrated (top) probabilities. The bottom left and right panel presents histograms of raw (uncalibrated) and Platt calibrated risk probability distributions, respectively, separately by true lapse outcome."><img src="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" width="672" height="768" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt scaled (top) probabilities. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome.
+Figure&nbsp;2: The top panel presents a calibration plot of raw and Platt calibrated risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt calibrated (top) probabilities. The bottom left and right panel presents histograms of raw (uncalibrated) and Platt calibrated risk probability distributions, respectively, separately by true lapse outcome.
 </figcaption>
 </figure>
 </div>
@@ -1209,17 +1213,17 @@ Figure&nbsp;4: Feature importance partial dependence plots.
 <p>Ablation model comparisons revealed that daily surveys alone captured nearly all of this predictive signal (auROC = 0.94). To our knowledge, no other published SUD study has collected daily survey data from participants continuously over the course of one year. Survey adherence rates in our sample were comparable to those observed in other clinical populations, suggesting that self‑report surveys are a feasible and risk-relevant sensing method for long‑term monitoring in this population.</p>
 <p>When daily surveys were ablated from the model, predictive performance dropped substantially (auROC = 0.63). Although this performance remained above chance and exceeded that of a demographics‑only model (with both geolocation and daily surveys ablated; auROC = 0.55), it indicates that geolocation features captured only modest predictive signal. Moreover, given that ablating geolocation features did not result in any drop in performance, this signal likely overlaps with information already captured with the daily surveys. It is possible that the relatively low predictive value of geolocation sensing in this study was due to methodological limitations.</p>
 <p>Although geolocation data can, in principle, be collected continuously moment‑by‑moment, in practice these data are difficult to collect reliably. In our study, geolocation features had substantially higher rates of missingness compared to daily surveys. Consequently, approximately 12% of geolocation features were imputed using median values derived from other individuals in the training dataset. Median values are by definition near the center of the feature distribution. These values are common and have limited influence on model predictions (i.e., low leverage). This was a purposeful decision in our design to ensure that missing data would not systematically influence predictions in either direction. However, this conservative approach likely contributed to reduced predictive performance of geolocation features, as imputations that minimize influence also limit the ability of those features to contribute risk‑relevant signal. Lastly, these median imputations are also not person-specific and as a result may not accurately represent typical values for the individual whose data are being imputed. As geolocation sensing methods become more robust and missingness is reduced, these features may become more powerful for lapse prediction.</p>
-<p>A second limitation of our sensing method, was that we relied on known locations with self-reported context. While this method provides meaningful contextual information, it is limited in its ability to capture the full range of locations participants visit (without substantially increasing participant burden). Passive methods for contextualizing location could address this limitation by providing risk-relevant contextual information across all locations. For example, latitude and longitude coordinates could be contextualized using publicly available datasets, such as alcohol outlet density, area deprivation index, and Narcotics Annonymous meeting times and locations. Increasing the number of locations would allow for potentially more variance in feature distributions within and between individuals.</p>
+<p>A second limitation of our sensing method was that we relied on known locations with self-reported context. While this method provides meaningful contextual information, it is limited in its ability to capture the full range of locations participants visit (without substantially increasing participant burden). Passive methods for contextualizing location could address this limitation by providing risk-relevant contextual information across all locations. For example, latitude and longitude coordinates could be contextualized using publicly available datasets, such as alcohol outlet density, area deprivation index, and Narcotics Annonymous meeting times and locations. Increasing the number of locations would allow for potentially more variance in feature distributions within and between individuals.</p>
 <p>To summarize, if the goal is prediction, geolocation sensing features are not necessary as they do not offer any unique incremental predictive value. However, if the goal is to have a more nuanced understanding of lapse risk across a more diverse array of risk features than geolocation is helpful. Adding geolocation features did not hurt model performance, and more data sources provides more opportunities for identifying intervenable targets specific to a person and moment in time.</p>
 <p>We were excited to see that fairness discrepancies in model performance were minimal. In all subgroups, our model had a median auROC above 0.90, which is generally considered to be a benchmark of excellent performance. Nevertheless, differences of 0.02 - 0.03 (favoring the advantaged group) were present in race and ethnicity, sexual orientation, and geographic location comparisons. These group comparisons were the most imbalanced, with 19-29% of participants in the disadvantaged groups. Our model may perform better for these groups with greater representation in the training data. Future research into identifying additional risk factors for lapse that are more prevalent in these groups may also help to reduce these discrepancies.</p>
 <p>Age may be another important dimension for evaluating model fairness. Older adults (65+ years) are less likely to receive substance use disorder treatment and often report lower levels of social interaction and support than younger adults. They may also be less comfortable with, or less able to provide, smartphone sensing data at the level of adherence needed for accurate prediction. We did not explicitly evaluate model fairness for this subgroup because we did not have the representation in our sample. We encourage researchers to perform this analysis in future studies.</p>
 <p>When using a standard mean absolute Shapley value approach to estimate average feature importance across observations, the most important feature was prior opioid use. This finding is consistent with the relapse‑prevention literature, which identifies lapse as an important precursor to relapse, and prior prediction research demonstrating that lapses predict future lapses <span class="citation" data-cites="wyantMachineLearningModels2024">(<a href="#ref-wyantMachineLearningModels2024" role="doc-biblioref">Wyant et al., 2024</a>)</span>. Notably, this feature had a mean absolute Shapley value that was nearly two-fold higher than the next most important feature. When considering this model in the context of a recovery monitoring support system that provides daily insight into lapse risk, this finding may be misleading. Fewer than 2% of day-level observations contained a lapse, and the majority of participants did not lapse at all. Among those who did lapse, many only lapsed one time. Given that lapse cannot be used as a predictor until after it has occurred, in most cases other features may represent more clinically meaningful targets for intervention.</p>
 <p>A more informative approach to characterize feature importance is to consider the proportion of observations in which a given feature had the highest Shapley value. This approach considers both the magnitude of a feature’s effect (in terms of log-odds change in the prediction) and its prevalence across observations. Using this approach, urge ratings and abstinence confidence emerged as the features most frequently influencing lapse risk predictions. This suggests that individuals may benefit more often from recovery recommendations focussed on reducing urges (e.g., urge surfing) and increasing abstinence confidence (e.g., reflecting on recent successes). Additionally, this approach showed that while some features have low average importance (across all individuals and observations), they can be highly important on certain days for certain individuals (e.g., self-reports of anger).</p>
 <p>Across both feature importance approaches, geolocation features emerged among the top subset of features. Specifically, location variance, time spent in helpful and harmful locations, and time spent at locations where religious activities are performed were among the top ten features. These findings suggest that although geolocation features may not provide unique signal for prediction, it may be worthwhile to still include them in the model to expand opportunities for intervention and provide precision-oriented recovery support.</p>
-<p>When considering how our model might generalize in real world context, we must consider that participants were compensated for completing daily surveys and providing geolocation data, which may have influenced their willingness to provide data. However, participants received no additional direct benefit from their participation beyond financial compensation. In real‑world implementations, individuals may be more motivated to share data when it enables personalized recovery support. This perceived benefit may outweigh the burden of data collection, posibbly even more so than financial incentive.</p>
+<p>When considering how our model might generalize in real world context, we must consider that participants were compensated for completing daily surveys and providing geolocation data, which may have influenced their willingness to provide data. However, participants received no additional direct benefit from their participation beyond financial compensation. In real‑world implementations, individuals may be more motivated to share data when it enables personalized recovery support. This perceived benefit may outweigh the burden of data collection, possibly even more so than financial incentive.</p>
 <p>Additionally, we implemented daily survey compliance thresholds to exclude participants and adjust study end dates. This criterion was important because we generated our lapse labels from the daily survey data and thus we required consistent collection of this data stream for accurate observation labels. As a result, our estimates of adherence and model performance may be slightly optimistic. Still, even with this criterion, nearly 78% of participants remained in the study for at least six months, suggesting that long-term monitoring with daily surveys is feasible for a substantial proportion of individuals in this population.</p>
 <p>Lastly, participants provided data for up to 12 months. This extended window of recovery is critical for evaluating the value of an algorithm intended for ongoing continuing care support and understanding how lapse risk evolves as people progress in their recovery. Unfortunately, our ability to address explanatory questions about the time course of lapse risk, and how individuals might cluster on different recovery trajectories is limited with traditional machine learning methods. These methods do not capture the repeated nature of sensing data. Each lapse prediction is treated as a new independent observation. We can account for the repeated observations in our sensing data by engineering features that capture individual changes over time to produce unbiased and precise estimates of predictive performance. However, more traditional time series models may be better suited for understanding the temporal dynamics of lapse risk over long periods of recovery.</p>
-<p>In conclusion, it is possible to predict future lapses back to opioid use using smartphone sensing data. Daily surveys and geolocation sensing provide diverse coverage of important risk factors for lapse. Daily recovery recommendations can be mapped onto these factors to deliver support that is personalized to both the person and the moment. While this model was evaluated in a research setting, our use of a national clinical sample of individuals with opioid use disorder suggests it represents a promising step toward future real‑world implementation and evaluation.</p>
+<p>In conclusion, it is possible to predict future lapses back to opioid use using smartphone sensing data. Daily surveys and geolocation sensing provide diverse coverage of important risk factors for lapse. Daily recovery recommendations can be mapped onto these factors to deliver support that is personalized to both the person and the moment. While this model was evaluated in a research setting, our use of a national clinical sample of individuals with OUD suggests it represents a promising step toward future real‑world implementation and evaluation.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
@@ -1282,7 +1286,7 @@ Lundberg, S. M., &amp; Lee, S.-I. (2017). A unified approach to interpreting mod
 Ma, J., Bao, Y.-P., Wang, R.-J., Su, M.-F., Liu, M.-X., Li, J.-Q., Degenhardt, L., Farrell, M., Blow, F. C., Ilgen, M., Shi, J., &amp; Lu, L. (2019). Effects of medication-assisted treatment on mortality among opioids users: A systematic review and meta-analysis. <em>Molecular Psychiatry</em>, <em>24</em>(12), 1868–1883. <a href="https://doi.org/10.1038/s41380-018-0094-5">https://doi.org/10.1038/s41380-018-0094-5</a>
 </div>
 <div id="ref-martinNeedReceiptSubstance2022" class="csl-entry" role="listitem">
-Martin, C. E., Parlier-Ahmad, A. B., Beck, L., Scialli, A., &amp; Terplan, M. (2022). Need for and <span>Receipt</span> of <span>Substance Use Disorder Treatment Among Adults</span>, by <span>Gender</span>, in the <span>United States</span>. <em>Public Health Reports<span></span></em>, <em>137</em>(5), 955–963. <a href="https://doi.org/10.1177/00333549211041554">https://doi.org/10.1177/00333549211041554</a>
+Martin, C. E., Parlier-Ahmad, A. B., Beck, L., Scialli, A., &amp; Terplan, M. (2022). Need for and <span>Receipt</span> of <span>Substance Use Disorder Treatment Among Adults</span>, by <span>Gender</span>, in the <span>United States</span>. <em>Public Health Reports<span>®</span></em>, <em>137</em>(5), 955–963. <a href="https://doi.org/10.1177/00333549211041554">https://doi.org/10.1177/00333549211041554</a>
 </div>
 <div id="ref-mohrPersonalSensingUnderstanding2017" class="csl-entry" role="listitem">
 Mohr, D. C., Zhang, M., &amp; Schueller, S. M. (2017). Personal <span>Sensing</span>: <span>Understanding Mental Health Using Ubiquitous Sensors</span> and <span>Machine Learning</span>. <em>Annual Review of Clinical Psychology</em>, <em>13</em>(1), 23–47. <a href="https://doi.org/10.1146/annurev-clinpsy-032816-044949">https://doi.org/10.1146/annurev-clinpsy-032816-044949</a>
@@ -1339,236 +1343,243 @@ Xin, Y., Schwarting, C. M., Wasef, M. R., &amp; Davis, A. K. (2023). Exploring t
 </section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1576,185 +1587,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
 (function() {
