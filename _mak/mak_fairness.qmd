@@ -10,21 +10,11 @@ format:
   html:
     embed-resources: true
 params:
-  
-  study: "combined"
-  model: "full" 
-  version: "v10"
 editor_options: 
   chunk_output_type: console
 ---
 
 ### Set Up Environment
-
-```{r}
-study <- params$study
-model <- params$model
-version <- params$version
-```
 
 
 Packages, functions, and paths
@@ -34,12 +24,11 @@ Packages, functions, and paths
 
 library(tidyverse)
 library(tidymodels)
-options(conflicts.policy = "depends.ok")
 
 devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
 
 path_shared <- format_path(str_c("risk2/data_processed/shared"))
-path_models <- format_path(str_c("risk2/models/", study))
+path_models <- format_path(str_c("risk2/models/combined"))
 ```
 
 
@@ -47,6 +36,7 @@ path_models <- format_path(str_c("risk2/models/", study))
 
 ```{r}
 preds <- read_rds(here::here(path_models, "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds"))
+preds_final <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 ### Load fairness features
@@ -72,9 +62,24 @@ feat_preds <- labels |>
   mutate(label = factor(label, levels = c("Lapse", "No lapse"))) |> 
   left_join(dem, by = "subid")
 
-# nrow(feat)
-# nrow(preds) # should be nrow(feat) * 6 (number of outer repeats)
+# nrow(labels)
+# nrow(preds) # should be nrow(labels) * 6 (number of outer repeats)
 # nrow(feat_preds) # should be same as nrow(preds)
+
+feat_preds_final <- labels |> 
+  select(id_obs = label_num,
+         label = lapse,
+         subid) |>
+  right_join(preds_final, by = c("id_obs", "label")) |> 
+  mutate(label = factor(label, levels = c("Lapse", "No lapse"))) |> 
+  left_join(dem, by = "subid")
+
+# nrow(labels)
+# nrow(preds_final) # should be same as nrow(labels)
+# nrow(feat_preds_final) # should be same as nrow(preds_final)
+
+feat_preds_final |> 
+  write_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 

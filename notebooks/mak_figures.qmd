@@ -23,6 +23,7 @@ suppressMessages(library(tidyverse))
 suppressMessages(library(tidymodels))
 suppressMessages(library(patchwork))
 suppressMessages(library(binom))
+options(scipen = 999)
 
 devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
 
@@ -41,8 +42,6 @@ pp_dem <- read_csv(here::here(path_models,
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
-
-options(scipen = 999)
 ```
 
 
@@ -106,7 +105,7 @@ bin_width = 0.10
 preds_all_logi <- preds |> 
   mutate(bins = cut(prob_logi, breaks = seq(0, 1, bin_width)), 
          lapse = if_else(label == "Lapse", 1, 0),
-         prob = "Platt calibration")  
+         prob = "Platt calibrated")  
 
 preds_all_raw <- preds |> 
   mutate(bins = cut(prob_raw, breaks = seq(0, 1, bin_width)), 
@@ -130,13 +129,14 @@ rug_data_logi <- preds_all_logi |>
 
 ```{r}
 #| label: fig-2
-#| fig-cap: "The left panel presents a calibration plot of raw and Platt scaled risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt scaled (top) probabilities. The right panel presents histograms of raw (uncalibrated) risk probability distributions separately by true lapse outcome."
-#| fig-width: 8
+#| fig-cap: "The top panel presents a calibration plot of raw and Platt calibrated risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt calibrated (top) probabilities. The bottom left and right panel presents histograms of raw (uncalibrated) and Platt calibrated risk probability distributions, respectively, separately by true lapse outcome."
+#| fig-width: 7
+#| fig-height: 8
 
 cal <- preds_all_raw |> 
   bind_rows(preds_all_logi) |> 
   mutate(prob = factor(prob, levels = c("Raw (uncalibrated)", 
-                                        "Platt calibration"))) |> 
+                                        "Platt calibrated"))) |> 
   group_by(bins,  prob)  |> 
   summarize(mean_lapse = mean(lapse),
             n = n(),
@@ -169,26 +169,28 @@ cal <- preds_all_raw |>
   scale_linetype_manual(values = c("solid", "twodash")) +
   theme_classic() +
   theme(axis.text=element_text(size=9.5),
-        legend.key.size = unit(0.25, "cm"),
         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
         legend.position = "bottom") 
 
 
 hist <- preds |> 
+  pivot_longer(cols = c(prob_raw, prob_logi), names_to = "prob_type", values_to = "prob") |>
+  mutate(prob_type = factor(prob_type, levels = c("prob_raw", "prob_logi"),
+                                labels = c("Raw (uncalibrated)", "Platt calibration"))) |> 
   ggplot() +
-  geom_histogram(aes(x = prob_raw), color = "black", 
-                 fill = "light grey", bins = 40) +
-  facet_wrap(~ label, ncol = 1, scales = "free_y") +
-  labs(x = "Raw (uncalibrated) probabilties",
+  geom_histogram(aes(x = prob, fill = prob_type), color = "white", bins = 40) +
+  facet_grid(label ~ prob_type, scales = "free_y") +
+  labs(x = "Probabilties",
        y = NULL) +
+  scale_fill_manual(values = c("#240e31", "#046B52")) +
   theme_classic() +
   theme(axis.text=element_text(size=9.5),
-        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1))
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none")
 
-cal + hist
+cal / hist
 ```
-
-
 
 
 

@@ -45,7 +45,9 @@ pp_dem <- read_csv(here::here(path_models,
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 
-shaps <- read_rds(here::here(path_models, "shapsgrp_v2_1_x_5_day_v10_kfold_full_final.rds"))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+
+preds_fairness <- read_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 
@@ -291,7 +293,377 @@ You visited the place shown below, near [*address*], several times in the past m
 ## Supplemental Figures
 
 
-### Figure S1: Global Feature Importance for all Feature Categories
+### Figure S1: Calibration Plots by Fairness Group
+
+Calibration by fairness group
+```{r}
+bin_width <- 0.1
+
+preds_all_logi <- preds_fairness |> 
+  mutate(bins = cut(prob_logi, breaks = seq(0, 1, bin_width)), 
+         lapse = if_else(label == "Lapse", 1, 0),
+         prob = "Platt calibrated")  
+
+preds_all_raw <- preds_fairness |> 
+  mutate(bins = cut(prob_raw, breaks = seq(0, 1, bin_width)), 
+         lapse = if_else(label == "Lapse", 1, 0),
+         prob = "Raw (uncalibrated)") 
+
+preds_plot <- preds_all_raw |> 
+  bind_rows(preds_all_logi) |> 
+  mutate(prob = factor(prob, levels = c("Raw (uncalibrated)", 
+                                        "Platt calibrated"))) |> 
+  pivot_longer(geography:orientation, names_to = "group", values_to = "subgroup") |> 
+  mutate(group = factor(group,
+                        levels = c("gender", "race", "income", "orientation", "geography"),
+                        labels = c("Gender", "Race", "Income", "Orientation", "Geography")),
+         subgroup = factor(subgroup, levels = c("not male", "male", 
+                                            "Hispanic and/or not white", "non-Hispanic White", 
+                                            "below poverty", "above poverty", 
+                                            "not heterosexual", "heterosexual",
+                                            "small town/rural", "urban/suburban"),
+                           labels = c("Not male", "Male", 
+                                            "Hispanic and/or not white", "Non-Hispanic White", 
+                                            "Below poverty", "Above poverty", 
+                                            "Not heterosexual", "Heterosexual",
+                                            "Small town/rural", "Urban/suburban"))) |>
+  group_by(bins, group, subgroup, prob)  |> 
+  summarize(mean_lapse = mean(lapse, na.rm = TRUE),
+            n = sum(!is.na(lapse)),
+            .groups = "drop") |> 
+  filter(n >= 10) |> 
+  select(-n) |> 
+  filter(!is.na(subgroup)) |> 
+  mutate(
+    bins = as.numeric(bins),
+    midpoints = bin_width/2 + bin_width * (bins - 1)
+  )  
+
+gender <- preds_plot |> 
+  filter(group == "Gender") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+race <- preds_plot |> 
+  filter(group == "Race") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+income <- preds_plot |> 
+  filter(group == "Income") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = "Observed Lapse Probability",
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+orientation <- preds_plot |> 
+  filter(group == "Orientation") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+geography <- preds_plot |> 
+  filter(group == "Geography") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "bottom")
+
+```
+
+```{r}
+#| fig-height: 10
+gender/race/income/orientation/geography
+```
+
+### Figure S2: Global Feature Importance by Fairness Group
+
+```{r}
+#| code-fold: true
+
+shaps_fairness <- shaps |>
+  right_join(preds_fairness, by = "id_obs")
+
+shap_levels <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  arrange(desc(mean_value)) |> 
+  slice_head(n = 30) |> 
+  arrange(mean_value) |> 
+  pull(variable_grp)
+
+global_race <- shaps_fairness |>
+  group_by(race, variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+   filter(variable_grp %in% shap_levels) |> 
+   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |> 
+  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
+  geom_bar(aes(fill = race), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~race) +
+  labs(y = "Mean(|Shapley Value|)",
+       x = NULL,
+       fill = NULL) +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+  
+
+
+
+n_obs <- shaps_fairness |> 
+  group_by(race) |> 
+  summarize(n_obs = n(), .groups = "drop")
+
+shaps_day_max <- shaps_fairness |>
+  group_by(id_obs) |>
+  slice_max(value) |> 
+  left_join(n_obs, by = "race") |> 
+  select(variable_grp, value, race, n_obs) |> 
+  group_by(race, variable_grp) |> 
+  summarise(
+  n = n(),
+  prop = n / first(n_obs)) |> 
+  ungroup() 
+
+
+local_race <- shaps_day_max |> 
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(mapping = aes(x = variable_grp, y = prop)) +
+  geom_bar(aes(fill = race), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~race) +
+  labs(y = "Proportion of days as top feature",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme(axis.text=element_text(size=9.5),
+        # axis.text.y = element_blank(),
+        # axis.ticks.y = element_blank(),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+```
+
+
+```{r}
+#| label: fig-3
+#| fig-width: 8
+#| fig-height: 10
+
+global_race / local_race
+```
+
+```{r}
+#| code-fold: true
+
+global_gender <- shaps_fairness |>
+  group_by(gender, variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+   filter(variable_grp %in% shap_levels) |> 
+   mutate(variable_grp = factor(variable_grp, levels = shap_levels),
+         gender = factor(gender, levels = c("not male", "male"))) |> 
+  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
+  geom_bar(aes(fill = gender), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~gender) +
+  labs(y = "Mean(|Shapley Value|)",
+       x = NULL,
+       fill = NULL) +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+  
+
+
+n_obs <- shaps_fairness |> 
+  group_by(gender) |> 
+  summarize(n_obs = n(), .groups = "drop")
+
+shaps_day_max <- shaps_fairness |>
+  group_by(id_obs) |>
+  slice_max(value) |> 
+  left_join(n_obs, by = "gender") |> 
+  select(variable_grp, value, gender, n_obs) |> 
+  group_by(gender, variable_grp) |> 
+  summarise(
+  n = n(),
+  prop = n / first(n_obs)) |> 
+  ungroup() 
+
+
+local_gender <- shaps_day_max |> 
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels),
+         gender = factor(gender, levels = c("not male", "male"))) |>
+  ggplot(mapping = aes(x = variable_grp, y = prop)) +
+  geom_bar(aes(fill = gender), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~gender) +
+  labs(y = "Proportion of days as top feature",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme(axis.text=element_text(size=9.5),
+        # axis.text.y = element_blank(),
+        # axis.ticks.y = element_blank(),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+```
+
+
+```{r}
+#| label: fig-3
+#| fig-width: 8
+#| fig-height: 10
+
+global_gender / local_gender
+```
+
+
+
+### Figure S3: Global Feature Importance for all Feature Categories
 
 ```{r}
 #| code-fold: true
@@ -362,7 +734,7 @@ global_panel_all + local_panel_all
 ```
 
 
-### Figure S2: Individual Shapley Plots for all Feature Categories
+### Figure S4: Individual Shapley Plots for all Feature Categories
 
 ```{r}
 #| label: fig-2
