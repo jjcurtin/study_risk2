@@ -1,0 +1,141 @@
+---
+title: "Shap evaluation"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+suppressPackageStartupMessages(library(tidyposterior))
+
+path_models <- format_path(str_c("risk2/models/combined"))
+path_shared <- format_path(str_c("risk2/data_processed/shared"))
+```
+
+## Read in data
+```{r}
+shaps <- read_rds(here::here(path_models, 
+                             "outer_shapsgrp_6_x_5_1_x_5_day_v10_nested_full.rds"))
+
+labels <- read_csv(here::here(path_shared, "lapse_labels_24h_day_gps.csv"),
+                   show_col_types = FALSE)
+
+dem <- read_csv(here::here(path_shared, "features_fairness.csv"),
+                 show_col_types = FALSE) |>
+  select(-ruca1) |> 
+  filter(subid %in% labels$subid)
+```
+
+## Match `id_obs` to fairness subgroups
+```{r}
+shap_dem <- labels |> 
+  select(id_obs = label_num,
+         label = lapse,
+         subid) |>
+  right_join(shaps, by = c("id_obs")) |> 
+  mutate(label = factor(label, levels = c("Lapse", "No lapse"))) |> 
+  left_join(dem, by = "subid") |> 
+  glimpse()
+
+# nrow(shaps)
+# nrow(shap_dem) # should be same as nrow(shaps)
+```
+
+## Get top 10 global shaps across sample
+```{r}
+(shaps_10 <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  arrange(desc(mean_value)) |> 
+  slice_head(n = 10))
+```
+
+
+## Create test data frame for Past opioid use, Diff (EMA)
+```{r}
+shap_past_use_race <- shap_dem |> 
+  filter(variable_grp == "Past opioid use, Diff (EMA)" & !is.na(race)) |> 
+  group_by(race, split_num, variable_grp) |> 
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  glimpse()
+
+shap_past_use_race <- shap_past_use_race |> 
+  pivot_wider(names_from = race, values_from = mean_value) |>
+  arrange(split_num) |> 
+  mutate(fold_num = rep(1:5, 6),
+         repeat_num = c(rep(1, 5), rep(2, 5), rep(3, 5), 
+                        rep(4, 5), rep(5, 5), rep(6, 5))) |>
+  select(-split_num) |> 
+  relocate(repeat_num, fold_num) |>
+  glimpse()
+```
+
+
+#### Bayesian comparison
+```{r}
+#| output: false
+
+# Repeated CV (id = repeat, id2 = fold within repeat)
+# with a common variance:  statistic ~ model + (model | id2/id)
+set.seed(101)
+pp <- shap_past_use_race |>
+  select(-variable_grp) |>
+  rename(id = fold_num,
+         id2 = repeat_num) |> 
+  perf_mod(formula = statistic ~ model + (1 | id2/id),
+        # transform = tidyposterior::logit_trans,  # for skewed & bounded AUC
+         iter = 8000, chains = 4, adapt_delta = .99, # increased iteration from 2000 to fix divergence issues
+         family = gaussian, 
+)  
+
+```
+
+```{r}
+pp_tidy <- pp |> 
+  tidy(seed = 123) 
+
+q = c(.025, .5, .975)
+pp_perf_tibble <- pp_tidy |> 
+  group_by(model) |> 
+  summarize(pp_median = quantile(posterior, probs = q[2]),
+            pp_lower = quantile(posterior, probs = q[1]), 
+            pp_upper = quantile(posterior, probs = q[3])) |> 
+  mutate(model = factor(model, levels = c("Hispanic and/or not white", "non-Hispanic White"))) |> 
+  arrange(model) 
+
+pp_perf_tibble
+```
+
+
+### Fairness Comparison
+
+```{r}
+ci <- pp |>
+  contrast_models(list("Hispanic and/or not white"),
+                  list("non-Hispanic White")) |>
+  summary(size = 0) 
+
+ci_median <- pp |>
+  contrast_models(list("Hispanic and/or not white"),
+                  list("non-Hispanic White")) |>
+  group_by(contrast) |>
+  summarize(median = quantile(difference, .5))
+
+
+ci <- ci |>
+  left_join(ci_median, by = c("contrast")) 
+
+ci
+```

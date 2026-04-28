@@ -581,7 +581,6 @@ local_race <- shaps_day_max |>
 
 
 ```{r}
-#| label: fig-3
 #| fig-width: 8
 #| fig-height: 10
 
@@ -654,7 +653,6 @@ local_gender <- shaps_day_max |>
 
 
 ```{r}
-#| label: fig-3
 #| fig-width: 8
 #| fig-height: 10
 

@@ -9,22 +9,11 @@ output:
 format:
   html:
     embed-resources: true
-params:
-  
-  study: "combined"
-  model: "dyn" 
-  version: "v7"
 editor_options: 
   chunk_output_type: console
 ---
 
 ### Set Up Environment
-
-```{r}
-study <- params$study
-model <- params$model
-version <- params$version
-```
 
 
 Packages, functions, and paths
@@ -38,18 +27,18 @@ options(conflicts.policy = "depends.ok")
 
 devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
 
-path_shared <- format_path(str_c("risk2/data_processed/shared"))
-path_models <- format_path(str_c("risk2/models/", study))
+path_shared <- format_path("risk2/data_processed/shared")
+path_models <- format_path("risk2/models/combined")
 ```
 
 
 ### Data
 
 ```{r}
-preds <- read_rds(here::here(path_models, str_c("preds_xgboost_kfold_6_x_5_", version, 
-                                                "_", model, ".rds")))
+preds <- read_rds(here::here(path_models,
+                             "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds"))
 
-labels <- read_csv(here::here(path_shared, "lapse_labels_1day_gps.csv"),
+labels <- read_csv(here::here(path_shared, "lapse_labels_24h_day_gps.csv"),
                    show_col_types = FALSE)
 ```
 
@@ -110,7 +99,7 @@ First lapses
 ```{r}
 auroc_first_lapse <- preds_combined |> 
   filter(first_lapse == "Yes" | label == "No lapse") |> 
-  nest(.by = split_num, .key = "preds") |> 
+  nest(.by = outer_split_num, .key = "preds") |> 
   mutate(auroc = map(preds, \(preds) roc_auc(preds, prob_raw, 
                                              truth = label))) |> 
   select(-preds) |> 
@@ -120,7 +109,7 @@ auroc_first_lapse <- preds_combined |>
      
 auroc_not_first_lapse <- preds_combined |> 
   filter(first_lapse == "No") |> 
-  nest(.by = split_num, .key = "preds") |> 
+  nest(.by = outer_split_num, .key = "preds") |> 
   mutate(auroc = map(preds, \(preds) roc_auc(preds, prob_raw, 
                                              truth = label))) |> 
   select(-preds) |> 
@@ -129,8 +118,8 @@ auroc_not_first_lapse <- preds_combined |>
   rename(not_first_lapse = .estimate) 
 
 aurocs <- auroc_first_lapse |> 
-  left_join(auroc_not_first_lapse, by = "split_num") |> 
-  arrange(split_num) |> 
+  left_join(auroc_not_first_lapse, by = "outer_split_num") |> 
+  arrange(outer_split_num) |> 
   glimpse()
 ```
 
