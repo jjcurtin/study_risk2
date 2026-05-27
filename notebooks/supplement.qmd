@@ -48,6 +48,8 @@ preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.
 shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
 
 preds_fairness <- read_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
+
+pp_perf_tibble_shap_fairness <- read_csv(here::here(path_models, "pp_perf_tibble_shap_fairness.csv"))
 ```
 
 
@@ -293,6 +295,53 @@ You visited the place shown below, near [*address*], several times in the past m
 ## Supplemental Figures
 
 ### Figure S1: Feature Imporance by Demographic Subgroup
+
+```{r}
+shap_levels <- pp_perf_tibble_shap_fairness |> 
+  group_by(variable_grp) |> 
+  summarise(mean = mean(mean_value)) |> 
+  arrange(mean) |> 
+  pull(variable_grp)
+
+pp_perf_tibble_shap_fairness |>
+  mutate(model = as.character(model),
+         group = case_match(model,
+                               "male" ~ "Gender",
+                               "not male" ~ "Gender",
+                               "non-Hispanic White" ~ "Race",
+                               "Hispanic and/or not white" ~ "Race",
+                               "below poverty" ~ "Income",
+                               "above poverty" ~ "Income",
+                               "urban/suburban" ~ "Geography",
+                               "small town/rural" ~ "Geography",
+                               "heterosexual" ~ "Orientation",
+                               "not heterosexual" ~ "Orientation"),
+         fairness = if_else(model %in% c("not male", 
+                                         "Hispanic and/or not white",
+                                         "below poverty",
+                                         "small town/rural",
+                                         "not heterosexual"), 
+                            "Disadvantaged (not male, Hispanic and/or not White, <$25,000 income, rural, not heterosexual)",
+                            "Advantaged (male, non-Hispanic White, $25,000+ income, urban, heterosexual)"),
+         fairness = factor(fairness),
+         group = factor(group, levels = c("Gender", "Race",
+                                                "Income", "Orientation", "Geography")),
+         feature = factor(feature, levels = shap_levels)) |>  
+ ggplot(aes(x = feature, y = pp_median, color = fairness, group = fairness)) +
+  geom_point(position = position_dodge(width = 0.5), size = 2) +
+  geom_errorbar(aes(ymin = pp_lower, ymax = pp_upper),
+                position = position_dodge(width = 0.5), width = 0) +
+  facet_wrap(~group) +
+  labs(x = NULL,
+       y = "Mean(|Shapley Value|)",
+       color = NULL) +
+  theme_classic() +
+  theme(legend.position = "bottom",
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1)) +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  coord_flip() +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE))
+```
 
 
 
