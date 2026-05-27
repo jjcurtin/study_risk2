@@ -203,7 +203,7 @@ shap_levels <- shaps |>
   group_by(variable_grp) |>
   summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
   arrange(desc(mean_value)) |> 
-  slice_head(n = 30) |> 
+  slice_head(n = 20) |> 
   arrange(mean_value) |> 
   pull(variable_grp)
 
@@ -280,7 +280,7 @@ shap_levels <- shaps |>
   group_by(variable_grp) |>
   summarize(mean_value = mean(abs(value)), .groups = "drop") |>
   arrange(desc(mean_value)) |> 
-  slice_head(n = 30) |> 
+  slice_head(n = 20) |> 
   pull(variable_grp)
 
 shaps|>
@@ -289,7 +289,7 @@ shaps|>
   ggplot(aes(x = rfvalue, y = value)) +
   geom_point(alpha = .3) +
   geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
-  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
   labs(
     title = "Top 30 SHAP Variable Relationships",
     x = "z-score raw feature score",
