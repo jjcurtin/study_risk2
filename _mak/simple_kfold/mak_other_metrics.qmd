@@ -55,15 +55,15 @@ preds <- read_rds(here::here(path_models, str_c("preds_xgboost_kfold_6_x_5_", ve
 
 
 
-Function to get  other metrics at Youdens j - **Uses Logi calibration**
+Function to get  other metrics at .5 - **Uses platt calibration**
 ```{r}
 get_metrics <- function(preds) {
   
-  j_thres <- preds |>  
-    roc_curve(prob_logi, truth = label) |> 
-    mutate(j = sensitivity + specificity - 1) |>
-    slice_max(j, n = 1, with_ties = FALSE) |>   
-    pull(.threshold)
+  # j_thres <- preds |>  
+  #   roc_curve(prob_logi, truth = label) |> 
+  #   mutate(j = sensitivity + specificity - 1) |>
+  #   slice_max(j, n = 1, with_ties = FALSE) |>   
+  #   pull(.threshold)
   
   split_num <- preds |> 
     pull(split_num) |> 
@@ -71,7 +71,7 @@ get_metrics <- function(preds) {
   
   preds |>
     mutate(
-      estimate = if_else(prob_logi > j_thres, "Lapse", "No lapse"),
+      estimate = if_else(prob_logi > .5, "Lapse", "No lapse"),
       estimate = factor(estimate, levels = c("Lapse", "No lapse"))
     ) |>
     conf_mat(truth = label, estimate = estimate) |>
