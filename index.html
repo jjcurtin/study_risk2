@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.9.36" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+<meta name="author" content="Kendra Wyant" />
+<meta name="author" content="John J. Curtin" />
+<meta name="dcterms.date" content="2026-05-30" />
+<meta name="keywords" content="Substance use disorders, Precision mental health" />
+
+<title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<!-- htmldependencies:E3FAD763 -->
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <div id="quarto-toc-target"></div>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default toc-left">
+  <div class="quarto-title-banner">
+    <div class="quarto-title column-body">
+      <h1 class="title">Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</h1>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+            <div class="quarto-title-meta-author">
+          <div class="quarto-title-meta-heading">Authors</div>
+          <div class="quarto-title-meta-heading">Affiliation</div>
+          
+                <div class="quarto-title-meta-contents">
+            <p class="author">Kendra Wyant </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Department of Psychology, University of Wisconsin-Madison
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">John J. Curtin <a href="mailto:jjcurtin@wisc.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Department of Psychology, University of Wisconsin-Madison
+                      </p>
+                  </div>
+                    </div>
+        
+        <div class="quarto-title-meta">
+
+                      
+                <div>
+            <div class="quarto-title-meta-heading">Published</div>
+            <div class="quarto-title-meta-contents">
+              <p class="date">May 30, 2026</p>
+            </div>
+          </div>
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      </div>
+    </div>
+
+    <div>
+      <div class="abstract">
+        <div class="block-title">Abstract</div>
+        <p>Enter abstract here.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="keywords">
+        <div class="block-title">Keywords</div>
+        <p>Substance use disorders, Precision mental health</p>
+      </div>
+    </div>
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header>
+
+  
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods">Methods</a>
+  <ul>
+  <li><a href="#transparency-and-openness" id="toc-transparency-and-openness">Transparency and Openness</a></li>
+  <li><a href="#participants" id="toc-participants">Participants</a></li>
+  <li><a href="#procedure" id="toc-procedure">Procedure</a></li>
+  <li><a href="#measures" id="toc-measures">Measures</a>
+  <ul>
+  <li><a href="#individual-differences" id="toc-individual-differences">Individual Differences</a></li>
+  <li><a href="#daily-survey" id="toc-daily-survey">Daily Survey</a></li>
+  <li><a href="#geolocation-sensing" id="toc-geolocation-sensing">Geolocation Sensing</a></li>
+  </ul></li>
+  <li><a href="#data-analytic-strategy" id="toc-data-analytic-strategy">Data Analytic Strategy</a>
+  <ul>
+  <li><a href="#feature-engineering" id="toc-feature-engineering">Feature Engineering</a></li>
+  <li><a href="#lapse-labels" id="toc-lapse-labels">Lapse Labels</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation">Cross-Validation</a></li>
+  <li><a href="#model-configurations" id="toc-model-configurations">Model Configurations</a></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation">Model Evaluation</a></li>
+  <li><a href="#feature-importance" id="toc-feature-importance">Feature Importance</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results">Results</a>
+  <ul>
+  <li><a href="#participants-1" id="toc-participants-1">Participants</a></li>
+  <li><a href="#adherence-features-and-labels" id="toc-adherence-features-and-labels">Adherence, Features, and Labels</a></li>
+  <li><a href="#auroc-and-model-comparisons-1" id="toc-auroc-and-model-comparisons-1">auROC and Model Comparisons</a></li>
+  <li><a href="#calibration-and-overall-performance-1" id="toc-calibration-and-overall-performance-1">Calibration and Overall Performance</a></li>
+  <li><a href="#feature-importance-1" id="toc-feature-importance-1">Feature Importance</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion">Discussion</a>
+  <ul>
+  <li><a href="#performance" id="toc-performance">Performance</a></li>
+  <li><a href="#sensing-methods" id="toc-sensing-methods">Sensing Methods</a></li>
+  <li><a href="#feature-importance-2" id="toc-feature-importance-2">Feature Importance</a></li>
+  <li><a href="#additional-limitations-and-future-directions" id="toc-additional-limitations-and-future-directions">Additional Limitations and Future Directions</a></li>
+  <li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references">References</a></li>
+  </ul>
+</nav>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>About 4.5 million adults in the United States met criteria for opioid use disorder (OUD) in 2024 <span class="citation" data-cites="substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed">(<a href="#ref-substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed" role="doc-biblioref">Substance Abuse and Mental Health Services Administration, n.d.</a>)</span>. OUD is associated with increased rates of mortality and morbidity, including infectious disease, psychiatric comorbidity, and disability <span class="citation" data-cites="hserHighMortalityPatients2017">(<a href="#ref-hserHighMortalityPatients2017" role="doc-biblioref">Hser et al., 2017</a>)</span>. The societal burden of untreated OUD is substantial. The combined economic costs of lost productivity, health care expenditures, criminal justice involvement, loss of life, and reduced quality of life have been estimated to exceed $1 trillion <span class="citation" data-cites="florenceEconomicBurdenOpioid2021">(<a href="#ref-florenceEconomicBurdenOpioid2021" role="doc-biblioref">Florence et al., 2021</a>)</span>.</p>
+<p>Medications for OUD (MOUD), including methadone and buprenorphine, are effective at reducing opioid use, craving, and overdose risk <span class="citation" data-cites="maEffectsMedicationassistedTreatment2019">(<a href="#ref-maEffectsMedicationassistedTreatment2019" role="doc-biblioref">Ma et al., 2019</a>)</span>. They are also associated with improvements in mental health and social functioning, particularly when maintained over extended periods. However, despite strong evidence for MOUD, the majority of individuals with OUD do not receive treatment.</p>
+<p>These low rates of treatment initiation are concerning, however, initiation alone is insufficient to achieve sustained recovery. Even among the minority who do initiate treatment, engagement is often brief and episodic. Lapses back to substance use and relapse (i.e., a full return to problematic use) are common, particularly in the absence of continued treatment engagement and recovery support.</p>
+<p>As in other healthcare domains, disparities in access to treatment and positive treatment outcomes are observed among certain subgroups of individuals. Women, low-income individuals, rural residents, and older adults may more frequently experience barriers to treatment, including limited service availability, mobility or transportation challenges, psychiatric and medical comorbities, and social constraints (e.g., childcare responsibilities or lack of support) <span class="citation" data-cites="parlier-ahmadExploratoryStudySex2021 greenfieldSubstanceAbuseTreatment2007 mchughSexGenderDifferences2018 listerSystematicReviewRuralspecific2020 sigmonAccessTreatmentOpioid2014 woodLotPeopleCall2019 kilaruIncidenceTreatmentOpioid2020">(<a href="#ref-greenfieldSubstanceAbuseTreatment2007" role="doc-biblioref">Greenfield et al., 2007</a>; <a href="#ref-kilaruIncidenceTreatmentOpioid2020" role="doc-biblioref">Kilaru et al., 2020</a>; <a href="#ref-listerSystematicReviewRuralspecific2020" role="doc-biblioref">Lister et al., 2020</a>; <a href="#ref-mchughSexGenderDifferences2018" role="doc-biblioref">McHugh et al., 2018</a>; <a href="#ref-parlier-ahmadExploratoryStudySex2021" role="doc-biblioref">Parlier-Ahmad et al., 2021</a>; <a href="#ref-sigmonAccessTreatmentOpioid2014" role="doc-biblioref">Sigmon, 2014</a>; <a href="#ref-woodLotPeopleCall2019" role="doc-biblioref">Wood et al., 2019</a>)</span>. Marginalized groups, such as racial, ethnic, and sexual minorities may additionally experience minority stress, stigma, discrimination, and isolation leading to higher rates of OUD and negative consequences from opioid use and overall poorer treatment outcomes <span class="citation" data-cites="pinedoCurrentReexaminationRacial2019 guerreroDisparitiesLatinoSubstance2013 schmidtEthnicDisparitiesClinical2007 kilaruIncidenceTreatmentOpioid2020 salonerBlacksHispanicsAre2013 freitagVariationsSubstanceUse2021">(<a href="#ref-freitagVariationsSubstanceUse2021" role="doc-biblioref">Freitag et al., 2021</a>; <a href="#ref-guerreroDisparitiesLatinoSubstance2013" role="doc-biblioref">Guerrero et al., 2013</a>; <a href="#ref-kilaruIncidenceTreatmentOpioid2020" role="doc-biblioref">Kilaru et al., 2020</a>; <a href="#ref-pinedoCurrentReexaminationRacial2019" role="doc-biblioref">Pinedo, 2019</a>; <a href="#ref-salonerBlacksHispanicsAre2013" role="doc-biblioref">Saloner &amp; Lê Cook, 2013</a>; <a href="#ref-schmidtEthnicDisparitiesClinical2007" role="doc-biblioref">Schmidt et al., 2007</a>)</span>.</p>
+<p>Opioid lapses are particularly high-risk events. Reduced opioid tolerance (e.g., after a period of abstinence) and the increasing prevalence of fentanyl and other synthetic opioids in the drug supply substantially increase the likelihood of fatal overdose. Identifying vulnerable periods of high lapse risk and contextualizing that risk (i.e., <em>Why</em> risk is high) could enable individuals to take proactive action to prevent lapse.</p>
+<p>However, OUD does not have a single set of putative precursors to relapse. Relapse risk factors differ across individuals and within individuals over time. They include intrapersonal factors, such as self‑efficacy (i.e., confidence in one’s ability to maintain abstinence), craving, motivation, emotional states, and coping‑related or substance‑use behaviors <span class="citation" data-cites="witkiewitzRelapsePreventionAlcohol2004 witkiewitzTherapistsGuideEvidenceBased2007 marlattRelapsePreventionSecond2007">(<a href="#ref-marlattRelapsePreventionSecond2007" role="doc-biblioref">Marlatt &amp; Donovan, 2007</a>; <a href="#ref-witkiewitzTherapistsGuideEvidenceBased2007" role="doc-biblioref">K. A. Witkiewitz &amp; Marlatt, 2007</a>; <a href="#ref-witkiewitzRelapsePreventionAlcohol2004" role="doc-biblioref">K. Witkiewitz &amp; Marlatt, 2004</a>)</span>, that interact with one another and with relational and environmental situations to influence lapse risk <span class="citation" data-cites="stantonRelapsePreventionNeeds2005a witkiewitzRelapsePreventionAlcohol2004">(<a href="#ref-stantonRelapsePreventionNeeds2005a" role="doc-biblioref">Stanton, 2005</a>; <a href="#ref-witkiewitzRelapsePreventionAlcohol2004" role="doc-biblioref">K. Witkiewitz &amp; Marlatt, 2004</a>)</span>. For a simple example, cravings are typically short-lived urges. Individuals in recovery-supportive environments may be able to ride out these cravings successfully. However, in unsupportive environments (e.g., locations with easily available alcohol or exposure to other substance-related cues), the likelihood of lapse increases. Given the complex, interactive, and time-varying nature of lapse risk, self-monitoring is difficult.</p>
+<p>An algorithm‑guided recovery monitoring and support system could help individuals monitor their lapse risk by automating the delivery of risk-relevant feedback (e.g., what their lapse risk is and why). Advances in smartphone sensing methods offer a powerful way to collect densely sampled risk-relevant data <span class="citation" data-cites="mohrPersonalSensingUnderstanding2017">(<a href="#ref-mohrPersonalSensingUnderstanding2017" role="doc-biblioref">Mohr et al., 2017</a>)</span>. These data can be used as inputs into machine learning models to generate temporally precise predictions of lapse risk <span class="citation" data-cites="wyantMachineLearningModels2024 heinzLongitudinalObservationalStudy2025">(<a href="#ref-heinzLongitudinalObservationalStudy2025" role="doc-biblioref">Heinz et al., 2025</a>; <a href="#ref-wyantMachineLearningModels2024" role="doc-biblioref">Wyant et al., 2024</a>)</span>. Methods from interpretable machine learning can be used to understand the most important features contributing to prediction for a given individual at a given moment in time <span class="citation" data-cites="lundbergUnifiedApproachInterpreting2017">(<a href="#ref-lundbergUnifiedApproachInterpreting2017" role="doc-biblioref">Lundberg &amp; Lee, 2017</a>)</span>.</p>
+<p>Daily self-report surveys can reliably collect proximal risk factors for lapse, such as recent craving, abstinence self-efficacy, risky situations, and substance use behaviors. Research suggests that individuals can adhere to self-report sensing methods while using substances <span class="citation" data-cites="wyantAcceptabilityPersonalSensing2023 jonesComplianceEcologicalMomentary2019">(<a href="#ref-jonesComplianceEcologicalMomentary2019" role="doc-biblioref">Jones et al., 2019</a>; <a href="#ref-wyantAcceptabilityPersonalSensing2023" role="doc-biblioref">Wyant et al., 2023</a>)</span>. However, it is less clear to what extent people in recovery from illicit substance use disorders can, or are willing to, report risk information accurately enough to develop prediction models. People with OUD may experience greater instability in their day-to-day lives (e.g., stigma or legal consequences may make access to healthcare, stable housing, or supportive relationships more difficult). This instability could make it difficult to recall and report recent behaviors and events promptly or accurately. It may also skew baseline perceptions of what constitutes a risky or stressful experience.</p>
+<p>Supplementing self-report data with passively sensed geolocation data could make up for imprecise reports of risk factors or be used for lapse prediction during periods of non-adherence to self-report surveys. Moreover, geolocation data could provide a complementary and distinct set of intervenable features. For example, geolocation data may provide insight into time spent in risky locations or changes in routine (e.g., job loss) that may indicate life stressors. These features may become even more powerful when combined with contextual information from public sources (e.g., census data, alcohol outlet density) or from self-report (e.g., self-evaluated riskiness of specific locations). Geolocation data have been demonstrated to contain sufficient signal for predicting craving <span class="citation" data-cites="epsteinPredictionStressDrug2020">(<a href="#ref-epsteinPredictionStressDrug2020" role="doc-biblioref">Epstein et al., 2020</a>)</span>, a putative precursor to opioid lapse, and therefore represent a promising sensing method for predicting lapse risk.</p>
+<p>Importantly, a monitoring system that performs fairly (i.e., the accuracy of the predictions and clinical benefit of the system is similar for everyone) could help mitigate pervasive discrepancies in the negative outcomes from OUD across certain subgroups. Because the system is automated, it could be implemented at relatively low‑cost and high scalability. Stigma‑related barriers may be reduced through delivery via a smartphone app that individuals can choose to use privately (e.g., without the awareness of family members or medical providers). Similarly, individuals living in geographically underserved areas or experiencing mobility constraints could independently monitor their risk from home.</p>
+<p>In the current study, we developed a machine learning model that predicts next-day opioid lapse risk using daily self-report and geolocation sensing data. Our study has several notable strengths. First, we recruited a national sample of participants across the United States who were diverse in regard to race and ethnicity, income, gender, sexual orientation, and geographic location. Second, participants provided sensing data and opioid lapse reports for up to one year, a duration that exceeds previously published SUD prediction studies and allowed us to capture longer-term recovery trajectories. Third, our sample consisted of individuals in early recovery from OUD receiving MOUD, ensuring that the study sample closely reflected the intended clinical population for our model. Fourth, we explicitly evaluated model performance across demographic subgroups to assess algorithmic fairness. Finally, we identified the most important predictors using two complementary descriptive approaches, providing insight into the features that drive lapse risk predictions.</p>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="transparency-and-openness" class="level2">
+<h2>Transparency and Openness</h2>
+<p>We adhere to research transparency principles that are crucial for robust and replicable science. First, we published this study’s protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>. Second, we followed the Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis extension for Artificial Intelligence (TRIPOD+AI) guidelines <span class="citation" data-cites="collinsTRIPODAIStatementUpdated2024">(<a href="#ref-collinsTRIPODAIStatementUpdated2024" role="doc-biblioref">Collins et al., 2024</a>)</span>. A TRIPOD+AI checklist is available in the supplement.<!--add checklist--> Finally, our features, labels, questionnaires, and other study materials are publicly available on our OSF page (<a href="https://osf.io/zvm7s/overview">https://osf.io/zvm7s/overview</a>) and our annotated analysis scripts and results are publicly available on our study website (<a href="https://jjcurtin.github.io/study_risk2/">https://jjcurtin.github.io/study_risk2/</a>). <!--JJC: Data??--><!--NIH sharing?--></p>
+</section>
+<section id="participants" class="level2">
+<h2>Participants</h2>
+<p>We recruited participants in early recovery from OUD from across the United States. We recruited through national digital advertising and collaborations with treatment providers at MOUD clinics. Our recruitment strategy was designed to create a diverse sample with respect to demographics (gender, age, race, and ethnicity), and geographic location (urban and rural). We required participants:</p>
+<ul>
+<li>were age 18 or older,</li>
+<li>could read, write, and speak in English,</li>
+<li>were enrolled in and adherent with an MOUD program for at least 1 month but no longer than 12 months or enrolled in or recently completed a day treatment program, and</li>
+<li>had an Android smartphone with an active data plan.</li>
+</ul>
+<p>We did not exclude participants for comorbid substance use or other psychiatric disorders.</p>
+</section>
+<section id="procedure" class="level2">
+<h2>Procedure</h2>
+<p>Participants completed three video or phone visits over approximately 12 months. During the enrollment visit, study staff obtained written informed consent and collected demographic information. They walked participants through how to download the Smart Technology for Addiction Recovery (STAR) study app, provided a set of video tutorials to learn how to use the app, and instructed participants to complete the intake survey within the app. The STAR app was developed by the UW Madison Center for Health Enhancement Systems Studies and used for all data collection. Within the app participants could control their data sharing options, monitor completed study tasks, receive reminder notifications about tasks, message staff, and access STAR’s suite of resources and tools for people in recovery from AUD <span class="citation" data-cites="gustafsonSmartphoneApplicationSupport2014">(<a href="#ref-gustafsonSmartphoneApplicationSupport2014" role="doc-biblioref">Gustafson et al., 2014</a>)</span>. Enrolled participants met with study staff one week later to troubleshoot technical issues. At the end of the study enrollment period participants met briefly with study staff for a debriefing session. While on study, participants were expected to complete daily surveys, monthly surveys, and share geolocation sensing data. Other sensing data streams (i.e., daily video check-ins, cellular communications, and app usage data) were collected as part of the parent grant’s aims (NIDA R01 DA047315). All procedures were approved by the University of Wisconsin-Madison Institutional Review Board (Study #2019-0656).</p>
+<p>Participants were compensated $40 for completing the enrollment visit and watching the STAR video tutorials and $10 for the two follow-up phone visits. Participants were compensated $10 per month for the monthly survey, up to $15 per month for the daily surveys<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, and $5 per month for sharing geolocation data.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Participants were also paid $50 per month to offset the cost of maintaining a cellphone data plan.</p>
+</section>
+<section id="measures" class="level2">
+<h2>Measures</h2>
+<section id="individual-differences" class="level3">
+<h3>Individual Differences</h3>
+<p>We collected self-report information about demographics (age, gender, sexual orientation, race, ethnicity, education, employment, and income). Zip codes from participants’ reported home addresses were linked to Rural–Urban Commuting Area (RUCA) codes to characterize the rural–urban status of their residences <span class="citation" data-cites="economicresearchserviceusdepartmentofagricultureRuralUrbanCommutingArea">(<a href="#ref-economicresearchserviceusdepartmentofagricultureRuralUrbanCommutingArea" role="doc-biblioref">Economic Research Service US Department of Agriculture, n.d.</a>)</span>. These variables were collected to characterize our sample. They were also included as features in our model to allow for potential interactions with the sensing features and control for demographic differences on lapse risk. Demographic variables with some evidence for influencing OUD treatment access and clinical outcomes and/or carrying general societal stigma (gender, race/ethnicity, income, sexual orientation, and geographic location) were used to perform subgroup analyses for evaluating model fairness <span class="citation" data-cites="pinedoCurrentReexaminationRacial2019 kilaruIncidenceTreatmentOpioid2020 olfsonHealthcareCoverageService2022 greenfieldSubstanceAbuseTreatment2007 martinNeedReceiptSubstance2022 lofaroRuralUrbanDifferences2025 xinExploringIntersectionalityStigma2023">(<a href="#ref-greenfieldSubstanceAbuseTreatment2007" role="doc-biblioref">Greenfield et al., 2007</a>; <a href="#ref-kilaruIncidenceTreatmentOpioid2020" role="doc-biblioref">Kilaru et al., 2020</a>; <a href="#ref-lofaroRuralUrbanDifferences2025" role="doc-biblioref">Lofaro et al., 2025</a>; <a href="#ref-martinNeedReceiptSubstance2022" role="doc-biblioref">Martin et al., 2022</a>; <a href="#ref-olfsonHealthcareCoverageService2022" role="doc-biblioref">Olfson et al., 2022</a>; <a href="#ref-pinedoCurrentReexaminationRacial2019" role="doc-biblioref">Pinedo, 2019</a>; <a href="#ref-xinExploringIntersectionalityStigma2023" role="doc-biblioref">Xin et al., 2023</a>)</span>.</p>
+<p>We collected information about OUD history to characterize OUD severity and recovery stability across our sample. These measures included self-reported Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition OUD symptoms <span class="citation" data-cites="americanpsychiatricassociationDiagnosticStatisticalManual2022">(<a href="#ref-americanpsychiatricassociationDiagnosticStatisticalManual2022" role="doc-biblioref">American Psychiatric Association, 2022</a>)</span>, past month opioid use, past month residential treatment for OUD, past month receipt of psychiatric medication, preferred opioid, preferred route of administration, and lifetime history of overdose. As part of the aims of the parent project, we collected many other trait and state measures throughout the study. A complete list of all measures can be found in our registered report <span class="citation" data-cites="moshontzProspectivePredictionLapses2021">(<a href="#ref-moshontzProspectivePredictionLapses2021" role="doc-biblioref">Moshontz et al., 2021</a>)</span>.</p>
+</section>
+<section id="daily-survey" class="level3">
+<h3>Daily Survey</h3>
+<p>Participants completed a brief (1-2 minute) 16-item daily survey each day on study through the STAR app. The daily survey became available in the app at 5:00 AM CST each morning and participants had 24 hours to complete it. Participants could enable push notifications for reminder prompts to complete the survey. Participants reported opioid lapses on the first daily survey item. If participants responded “yes” to the question “Have you used any opioids for non-medical reasons that you have not yet reported?”, they were prompted to select the day(s) and time(s) of the lapse(s). Times were reported in 6-hour increments (12:00am–5:59am, 6:00am–11:59am, 12:00pm–5:59pm, 6:00pm–11:59pm). These reports served as the primary outcome for the lapse risk prediction model. On the remaining 15 items, participants reported any other drugs that they had used in the past 24 hours, whether they took their MOUD as prescribed in the past 24 hours, and rated the maximum intensity of recent (i.e., in the past 24 hours) experiences of pain, craving, risky situations, stressful events, and pleasant events. They also rated their sleep and how depressed, angry, anxious, relaxed, and happy they have felt in the past 24 hours. Lastly, participants responded to 2 future-facing items that asked about participants’ motivation and confidence to continue to avoid using opioids for non-medical reasons over the next week. The full daily survey is available in the supplement.</p>
+</section>
+<section id="geolocation-sensing" class="level3">
+<h3>Geolocation Sensing</h3>
+<p>The STAR app passively recorded participants’ time-stamped geolocations (i.e., latitude and longitude) every 1.5-15 minutes, depending on their movement. We augmented the geolocation data with self-reported subjective context. On each monthly survey participants were asked 6 questions about frequently visited locations from the previous month (i.e., locations that the participant spent more than 3 minutes at 2 or more times in a month). Participants were asked to describe the type of place, what they typically do there, the general frequency of pleasant and unpleasant experiences at the location, and the extent to which spending time there helps or harms their recovery. The full set of location questions is avilable in the supplement. <!--more detail about monthly survey maybe?  This also included measures collected at enrollment that were expected to change.--><!--KW: lets talk about this, We arent using any of those monthly measures aside from the context questions so I am not sure how much to go into it--></p>
+<!--Add cap on the number of locations that were queried on any survey-->
+<!--cap was 50-->
+</section>
+</section>
+<section id="data-analytic-strategy" class="level2">
+<h2>Data Analytic Strategy</h2>
+<p>Data preprocessing, modeling, and Bayesian analyses were done in R using the tidymodels ecosystem <span class="citation" data-cites="kuhnTidymodelsCollectionPackages2020 kuhnTidyposteriorBayesianAnalysis2022 goodrichRstanarmBayesianApplied2023">(<a href="#ref-goodrichRstanarmBayesianApplied2023" role="doc-biblioref">Goodrich et al., 2023</a>; <a href="#ref-kuhnTidyposteriorBayesianAnalysis2022" role="doc-biblioref">Kuhn, 2022</a>; <a href="#ref-kuhnTidymodelsCollectionPackages2020" role="doc-biblioref">Kuhn &amp; Wickham, 2020</a>)</span>. Models were trained and evaluated using high-throughput computing resources provided by the University of Wisconsin Center for High Throughput Computing <span class="citation" data-cites="chtc">(<a href="#ref-chtc" role="doc-biblioref">Center for High Throughput Computing, 2006</a>)</span>.</p>
+<section id="feature-engineering" class="level3">
+<h3>Feature Engineering</h3>
+<p>Features were calculated using only data collected before the start of each prediction window to ensure our models were making true future predictions. We calculated a total of 297 features from three data sources:</p>
+<ol type="1">
+<li><p><em>The prediction window day.</em> We created one-hot coded features for day of the week for the start of the prediction window.</p></li>
+<li><p><em>Demographic individual differences.</em> For demographics, we created ordinal features for age, education, and income based on predefined response ranges (see <a href="#tbl-1" class="quarto-xref">Table 1</a> for ranges), an ordinal feature for RUCA code associated with home address (range 1-10), and one-hot coded features for gender (male, not male), race and ethnicity (non-Hispanic White, Hispanic and/or not White), orientation (heterosexual, not heterosexual), and employment (employed, not employed/looking for work, not employed/not looking or able to work).</p></li>
+<li><p><em>Dynamic daily survey and geolocation sensing data.</em> For both sets of sensing features we calculated two types of features: raw and difference features. Raw features represent the feature value calculated within a given feature scoring epoch (e.g., the maximum urge rating reported on the daily survey during the 168 hours immediately preceding the start of the prediction window). Difference features capture participant-level changes from their baseline scores. Specifically, we subtracted each participant’s mean score for each feature using all available data prior to the prediction window from the associated raw feature (e.g., the participant’s average urge rating across all prior daily surveys subtracted from the maximum urge rating in the preceding 168 hours).</p>
+<p>For the daily survey, we calculated raw and difference features for the most recent and the min, max, and median responses in the 168 hours preceeding the start of the prediciton window for the 13 5-point likert scale items (items 4-16; pain, urge, risky situation, stressful event, pleasant event, sleep, depressed, angry, anxious, relaxed, happy, abstinence motivation, and abstinence confidence). We also calculated raw and difference rate features based on counts of previous opioid lapses, other drug use, missed MOUD doses (items 1-3), and completed daily surveys in 24 and 168-hour feature scoring epochs (e.g., counts of opioid lapses within the 168 hours preceding the start of a prediction window divided by 168).</p>
+<p>We used two feature scoring epochs (24 and 168 hours before the start of the prediction window) to create proximal and distal geolocation features. Raw geolocation points were cross-checked against known locations with reported subjective context. We used a threshold of 50 meters for matching context to geolocation points. We calculated raw and difference features for sum duration of time out of the home in the evenings (i.e., not at their home between the hours of 7:00pm-4:00am). We calculated raw and difference features for sum duration of time spent at locations according to what they indicated they do at the location (spend time with friends, socialize with new people, religious activities, relax, spend time with family, volunteer, receive mental health care, receive physical health care, receive MOUD treatment, drink alcohol, take classes, work), how pleasant and unpleasant their experiences typically are at the location (Always, Most of the time, Sometimes, Rarely, Never), and how helpful and harmful the location is to their recovery (Extremely, Considerably, Moderately, Mildly, Not at all). We also calculated a raw and difference feature of location variance (i.e., the extent to which a participant’s location changes over a feature scoring epoch).</p></li>
+</ol>
+<p>All features (sets 1-3 above) were included in our full model. We also fit three models with varying combinations of ablated sensing data type from set 3. Specifically, these models ablated daily survey features, ablated geolocation features, and ablated daily survey and geolocation features combined to assess the incremental predictive value of these features.</p>
+<p>Other feature engineering steps performed during cross-validation included imputing missing values (median imputation for numeric features and mode imputation for nominal features), dummy coding nominal features, normalizing features to have a mean of zero and standard deviation of 1, bringing outlying values (|z-score| &gt; 5) to the fence, and removing zero and near-zero variance features as determined from held-in data. We selected coarse median/mode methods for handling missing data due to the low rates of missing values and computational costs associated with more advanced forms of imputation (e.g., KNN imputation, multiple imputation). A sample feature engineering script (i.e., tidymodels recipe) containing all feature engineering steps is available on our OSF study page.</p>
+</section>
+<section id="lapse-labels" class="level3">
+<h3>Lapse Labels</h3>
+<p>Prediction windows started at 6:00am in participants’ local timezones and ended at 5:59am the next day. This window start time was selected to more closely approximate a typical wake-sleep cycle as opposed to a midnight-to-midnight calendar day. For each participant the first prediction window began at 6:00am on their second day of participation and rolled forward day-by-day until their participation ended (i.e., the last prediction window ended at 5:59am on the day of their last recorded daily survey). <!--JJC: day before their last survey?--><!--KW: no it was technically the last day but it was early morning before the last survey was available at 6 am--> Responses from the first daily survey item were used to label each prediction window as lapse or no lapse. For example, if a participant reported a lapse on December 12 from 12:00am-5:59am the prediction window spanning 6:00am on December 11 through 5:59am on December 12 was labeled as a lapse.</p>
+</section>
+<section id="cross-validation" class="level3">
+<h3>Cross-Validation</h3>
+<p>We used nested cross-validation for selection and evaluation of the final candidate model configurations. We used 1 repeat of 5-fold cross-validation on the inner loop for model selection and 6 repeats of 5-fold cross-validation on the outer loop for evaluation. Participants were grouped so that all of their data were always in the held-in or held-out fold to avoid bias introduced when predicting a participant’s data from their own data. Folds were stratified so that all folds contained comparable proportions of individuals who lapsed at least once while on study.<!--what it stratified just on lapse vs. no-lapse or something more complicated?  How does that compare to what we do with RISK--><!--KW: stratified on hi/lo performed worse we decided to use yes/no because lapses may be considered a bigger deal and therefore be more homogenous across frequent vs infrequent lapsers--></p>
+</section>
+<section id="model-configurations" class="level3">
+<h3>Model Configurations</h3>
+<p>We initially considered three statistical algorithms that differed in terms of assumptions and bias-variance tradeoff: elastic net, random forest, and XGBoost. Preliminary analyses using simple 6x5 cross-validation suggested that XGBoost was superior (see supplement for initial performance estimates by algorithm). Additionally, we planned to use the Shapley additive explanations (SHAP) method for calculating feature importance which is optimized for XGBoost. Therefore we only considered XGBoost for the final nested cross-validation analyses.</p>
+<p>Final candidate model configurations differed across sensible values for key hyperparameters and outcome resampling method (i.e., up-sampling and down-sampling of the outcome at ratios ranging from 5:1 to 1:1). All resampling was exclusively done in the held-in training data (i.e., held-out data were not resampled) to prevent biasing performance estimates <span class="citation" data-cites="vandewieleOverlyOptimisticPrediction2021">(<a href="#ref-vandewieleOverlyOptimisticPrediction2021" role="doc-biblioref">Vandewiele et al., 2021</a>)</span>. All model configurations were fit for the full model and the three feature ablation models (ablated daily survey features, ablated geolocation features, and ablated daily survey and geolocation features combined).</p>
+</section>
+<section id="model-evaluation" class="level3">
+<h3>Model Evaluation</h3>
+<p>We evaluated the best full model’s probability predictions across three domains: discrimination, calibration, and overall performance. We followed best practices for reporting performance metrics and using visualizations to characterize model performance across these domains <span class="citation" data-cites="vancalsterEvaluationPerformanceMeasures2025">(<a href="#ref-vancalsterEvaluationPerformanceMeasures2025" role="doc-biblioref">Van Calster et al., 2025</a>)</span>.</p>
+<section id="auroc-and-model-comparisons" class="level4">
+<h4>auROC and Model Comparisons</h4>
+<p>Our performance metric for model selection and evaluation was area under the receiver operating characteristic curve (auROC). auROC is an aggregate measure of discrimination across all possible decision thresholds. Specifically, it represents the probability that the model will assign a higher predicted probability to a randomly selected positive case (lapse) compared to a randomly selected negative case (no lapse).</p>
+<p>We used a Bayesian hierarchical generalized linear model to estimate the posterior distribution and 95% credible intervals (CI) for auROC for the 30 held-out test sets (i.e., held-out data in the outer loop of the nested cross-validation procedure) for our best full and ablated models. We used weakly informative, data-dependent priors to regularize and reduce overfitting. Priors were set as follows: residual standard deviation ~ normal(location=0, scale=exp(2)), intercept (after centering predictors) ~ normal(location=2.3, scale=1.3), the two coefficients for window width contrasts ~ normal (location=0, scale=2.69), and covariance ~ decov(regularization=1, concentration=1, shape=1, scale=1). We set two random intercepts to account for our resampling method: one for the repeat, and another for the fold nested within the repeat. We specified three model contrasts that compared the full model to each of the three ablated models (full vs. ablated daily survey features, full vs. ablated geolocation features, full vs. ablated daily survey and geolocation features combined). auROCs were transformed using the logit function and regressed as a function of model contrast. From the Bayesian model we obtained the posterior distribution for auROC for the full and ablated models. We reported the median posterior probability for auROC and 95% CIs for each model. We then conducted four Bayesian model comparisons to determine the probability that the full model differed systematically in performance compared to the three ablated models.</p>
+<p>We performed five dichotomous subgroup analyses to assess the fairness of our model’s predictions. Using the same 30 held-out test sets and the same modeling procedure as above, we calculated the median posterior probability and 95% CI for auROC for each model separately by gender (not male vs. male), race/ethnicity (Hispanic and/or non-White vs. non-Hispanic White), income (less than $25,000 vs. more than $25,000)<!--We usually refer to this comparison as below poverty but our lowest income group is technically above the federal poverty line ($15,960)-->, sexual orientation (heterosexual vs. not heterosexual), and geographic location (rural vs. urban).<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> We conducted Bayesian group comparisons to assess the likelihood that each model performs differently by group.</p>
+</section>
+<section id="calibration-and-overall-performance" class="level4">
+<h4>Calibration and Overall Performance</h4>
+<p>To further evaluate our model’s predictions, we used our inner resampling procedure (1 repeat of 5-fold cross validation) on the full data set to select and fit a single best model configuration for the full model. The final configuration selected represents the most reliable and robust configuration for deployment.</p>
+<p>Calibration is an indicator of how well a model’s predicted probabilities match the true observed outcomes. For example, a well-calibrated model that assigns a 30% lapse risk prediction should observe lapses in approximately 30% of such cases. We used Platt scaling to calibrate our final full model’s raw probabilities from the 5 held-out folds <span class="citation" data-cites="plattProbabilisticOutputsSupport1999">(<a href="#ref-plattProbabilisticOutputsSupport1999" role="doc-biblioref">Platt, 1999</a>)</span>. We provided a calibration plot of these raw and calibrated probabilities. To characterize overall performance we reported Brier scores for the raw and calibrated probabilities. Brier scores are the mean squared difference between the predicted probabilities and observed outcome and range from 0 (perfect accuracy) to 1 (perfect inaccuracy). We also provided histograms of risk probability distributions by true lapse outcome.</p>
+</section>
+</section>
+<section id="feature-importance" class="level3">
+<h3>Feature Importance</h3>
+<p>Feature importance values provide insight into the features that have the most influence on the model’s predictions. For every prediction, we can extract feature importance values providing actionable insight into intervenable targets for lapse risk (i.e., for a specific individal at a specific moment). We used the same single 5-fold cross-validation procedure (see Calibration and Overall Performance section) to calculate raw Shapley values for each observation in held-out data <span class="citation" data-cites="lundbergUnifiedApproachInterpreting2017">(<a href="#ref-lundbergUnifiedApproachInterpreting2017" role="doc-biblioref">Lundberg &amp; Lee, 2017</a>)</span>. The magnitude of the raw Shapley value indicates how much the feature score for that observation adjusted the prediction (in log-odds units) relative to the mean prediction across all observations. Positive Shapley values indicate that the feature score increased the prediction for that observation and negative values indicate that the feature score decreased the prediction. In other words, higher Shapley values suggest the feature increases lapse risk and lower values suggest the feature decreases lapse risk. Shapley values are inherently additive. For any observation, Shapley values can be summed to create a total adjustment score for the predicted value. We created feature categories by collapsing features that differed only by feature scoring epoch and calculation into a single feature category (e.g., Raw features for most recent urge rating, and min, max, and mean urge rating in the 168 hours preceding the start of the prediction window were combined to form a “Urge, Raw” feature category). Raw and difference features were not combined as their relationship to risk were not uniform. We plotted individual Shapley values and feature categories as partial dependence plots to illustrate these feature-risk relationships.</p>
+<p>Feature importance values can also be aggregated across all participants and all observations to provide a relative rank ordering of the most important features. We calculated overall feature importance in two ways. First, we used a traditional approach in which we calculated the mean absolute Shapley value for each feature category across all observations. This approach summarizes overall feature importance by averaging the magnitude of each feature’s contribution. However, it can be skewed toward features that exhibit infrequent but very large Shapley values, potentially overstating the importance of features that are strongly associated with the outcome, but only come up in a small subset of observations. The second way we calculated feature importance was by calculating the proportion of observations in which each feature category had the highest Shapley value. This approach summarizes how frequently a feature category is influential across observations (i.e., considering both magnitude and prevalence). We provided a plot of the relative ranking of feature categories by their overall feature importance using these two methods.</p>
+</section>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="participants-1" class="level2">
+<h2>Participants</h2>
+<p>We enrolled 330 participants across 47 states in the United States from April 2021 through December 2024. To be considered enrolled in the study, participants were required to be eligible, consent, and complete the first personalized monthly survey where geolocation context were provided.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> Of these 330, 14 were excluded for not providing at least 28 days of EMA data with acceptable adherence<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, 7 participants were excluded due to evidence of careless responding on daily surveys, and 13 participants were excluded due to having insufficient context data for geolocation points (fewer than two contextualized locations). Our final analysis sample consisted of 296 participants. Participant demographic and OUD characteristics of our final sample is presented in <a href="#tbl-1" class="quarto-xref">Table 1</a>.</p>
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_tables.qmd" data-notebook-title="Make All Tables for Main Manuscript" data-notebook-cellId="cell-tbl-1">
+<div class="cell">
+<div id="tbl-1" class="cell quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 1: Demographic and Clinical Characteristics
+</figcaption>
+<div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<table class="lightable-classic cell caption-top" data-quarto-postprocess="true" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">N</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="6">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">22-25</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">2.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">26-35</td>
+<td style="text-align: right;">105</td>
+<td style="text-align: right;">35.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">36-45</td>
+<td style="text-align: right;">107</td>
+<td style="text-align: right;">36.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">46-55</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">20.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">56-65</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">4.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Over 65</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gender</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Man</td>
+<td style="text-align: right;">158</td>
+<td style="text-align: right;">53.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Woman</td>
+<td style="text-align: right;">131</td>
+<td style="text-align: right;">44.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Non-binary</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not listed above</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Orientation</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="5">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Straight, that is, not gay or lesbian</td>
+<td style="text-align: right;">237</td>
+<td style="text-align: right;">80.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Lesbian or gay</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">5.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Bisexual</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">11.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not sure</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not listed above</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Race and Ethnicity (select all that apply)</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="7">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">American Indian/Alaskan Native</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">5.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Asian</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Black/African American</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">14.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Native Hawaiian/Other Pacific Islander</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">White/Caucasian</td>
+<td style="text-align: right;">235</td>
+<td style="text-align: right;">79.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Hispanic, Latino, or Spanish origin</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">8.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not listed above</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Geographic Location</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">rural</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">19.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">urban</td>
+<td style="text-align: right;">239</td>
+<td style="text-align: right;">80.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Education</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="6">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">8th grade or less</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Some high school, but did not graduate</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">8.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">High school graduate or GED</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">31.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Some college or 2-year degree</td>
+<td style="text-align: right;">130</td>
+<td style="text-align: right;">43.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">4-year college graduate</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">10.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">More than 4-year or advanced degree</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">4.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Employment</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="6">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Disabled, not able to work</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">11.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Employed, working 1-39 hours per week</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">23.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Employed, working 40 or more hours per week</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">18.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not employed, NOT looking for work</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">10.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Not employed, looking for work</td>
+<td style="text-align: right;">102</td>
+<td style="text-align: right;">34.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Retired</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Household Income</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="8">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Less than $25,000</td>
+<td style="text-align: right;">164</td>
+<td style="text-align: right;">55.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$25,000 - $34,999</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">14.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$35,000 - $49,999</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">12.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$50,000 - $74,999</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">9.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$75,000 - $99,999</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">4.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$100,000 - $149,999</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$150,000 - $199,999</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">$200,000 or more</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Self-reported DSM-5 OUD Symptom Count</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Under threshold (0-1)</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Mild (2-3)</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Moderate (4-5)</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Severe (6+)</td>
+<td style="text-align: right;">284</td>
+<td style="text-align: right;">95.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Past Month Opioid Use</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">No</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">67.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Yes</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">31.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Past Month Detox or Residential Treatment</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">No</td>
+<td style="text-align: right;">189</td>
+<td style="text-align: right;">63.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Yes</td>
+<td style="text-align: right;">106</td>
+<td style="text-align: right;">35.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Past Month Psychiatric Medication</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="2">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">No</td>
+<td style="text-align: right;">151</td>
+<td style="text-align: right;">51.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Yes</td>
+<td style="text-align: right;">144</td>
+<td style="text-align: right;">48.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Preferred Opioid</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="4">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Fentanyl</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">16.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Heroin</td>
+<td style="text-align: right;">122</td>
+<td style="text-align: right;">41.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Prescription opioid not for opioid treatment</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">31.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Medication for opioid treatment</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">9.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Preferred Route of Administration</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even" data-grouplength="5">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Injection</td>
+<td style="text-align: right;">104</td>
+<td style="text-align: right;">35.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Oral</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">18.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Smoke</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">16.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Sniff or snort</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">28.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Other</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lifetime History of Overdose</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd" data-grouplength="5">
+<td colspan="3" style="text-align: left; border-bottom: 0;"><strong></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Never</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: right;">40.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">1 time</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">13.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">2-3 times</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">23.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">4-5 times</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">8.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">More than 5 times</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">13.2</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><span style="font-style: italic;">Note: </span></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding: 0;"><sup></sup> N = 296</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adherence-features-and-labels" class="level2">
+<h2>Adherence, Features, and Labels</h2>
+<p>Mean days on study across participants was 278.32 days (range 30-392 days). 77.7% of participants (230/296) remained on study for at least six months. Daily survey adherence was high. On average participants completed 77.8% of the daily survey prompts (range 40-100%). Participants provided, on average, 263.50 daily geolocation points (range 2.17-871.34).</p>
+<p>The average percentage of missing values across daily survey features was low (mean=0.71%, range 0-1.10%). The average percentage of missing values across geolocation features was higher (mean=12.0%, range 0-15.6%). Across participants we generated a total of 82,156 day-level labels. Thirty-six percent of participants (106/296) reported an opioid lapse while on study (mean=4.93, range 0-117). This resulted in 1.8% of the labels positive for lapse (1,458/82,156 labels). We stratified the data on a variable of whether someone lapsed on study to ensure our imbalanced outcome was evenly split (and roughly equivalent to the sample prevalance) across cross-validation folds.</p>
+</section>
+<section id="auroc-and-model-comparisons-1" class="level2">
+<h2>auROC and Model Comparisons</h2>
+<p>The median posterior probability for the best full model was 0.94, with narrow 95% CI ([0.93, 0.95]). To evaluate the incremental predictive value of our dynamic sensing features, we compared the performance of our full model to the performance of three ablated models: 0.63 (ablated daily survey features), 0.94 (ablated geolocation features), and 0.55 (ablated daily survey and geolocation features). There was strong evidence that the full model’s performance was better compared to models that ablated the daily survey features and the daily survey and geolocation features combined (probabilities = 1.00). There was no evidence that the full model performed better than a model with geolocation features ablated (probability = 0.34). The median difference in auROC, 95% Bayesian CI, and posterior probability that that the auROC difference was greater than 0 for all ablation contrasts are presented in <a href="#tbl-2" class="quarto-xref">Table 2</a>.</p>
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_tables.qmd" data-notebook-title="Make All Tables for Main Manuscript" data-notebook-cellId="cell-tbl-2">
+<div class="cell">
+<div id="tbl-2" class="cell quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-tbl">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 2: Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was larger than 0 for all ablated model contrasts.
+</figcaption>
+<div aria-describedby="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display">
+<table class="lightable-classic cell caption-top" data-quarto-postprocess="true" style="font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Contrast</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Median auROC Difference</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Bayesian CI</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; width: 25em;">full vs. ablated daily survey</td>
+<td style="text-align: left;">0.314</td>
+<td style="text-align: left;">[0.29, 0.338]</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; width: 25em;">full vs. ablated geolocation</td>
+<td style="text-align: left;">-0.002</td>
+<td style="text-align: left;">[-0.009, 0.005]</td>
+<td style="text-align: left;">0.342</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; width: 25em;">full vs. ablated daily survey and geolocation</td>
+<td style="text-align: left;">0.389</td>
+<td style="text-align: left;">[0.363, 0.414]</td>
+<td style="text-align: left;">1.000</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0; border: 0;"><sup></sup> Median auROC differences greater than 0 indicate the full model, on average, performed better than the ablated model (i.e., full vs. ablated daily survey, full vs. ablated geolocation, full vs. ablated daily survey and geolocation). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is greater than 0 (i.e., the full model is performing better).</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tfoot>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p>Our fairness subgroup comparisons for the full model revealed strong evidence that performance differed by gender, income, race and ethnicity, sexual orientation, and geographic location (probabilities &gt; 0.97). Notably, our model performed better for individuals with an annual income of less than $25,000 compared to individuals with an annual income greater than $25,000, thus favoring the disadvantaged group. While differences in performance estimates exist, this model is likely still clinically meaningful across subgroups, as all subgroups yielded median auROCs between 0.91 - 0.95 (<a href="#fig-1" class="quarto-xref">Figure 1</a>). A table of fairness subgroup comparisons is available in the supplement.</p>
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellId="cell-fig-1">
+<div id="cell-fig-1" class="cell" data-message="false">
+<div class="cell-output cell-output-display">
+<div id="fig-1" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-mak_figures-fig-1-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure 1: Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, greater than $25,000 annual income, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, less than $25,000 annual income, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."><img src="index_files/figure-html/notebooks-mak_figures-fig-1-output-2.png" width="672" height="480" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1: Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, greater than $25,000 annual income, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, less than $25,000 annual income, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="calibration-and-overall-performance-1" class="level2">
+<h2>Calibration and Overall Performance</h2>
+<p>The best full model configuration selected with 1 repeat of 5-fold cross-validation used an xgboost statistical algorithm and up-sampled the minority class.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> This model produced generally well-calibrated raw probabilities (brier score = 0.014; left panel of <a href="#fig-2" class="quarto-xref">Figure 2</a>). We attempted to improve calibration with Platt scaling and results were comparable (brier score = 0.014). Histograms of raw risk probability distributions separately by true lapse outcome are presented in the right panel of <a href="#fig-2" class="quarto-xref">Figure 2</a>.</p>
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellId="cell-fig-2">
+<div id="cell-fig-2" class="cell" data-fig-width="7" data-fig-height="8">
+<div class="cell-output cell-output-display">
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure 2: The top panel presents a calibration plot of raw and Platt calibrated risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt calibrated (top) probabilities. The bottom left and right panel presents histograms of raw (uncalibrated) and Platt calibrated risk probability distributions, respectively, separately by true lapse outcome."><img src="index_files/figure-html/notebooks-mak_figures-fig-2-output-1.png" width="672" height="768" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: The top panel presents a calibration plot of raw and Platt calibrated risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt calibrated (top) probabilities. The bottom left and right panel presents histograms of raw (uncalibrated) and Platt calibrated risk probability distributions, respectively, separately by true lapse outcome.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="feature-importance-1" class="level2">
+<h2>Feature Importance</h2>
+<p>We aggregated individual Shapley values across all participants and all observations to provide a relative rank ordering of the most important features. A traditional mean absolute Shapley value approach revealed the most important feature (i.e., largest magnitude of change in log-odds) was differences in past opioid use. These feature was nearly two-fold more important than the next most important feature, raw urge ratings. <a href="#fig-3" class="quarto-xref">Figure 3</a> displays the top 30 (out of 186) feature categories, as defined by the 30 largest absolute mean Shapley values. In the supplement, we provide full figures of all possible feature categories.</p>
+<p>A second approach where we calculated the proportion of observations in which each feature category had the highest Shapley value (i.e., largest magnitude and prevalence), revealed the most important feature to be raw urge ratings, followed by raw abstinence confidence ratings. Differences in past opioid use was the third most important feature by this method, suggesting that while it has a strong relationship with lapse risk, it is not as prevalent across observations as other features. Notably, in this approach several additional comparably important features emerged, including differences in past pleasant experiences, differences in past stimulant use, and differences in time spent in helpful locations.<!--reference supplement fig of shapley values by group--></p>
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellId="cell-fig-3">
+<div id="cell-fig-3" class="cell" data-fig-width="8">
+<div class="cell-output cell-output-display">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center" height="480" width="768">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure 3: "><img src="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" id="fig-3" width="768" height="480" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 3
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>To understand the direction in which these feature categories adjusted the lapse risk predictions, we plotted Shapley-feature value partial dependence plots for the top 30 feature categories (<a href="#fig-4" class="quarto-xref">Figure 4</a>). Differences in past opioid use lowered lapse risk probability for participants who did not lapse on study (i.e., a feature score of 0). Lapse probability dramatically increased when participants had increased reported opioid use over the past 24 and 168 hours. Unsurprisingly, raw urge and abstinence confidence ratings had linear relationships to lapse risk, with higher urge ratings increasing lapse risk probability and higher abstinence confidence decreasing lapse risk probability. There was a more nuanced finding for stimulant use and opioid lapse risk probability. Raw rate counts of stimulant use increased lapse risk; however, participants were at highest risk when recent stimulant use decreased (i.e., Stimulant Use, Diff).</p>
+<div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellId="cell-fig-4">
+<div id="cell-fig-4" class="cell" data-message="false" data-fig-width="10" data-fig-height="14">
+<div class="cell-output cell-output-display">
+<div id="fig-4" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure 4: Feature importance partial dependence plots."><img src="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" width="960" height="1344" /></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4: Feature importance partial dependence plots.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<section id="performance" class="level2">
+<h2>Performance</h2>
+<p>Our full model demonstrated that it is possible to future next-day lapses back to opioid use with high accuracy using smartphone sensing data (auROC = 0.94). Model predictions were well-calibrated, with estimated probabilities closely aligning with observed lapse rates. This is exciting given that our goal was to build a model that could provide insight into lapse risk.</p>
+<p>We were excited to see that fairness discrepancies in model performance were minimal. In all subgroups, our model had a median auROC above 0.90, which is generally considered to be a benchmark of excellent performance. Nevertheless, differences of 0.01 - 0.03 (favoring the advantaged group) were present in gender, race and ethnicity, sexual orientation, and geographic location comparisons. Despite our efforts to recruit a diverse sample, many of these group comparisons remained imbalanced (e.g., 19-29% of participants in the disadvantaged groups for race and ethnicity, sexual orientation, and geographic location). Our model may perform better for these groups with greater representation in the training data. Future models would benefit from increased representation across these groups.</p>
+<p>Future research should also purposefully recruit participants across a wider age range. Older adults (65+ years) are less likely to receive substance use disorder treatment and often report lower levels of social interaction and support than younger adults <span class="citation" data-cites="choiTreatmentUsePerceived2014 kilaruIncidenceTreatmentOpioid2020">(<a href="#ref-choiTreatmentUsePerceived2014" role="doc-biblioref">Choi et al., 2014</a>; <a href="#ref-kilaruIncidenceTreatmentOpioid2020" role="doc-biblioref">Kilaru et al., 2020</a>)</span>. They may also be less comfortable with, or less able to provide, smartphone sensing data at the level of adherence needed for accurate prediction. We did not explicitly evaluate model fairness for this subgroup due to limited representation in our sample. We encourage future research to examine model performance for older adults to ensure generalizability.</p>
+<p>In addition to representation, it may be that additional risk factors not currently measured could further improve the fairness performance of our models. For example, incorporating lapse risk factors that may be more salient for women (e.g., interpersonal relationship problems, hormonal changes <span class="citation" data-cites="walitzerGenderDifferencesAlcohol2006 mchughSexGenderDifferences2018">(<a href="#ref-mchughSexGenderDifferences2018" role="doc-biblioref">McHugh et al., 2018</a>; <a href="#ref-walitzerGenderDifferencesAlcohol2006" role="doc-biblioref">Walitzer &amp; Dearing, 2006</a>)</span>) and other underrepresented groups may help reduce performance disparities by adding features more salient for predicting lapse for certain subgroups.</p>
+</section>
+<section id="sensing-methods" class="level2">
+<h2>Sensing Methods</h2>
+<p>Ablation model comparisons revealed that daily surveys alone captured nearly all of this predictive signal (auROC = 0.94). To our knowledge, no other published SUD study has collected daily survey data from participants continuously over the course of one year. Survey adherence rates in our sample were comparable to those observed in other clinical populations, suggesting that self‑report surveys are a feasible and risk-relevant sensing method for long‑term monitoring in this population. When daily surveys were ablated from the model, predictive performance dropped substantially (auROC = 0.63). Although this performance remained above chance and exceeded that of a demographics‑only model (with both geolocation and daily surveys ablated; auROC = 0.55), it indicates that geolocation features captured only modest predictive signal. Moreover, given that ablating geolocation features did not result in any drop in performance, this signal likely overlaps with information already captured with the daily surveys. It is possible that the relatively low predictive value of geolocation sensing in this study was due to methodological limitations.</p>
+<p>Although geolocation data can, in principle, be collected continuously moment‑by‑moment, in practice these data are difficult to collect reliably. In our study, geolocation features had substantially higher rates of missingness compared to daily surveys. Consequently, approximately 12% of geolocation features were imputed using median values derived from other individuals in the training dataset. Median values are by definition near the center of the feature distribution. These values are common and have limited influence on model predictions (i.e., low leverage). This was a purposeful decision in our design to ensure that missing data would not systematically influence predictions in either direction. However, this conservative approach likely contributed to reduced predictive performance of geolocation features, as imputations that minimize influence also limit the ability of those features to contribute risk‑relevant signal. Lastly, these median imputations are also not person-specific and as a result may not accurately represent typical values for the individual whose data are being imputed. As geolocation sensing methods become more robust and missingness is reduced, these features may become more powerful for lapse prediction.</p>
+<p>We could also imagine augmenting our method for contextualizing geolocation data with other publicly available data. A limitation of our geolocation sensing method was that we relied on known locations with self-reported context. While this method provides meaningful contextual information, it is limited in its ability to capture the full range of locations participants visit without substantially increasing participant burden. Passive methods for contextualizing location could address this limitation by providing risk-relevant contextual information across all locations. For example, latitude and longitude coordinates could be contextualized using publicly available datasets, such as alcohol outlet density, area deprivation index, and Narcotics Annonymous meeting times and locations. Increasing the number of locations would allow for potentially more variance in feature distributions within and between individuals.</p>
+<p>There is also a question as to whether geolocation sensing is as feasible for rural populations as it is for urban populations. Modern GPS often uses cell towers and Wi-Fi networks to improve speed and accuracy. In rural areas, where such infrastructure is sparse, devices rely more heavily on satellite-only positioning, which can be slower to initialize and less reliable under suboptimal signal conditions <span class="citation" data-cites="grovesPrinciplesGNSSInertial2013">(<a href="#ref-grovesPrinciplesGNSSInertial2013" role="doc-biblioref">Groves, 2013</a>)</span>. Therefore, we plan to explicitly assess differences in geolocation adherence (e.g., the percentage of days with available geolocation data) as well as differences in the strength of geolocation feature importance between these groups.</p>
+<p>If geolocation sensing proves to be less accurate or reliable for rural populations, this could foreshadow additional design challenges associated with using a web-based app for recovery monitoring. For example, unstable internet connectivity may necessitate storing in-app recovery recommendations locally so that individuals can access them at moments of need. Even EMA, when administered once per day, could pose challenges if completed surveys cannot be reliably transmitted over cellular data. We highlight these potential limitations as areas warranting close examination in future work. Nevertheless, we remain optimistic about the potential of geolocation sensing, given that our models generally performed comparably across rural and urban groups.</p>
+<p>To summarize, if the goal is prediction, geolocation sensing features are not necessary as they do not offer any unique incremental predictive value. However, if the goal is to have a more nuanced understanding of lapse risk across a more diverse array of risk features than geolocation is helpful. Adding geolocation features did not hurt model performance, and more data sources provides more opportunities for identifying intervenable targets specific to a person and moment in time.</p>
+</section>
+<section id="feature-importance-2" class="level2">
+<h2>Feature Importance</h2>
+<p>When using a standard mean absolute Shapley value approach to estimate average feature importance across observations, the most important feature was prior opioid use. This finding is consistent with the relapse‑prevention literature, which identifies lapse as an important precursor to relapse, and prior prediction research demonstrating that lapses predict future lapses <span class="citation" data-cites="wyantMachineLearningModels2024">(<a href="#ref-wyantMachineLearningModels2024" role="doc-biblioref">Wyant et al., 2024</a>)</span>. Notably, this feature had a mean absolute Shapley value that was nearly four-fold higher than the next most important feature. When considering this model in the context of a recovery monitoring support system that provides daily insight into lapse risk, this finding may be misleading. Fewer than 2% of day-level observations contained a lapse, and the majority of participants did not lapse at all. Among those who did lapse, many only lapsed one time. Given that lapse cannot be used as a predictor until after it has occurred, in most cases other features may represent more clinically meaningful targets for intervention.</p>
+<p>A more informative approach to characterize feature importance is to consider the proportion of observations in which a given feature had the highest Shapley value. This approach considers both the magnitude of a feature’s effect (in terms of log-odds change in the prediction) and its prevalence across observations. Using this approach, urge ratings and abstinence confidence emerged as the features most frequently influencing lapse risk predictions. This suggests that individuals may benefit more often from recovery recommendations focussed on reducing urges (e.g., urge surfing) and increasing abstinence confidence (e.g., reflecting on recent successes). Additionally, this approach showed that while some features have low average importance (across all individuals and observations), they can be highly important on certain days for certain individuals (e.g., self-reports of anger).</p>
+<p>Across both feature importance approaches, geolocation features emerged among the top subset of features. Specifically, location variance, time spent in helpful and harmful locations, and time spent at locations where religious activities are performed were among the top ten features. These findings suggest that although geolocation features may not provide unique signal for prediction, it may be worthwhile to still include them in the model to expand opportunities for intervention and provide precision-oriented recovery support.</p>
+</section>
+<section id="additional-limitations-and-future-directions" class="level2">
+<h2>Additional Limitations and Future Directions</h2>
+<p>Other characteristics of our sample may limit the generalizability of our findings. One obvious limitation is the research context in which participants provided these data. Participants were modestly compensated for completing daily surveys and providing geolocation data, which may have influenced their willingness to provide these data. However, participants received no additional direct benefit beyond financial compensation. In real-world implementations, individuals may be more motivated to share data if doing so enables personalized recovery support.</p>
+<p>Second, we implemented daily survey compliance thresholds to exclude participants and adjust study end dates. This criterion was important because we generated our lapse labels from the daily survey data and thus we required consistent collection of this data stream for accurate observation labels. As a result, our estimates of adherence and model performance may be slightly optimistic. Still, even with this criterion, nearly 78% of participants remained in the study for at least six months, suggesting that long-term monitoring with daily surveys is feasible for a substantial proportion of individuals in this population.</p>
+<p>A third limitation is that our sample was restricted to individuals with a goal of abstinence. Accordingly, our models were trained to predict goal-inconsistent use (i.e., lapse), which may limit their applicability to individuals with alternative recovery goals. Although we see no inherent reason these models could not be adapted for individuals pursuing moderation or harm reduction, this remains an empirical question. For individuals who do not aim to abstain, the definition of goal-inconsistent use is less straightforward and may vary considerably from person to person. Future studies could improve generalizability by allowing individuals to self-define goal-inconsistent use (e.g., mixing opioids with other substances or using larger amounts than planned) and train models in samples with diverse recovery goals.</p>
+<p>Fourth we explicitly recruited participants who were early in their recovery (defined by time abstinent). Thus, it is possible that our models more accurately represent relationships between risk factors and lapse among individuals in early recovery. As individuals progress in their recovery, the relative importance of different risk factors may change. For example, craving may be more important for lapse risk during early recovery, whereas pleasant events and location variance may become more important during extended recovery.</p>
+<p>Given that our participants remained in the study for up to one year. We may be able to test whether the accuracy of our model’s predictions or the magnitude of a feature’s contribution to those predictions, changes as a function of time in recovery in future work. For example, we could include a time-varying recovery feature, such as days since the most recent quit date or days since the last treatment episode, in our model. Because our best-performing models have been XGBoost, they can natively accommodate interactions between this recovery feature and other predictors. We could then assess whether model performance and the relative ordering of important features differ between the first half and the second half of the study period, providing insight into potential differences in early versus later recovery.</p>
+<p>Lastly, there may be value in exploring alternative modeling approaches that better leverage the temporal structure and individual-level nature of these data. For example, hierarchical models that start with population-based information (i.e., priors) and are updated with person-specific information as the individual provides data may be the most promising approach for effective use of time-varying information to model how an individual’s lapse risk evolves over time. Our lab has begun to develop these models and found preliminary evidence to suggest that they may modestly outperform traditional machine learning models for predicting alcohol lapses <span class="citation" data-cites="pulickIdiographicLapsePrediction2025">(<a href="#ref-pulickIdiographicLapsePrediction2025" role="doc-biblioref">Pulick et al., 2025</a>)</span> (but also see <span class="citation" data-cites="leenaertsPersonspecificPooledPrediction2024">Leenaerts et al. (<a href="#ref-leenaertsPersonspecificPooledPrediction2024" role="doc-biblioref">2024</a>)</span>).</p>
+</section>
+<section id="conclusion" class="level2">
+<h2>Conclusion</h2>
+<p>In conclusion, it is possible to predict future lapses back to opioid use using smartphone sensing data. Daily surveys and geolocation sensing provide diverse coverage of important risk factors for lapse. Daily recovery recommendations can be mapped onto these factors to deliver support that is personalized to both the person and the moment. While this model was evaluated in a research setting, our use of a national clinical sample of individuals with OUD suggests it represents a promising step toward future real‑world implementation and evaluation.</p>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-americanpsychiatricassociationDiagnosticStatisticalManual2022" class="csl-entry" role="listitem">
+American Psychiatric Association. (2022). <em>Diagnostic and statistical manual of mental disorders : <span>DSM-5-TR</span></em>. 5th edition, text revision. Washington, DC : American Psychiatric Association Publishing, 2022.
+</div>
+<div id="ref-chtc" class="csl-entry" role="listitem">
+Center for High Throughput Computing. (2006). <em>Center for high throughput computing</em>. Center for High Throughput Computing. <a href="https://doi.org/10.21231/GNT1-HW21">https://doi.org/10.21231/GNT1-HW21</a>
+</div>
+<div id="ref-choiTreatmentUsePerceived2014" class="csl-entry" role="listitem">
+Choi, N. G., DiNitto, D. M., &amp; Marti, C. N. (2014). Treatment use, perceived need, and barriers to seeking treatment for substance abuse and mental health problems among older adults compared to younger adults. <em>Drug and Alcohol Dependence</em>, <em>145</em>, 113–120. <a href="https://doi.org/10.1016/j.drugalcdep.2014.10.004">https://doi.org/10.1016/j.drugalcdep.2014.10.004</a>
+</div>
+<div id="ref-collinsTRIPODAIStatementUpdated2024" class="csl-entry" role="listitem">
+Collins, G. S., Moons, K. G. M., Dhiman, P., Riley, R. D., Beam, A. L., Van Calster, B., Ghassemi, M., Liu, X., Reitsma, J. B., Van Smeden, M., Boulesteix, A.-L., Camaradou, J. C., Celi, L. A., Denaxas, S., Denniston, A. K., Glocker, B., Golub, R. M., Harvey, H., Heinze, G., … Logullo, P. (2024). <span>TRIPOD</span>+<span>AI</span> statement: Updated guidance for reporting clinical prediction models that use regression or machine learning methods. <em>BMJ</em>, <em>385</em>, e078378. <a href="https://doi.org/10.1136/bmj-2023-078378">https://doi.org/10.1136/bmj-2023-078378</a>
+</div>
+<div id="ref-economicresearchserviceusdepartmentofagricultureRuralUrbanCommutingArea" class="csl-entry" role="listitem">
+Economic Research Service US Department of Agriculture. (n.d.). <em>Rural-<span>Urban Commuting Area Codes</span> - <span>Users</span>’ <span>Guide</span></em>. https://www.ers.usda.gov/data-products/rural-urban-commuting-area-codes/users-guide.
+</div>
+<div id="ref-epsteinPredictionStressDrug2020" class="csl-entry" role="listitem">
+Epstein, D. H., Tyburski, M., Kowalczyk, W. J., Burgess-Hull, A. J., Phillips, K. A., Curtis, B. L., &amp; Preston, K. L. (2020). Prediction of stress and drug craving ninety minutes in the future with passively collected <span>GPS</span> data. <em>Npj Digital Medicine</em>, <em>3</em>(1), 26. <a href="https://doi.org/10/ghqvcw">https://doi.org/10/ghqvcw</a>
+</div>
+<div id="ref-florenceEconomicBurdenOpioid2021" class="csl-entry" role="listitem">
+Florence, C., Luo, F., &amp; Rice, K. (2021). The economic burden of opioid use disorder and fatal opioid overdose in the <span>United States</span>, 2017. <em>Drug and Alcohol Dependence</em>, <em>218</em>, 108350. <a href="https://doi.org/10.1016/j.drugalcdep.2020.108350">https://doi.org/10.1016/j.drugalcdep.2020.108350</a>
+</div>
+<div id="ref-freitagVariationsSubstanceUse2021" class="csl-entry" role="listitem">
+Freitag, T. M., Chen-Sankey, J. C., Duarte, D. A., Ramsey, M. W., &amp; Choi, K. (2021). Variations in <span>Substance Use</span> and <span>Disorders Among Sexual Minorities</span> by <span>Race</span>/<span>Ethnicity</span>. <em>Substance Use &amp; Misuse</em>, <em>56</em>(7), 921–928. <a href="https://doi.org/10.1080/10826084.2021.1899225">https://doi.org/10.1080/10826084.2021.1899225</a>
+</div>
+<div id="ref-goodrichRstanarmBayesianApplied2023" class="csl-entry" role="listitem">
+Goodrich, B., Gabry, J., Ali, I., &amp; Brilleman, S. (2023). <em>Rstanarm: <span>Bayesian Applied Regression Modeling</span> via <span>Stan</span></em>.
+</div>
+<div id="ref-greenfieldSubstanceAbuseTreatment2007" class="csl-entry" role="listitem">
+Greenfield, S. F., Brooks, A. J., Gordon, S. M., Green, C. A., Kropp, F., McHugh, R. K., Lincoln, M., Hien, D., &amp; Miele, G. M. (2007). Substance abuse treatment entry, retention, and outcome in women: <span>A</span> review of the literature. <em>Drug and Alcohol Dependence</em>, <em>86</em>(1), 1–21. <a href="https://doi.org/10.1016/j.drugalcdep.2006.05.012">https://doi.org/10.1016/j.drugalcdep.2006.05.012</a>
+</div>
+<div id="ref-grovesPrinciplesGNSSInertial2013" class="csl-entry" role="listitem">
+Groves, P. (2013). <em>Principles of <span>GNSS</span>, <span>Inertial</span>, and <span>Multisensor Integrated Navigation Systems</span>, <span>Second Edition</span></em>.
+</div>
+<div id="ref-guerreroDisparitiesLatinoSubstance2013" class="csl-entry" role="listitem">
+Guerrero, E. G., Marsh, J. C., Khachikian, T., Amaro, H., &amp; Vega, W. A. (2013). Disparities in <span>Latino</span> substance use, service use, and treatment: <span>Implications</span> for culturally and evidence-based interventions under health care reform. <em>Drug and Alcohol Dependence</em>, <em>133</em>(3), 805–813. <a href="https://doi.org/10.1016/j.drugalcdep.2013.07.027">https://doi.org/10.1016/j.drugalcdep.2013.07.027</a>
+</div>
+<div id="ref-gustafsonSmartphoneApplicationSupport2014" class="csl-entry" role="listitem">
+Gustafson, D. H., McTavish, F. M., Chih, M.-Y., Atwood, A. K., Johnson, R. A., Boyle, M. G., Levy, M. S., Driscoll, H., Chisholm, S. M., Dillenburg, L., Isham, A., &amp; Shah, D. (2014). A smartphone application to support recovery from alcoholism: A randomized clinical trial. <em>JAMA Psychiatry</em>, <em>71</em>(5), 566–572. <a href="https://doi.org/10.1001/jamapsychiatry.2013.4642">https://doi.org/10.1001/jamapsychiatry.2013.4642</a>
+</div>
+<div id="ref-healthresourcesandservicesadministrationHowWeDefine" class="csl-entry" role="listitem">
+Health Resources and Services Administration. (n.d.). <em>How <span>We Define Rural</span></em>. https://www.hrsa.gov/rural-health/about-us/what-is-rural.
+</div>
+<div id="ref-heinzLongitudinalObservationalStudy2025" class="csl-entry" role="listitem">
+Heinz, M. V., Price, G. D., Singh, A., Bhattacharya, S., Chen, C.-H., Asyyed, A., Does, M. B., Hassanpour, S., Hichborn, E., Kotz, D., Lambert-Harris, C. A., Li, Z., McLeman, B., Mishra, V., Stanger, C., Subramaniam, G., Wu, W., Campbell, C. I., Marsch, L. A., &amp; Jacobson, N. C. (2025). A longitudinal observational study with ecological momentary assessment and deep learning to predict non-prescribed opioid use, treatment retention, and medication nonadherence among persons receiving medication treatment for opioid use disorder. <em>Journal of Substance Use &amp; Addiction Treatment</em>, <em>173</em>. <a href="https://doi.org/10.1016/j.josat.2025.209685">https://doi.org/10.1016/j.josat.2025.209685</a>
+</div>
+<div id="ref-hserHighMortalityPatients2017" class="csl-entry" role="listitem">
+Hser, Y.-I., Mooney, L. J., Saxon, A. J., Miotto, K., Bell, D. S., Zhu, Y., Liang, D., &amp; Huang, D. (2017). High <span>Mortality Among Patients With Opioid Use Disorder</span> in a <span>Large Healthcare System</span>. <em>Journal of Addiction Medicine</em>, <em>11</em>(4), 315. <a href="https://doi.org/10.1097/ADM.0000000000000312">https://doi.org/10.1097/ADM.0000000000000312</a>
+</div>
+<div id="ref-jonesComplianceEcologicalMomentary2019" class="csl-entry" role="listitem">
+Jones, A., Remmerswaal, D., Verveer, I., Robinson, E., Franken, I. H. A., Wen, C. K. F., &amp; Field, M. (2019). Compliance with ecological momentary assessment protocols in substance users: A meta-analysis. <em>Addiction (Abingdon, England)</em>, <em>114</em>(4), 609–619. <a href="https://doi.org/10/gfsjzg">https://doi.org/10/gfsjzg</a>
+</div>
+<div id="ref-kilaruIncidenceTreatmentOpioid2020" class="csl-entry" role="listitem">
+Kilaru, A. S., Xiong, A., Lowenstein, M., Meisel, Z. F., Perrone, J., Khatri, U., Mitra, N., &amp; Delgado, M. K. (2020). Incidence of <span>Treatment</span> for <span>Opioid Use Disorder Following Nonfatal Overdose</span> in <span>Commercially Insured Patients</span>. <em>JAMA Network Open</em>, <em>3</em>(5), e205852. <a href="https://doi.org/10.1001/jamanetworkopen.2020.5852">https://doi.org/10.1001/jamanetworkopen.2020.5852</a>
+</div>
+<div id="ref-kuhnTidyposteriorBayesianAnalysis2022" class="csl-entry" role="listitem">
+Kuhn, M. (2022). <em>Tidyposterior: <span>Bayesian Analysis</span> to <span>Compare Models</span> using <span>Resampling Statistics</span></em>.
+</div>
+<div id="ref-kuhnTidymodelsCollectionPackages2020" class="csl-entry" role="listitem">
+Kuhn, M., &amp; Wickham, H. (2020). <em>Tidymodels: A collection of packages for modeling and machine learning using tidyverse principles</em>.
+</div>
+<div id="ref-leenaertsPersonspecificPooledPrediction2024" class="csl-entry" role="listitem">
+Leenaerts, N., Soyster, P., Ceccarini, J., Sunaert, S., Fisher, A., &amp; Vrieze, E. (2024). Person-specific and pooled prediction models for binge eating, alcohol use and binge drinking in bulimia nervosa and alcohol use disorder. <em>Psychological Medicine</em>, <em>54</em>(10), 2758–2773. <a href="https://doi.org/10.1017/S0033291724000862">https://doi.org/10.1017/S0033291724000862</a>
+</div>
+<div id="ref-listerSystematicReviewRuralspecific2020" class="csl-entry" role="listitem">
+Lister, J. J., Weaver, A., Ellis, J. D., Himle, J. A., &amp; Ledgerwood, D. M. (2020). A systematic review of rural-specific barriers to medication treatment for opioid use disorder in the <span>United States</span>. <em>The American Journal of Drug and Alcohol Abuse</em>, <em>46</em>(3), 273–288. <a href="https://doi.org/10.1080/00952990.2019.1694536">https://doi.org/10.1080/00952990.2019.1694536</a>
+</div>
+<div id="ref-lofaroRuralUrbanDifferences2025" class="csl-entry" role="listitem">
+Lofaro, R. J., Bohler, R. M., Spurgeon, R., &amp; Mase, W. A. (2025). Rural and urban differences in treatment on demand for substance use treatment involving medications for opioid use disorder. <em>The Journal of Rural Health</em>, <em>41</em>(3), e70076. <a href="https://doi.org/10.1111/jrh.70076">https://doi.org/10.1111/jrh.70076</a>
+</div>
+<div id="ref-lundbergUnifiedApproachInterpreting2017" class="csl-entry" role="listitem">
+Lundberg, S. M., &amp; Lee, S.-I. (2017). A unified approach to interpreting model predictions. <em>Proceedings of the 31st <span>International Conference</span> on <span>Neural Information Processing Systems</span>, <span>NIPS</span>’17</em>, 4768–4777.
+</div>
+<div id="ref-maEffectsMedicationassistedTreatment2019" class="csl-entry" role="listitem">
+Ma, J., Bao, Y.-P., Wang, R.-J., Su, M.-F., Liu, M.-X., Li, J.-Q., Degenhardt, L., Farrell, M., Blow, F. C., Ilgen, M., Shi, J., &amp; Lu, L. (2019). Effects of medication-assisted treatment on mortality among opioids users: A systematic review and meta-analysis. <em>Molecular Psychiatry</em>, <em>24</em>(12), 1868–1883. <a href="https://doi.org/10.1038/s41380-018-0094-5">https://doi.org/10.1038/s41380-018-0094-5</a>
+</div>
+<div id="ref-marlattRelapsePreventionSecond2007" class="csl-entry" role="listitem">
+Marlatt, G. A., &amp; Donovan, D. M. (Eds.). (2007). <em>Relapse <span>Prevention</span>, <span>Second Edition</span>: <span>Maintenance Strategies</span> in the <span>Treatment</span> of <span>Addictive Behaviors</span></em> (2nd edition). The Guilford Press.
+</div>
+<div id="ref-martinNeedReceiptSubstance2022" class="csl-entry" role="listitem">
+Martin, C. E., Parlier-Ahmad, A. B., Beck, L., Scialli, A., &amp; Terplan, M. (2022). Need for and <span>Receipt</span> of <span>Substance Use Disorder Treatment Among Adults</span>, by <span>Gender</span>, in the <span>United States</span>. <em>Public Health Reports<span>®</span></em>, <em>137</em>(5), 955–963. <a href="https://doi.org/10.1177/00333549211041554">https://doi.org/10.1177/00333549211041554</a>
+</div>
+<div id="ref-mchughSexGenderDifferences2018" class="csl-entry" role="listitem">
+McHugh, R. K., Votaw, V. R., Sugarman, D. E., &amp; Greenfield, S. F. (2018). Sex and gender differences in substance use disorders. <em>Clinical Psychology Review</em>, <em>66</em>, 12–23. <a href="https://doi.org/10.1016/j.cpr.2017.10.012">https://doi.org/10.1016/j.cpr.2017.10.012</a>
+</div>
+<div id="ref-mohrPersonalSensingUnderstanding2017" class="csl-entry" role="listitem">
+Mohr, D. C., Zhang, M., &amp; Schueller, S. M. (2017). Personal <span>Sensing</span>: <span>Understanding Mental Health Using Ubiquitous Sensors</span> and <span>Machine Learning</span>. <em>Annual Review of Clinical Psychology</em>, <em>13</em>(1), 23–47. <a href="https://doi.org/10.1146/annurev-clinpsy-032816-044949">https://doi.org/10.1146/annurev-clinpsy-032816-044949</a>
+</div>
+<div id="ref-moshontzProspectivePredictionLapses2021" class="csl-entry" role="listitem">
+Moshontz, H., Colmenares, A. J., Fronk, G. E., Sant’Ana, S. J., Wyant, K., Wanta, S. E., Maus, A., Jr, D. H. G., Shah, D., &amp; Curtin, J. J. (2021). Prospective <span>Prediction</span> of <span>Lapses</span> in <span>Opioid Use Disorder</span>: <span>Protocol</span> for a <span>Personal Sensing Study</span>. <em>JMIR Research Protocols</em>, <em>10</em>(12), e29563. <a href="https://doi.org/10.2196/29563">https://doi.org/10.2196/29563</a>
+</div>
+<div id="ref-olfsonHealthcareCoverageService2022" class="csl-entry" role="listitem">
+Olfson, M., Mauro, C., Wall, M. M., Choi, C. J., Barry, C. L., &amp; Mojtabai, R. (2022). Healthcare coverage and service access for low-income adults with substance use disorders. <em>Journal of Substance Abuse Treatment</em>, <em>137</em>, 108710. <a href="https://doi.org/10.1016/j.jsat.2021.108710">https://doi.org/10.1016/j.jsat.2021.108710</a>
+</div>
+<div id="ref-parlier-ahmadExploratoryStudySex2021" class="csl-entry" role="listitem">
+Parlier-Ahmad, A. B., Martin, C. E., Radic, M., &amp; Svikis, D. S. (2021). An exploratory study of sex and gender differences in demographic, psychosocial, clinical, and substance use treatment characteristics of patients in outpatient opioid use disorder treatment with buprenorphine. <em>Translational Issues in Psychological Science</em>, <em>7</em>(2), 141–153. <a href="https://doi.org/10.1037/tps0000250">https://doi.org/10.1037/tps0000250</a>
+</div>
+<div id="ref-pinedoCurrentReexaminationRacial2019" class="csl-entry" role="listitem">
+Pinedo, M. (2019). A current re-examination of racial/ethnic disparities in the use of substance abuse treatment: <span>Do</span> disparities persist? <em>Drug and Alcohol Dependence</em>, <em>202</em>, 162–167. <a href="https://doi.org/10.1016/j.drugalcdep.2019.05.017">https://doi.org/10.1016/j.drugalcdep.2019.05.017</a>
+</div>
+<div id="ref-plattProbabilisticOutputsSupport1999" class="csl-entry" role="listitem">
+Platt, J. (1999). Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. In <em>Advances in large margin classifiers</em> (pp. 61–74). MIT Press.
+</div>
+<div id="ref-pulickIdiographicLapsePrediction2025" class="csl-entry" role="listitem">
+Pulick, E., Curtin, J., &amp; Mintz, Y. (2025). Idiographic <span>Lapse Prediction With State Space Modeling</span>: <span>Algorithm Development</span> and <span>Validation Study</span>. <em>JMIR Formative Research</em>, <em>9</em>(1), e73265. <a href="https://doi.org/10.2196/73265">https://doi.org/10.2196/73265</a>
+</div>
+<div id="ref-salonerBlacksHispanicsAre2013" class="csl-entry" role="listitem">
+Saloner, B., &amp; Lê Cook, B. (2013). Blacks and <span>Hispanics</span> are less likely than whites to complete addiction treatment, largely due to socioeconomic factors. <em>Health Affairs</em>, <em>32</em>(1), 135–145. <a href="https://doi.org/10.1377/hlthaff.2011.0983">https://doi.org/10.1377/hlthaff.2011.0983</a>
+</div>
+<div id="ref-schmidtEthnicDisparitiesClinical2007" class="csl-entry" role="listitem">
+Schmidt, L. A., Ye, Y., Greenfield, T. K., &amp; Bond, J. (2007). Ethnic disparities in clinical severity and services for alcohol problems: Results from the <span>National Alcohol Survey</span>. <em>Alcoholism, Clinical and Experimental Research</em>, <em>31</em>(1), 48–56. <a href="https://doi.org/10.1111/j.1530-0277.2006.00263.x">https://doi.org/10.1111/j.1530-0277.2006.00263.x</a>
+</div>
+<div id="ref-sigmonAccessTreatmentOpioid2014" class="csl-entry" role="listitem">
+Sigmon, S. C. (2014). Access to treatment for opioid dependence in rural <span>America</span>: Challenges and future directions. <em>JAMA Psychiatry</em>, <em>71</em>(4), 359–360. <a href="https://doi.org/10.1001/jamapsychiatry.2013.4450">https://doi.org/10.1001/jamapsychiatry.2013.4450</a>
+</div>
+<div id="ref-stantonRelapsePreventionNeeds2005a" class="csl-entry" role="listitem">
+Stanton, M. (2005). Relapse <span>Prevention Needs More Emphasis</span> on <span>Interpersonal Factors</span>. <em>American Psychologist</em>, <em>60</em>(4), 340–341. <a href="https://doi.org/10.1037/0003-066X.60.4.340">https://doi.org/10.1037/0003-066X.60.4.340</a>
+</div>
+<div id="ref-substanceabuseandmentalhealthservicesadministration2024NSDUHDetailed" class="csl-entry" role="listitem">
+Substance Abuse and Mental Health Services Administration. (n.d.). <em>2024 <span>NSDUH Detailed Tables</span> <span></span> <span>CBHSQ Data</span></em>. https://www.samhsa.gov/data/report/2024-nsduh-detailed-tables.
+</div>
+<div id="ref-vancalsterEvaluationPerformanceMeasures2025" class="csl-entry" role="listitem">
+Van Calster, B., Collins, G. S., Vickers, A. J., Wynants, L., Kerr, K. F., Barreñada, L., Varoquaux, G., Singh, K., Moons, K. G., Hernandez-Boussard, T., Timmerman, D., McLernon, D. J., Van Smeden, M., &amp; Steyerberg, E. W. (2025). Evaluation of performance measures in predictive artificial intelligence models to support medical decisions: Overview and guidance. <em>The Lancet Digital Health</em>, 100916. <a href="https://doi.org/10.1016/j.landig.2025.100916">https://doi.org/10.1016/j.landig.2025.100916</a>
+</div>
+<div id="ref-vandewieleOverlyOptimisticPrediction2021" class="csl-entry" role="listitem">
+Vandewiele, G., Dehaene, I., Kovács, G., Sterckx, L., Janssens, O., Ongenae, F., De Backere, F., De Turck, F., Roelens, K., Decruyenaere, J., Van Hoecke, S., &amp; Demeester, T. (2021). Overly optimistic prediction results on imbalanced data: A case study of flaws and benefits when applying over-sampling. <em>Artificial Intelligence in Medicine</em>, <em>111</em>, 101987. <a href="https://doi.org/10.1016/j.artmed.2020.101987">https://doi.org/10.1016/j.artmed.2020.101987</a>
+</div>
+<div id="ref-walitzerGenderDifferencesAlcohol2006" class="csl-entry" role="listitem">
+Walitzer, K. S., &amp; Dearing, R. L. (2006). Gender differences in alcohol and substance use relapse. <em>Clinical Psychology Review</em>, <em>26</em>(2), 128–148. <a href="https://doi.org/10.1016/j.cpr.2005.11.003">https://doi.org/10.1016/j.cpr.2005.11.003</a>
+</div>
+<div id="ref-witkiewitzTherapistsGuideEvidenceBased2007" class="csl-entry" role="listitem">
+Witkiewitz, K. A., &amp; Marlatt, G. A. (Eds.). (2007). <em>Therapist’s <span>Guide</span> to <span>Evidence-Based Relapse Prevention</span></em> (1st edition). Academic Press.
+</div>
+<div id="ref-witkiewitzRelapsePreventionAlcohol2004" class="csl-entry" role="listitem">
+Witkiewitz, K., &amp; Marlatt, G. A. (2004). Relapse prevention for alcohol and drug problems: <span>That</span> was zen, this is tao. <em>American Psychologist</em>, <em>59</em>(4), 224–235. <a href="https://doi.org/10.1037/0003-066X.59.4.224">https://doi.org/10.1037/0003-066X.59.4.224</a>
+</div>
+<div id="ref-woodLotPeopleCall2019" class="csl-entry" role="listitem">
+Wood, P., Opie, C., Tucci, J., Franklin, R., &amp; Anderson, K. (2019). <span>“<span>A</span> lot of people call it liquid handcuffs”</span> – barriers and enablers to opioid replacement therapy in a rural area. <em>Journal of Substance Use</em>, <em>24</em>(2), 150–155. <a href="https://doi.org/10.1080/14659891.2018.1523968">https://doi.org/10.1080/14659891.2018.1523968</a>
+</div>
+<div id="ref-wyantAcceptabilityPersonalSensing2023" class="csl-entry" role="listitem">
+Wyant, K., Moshontz, H., Ward, S. B., Fronk, G. E., &amp; Curtin, J. J. (2023). Acceptability of <span>Personal Sensing Among People With Alcohol Use Disorder</span>: <span>Observational Study</span>. <em>JMIR mHealth and uHealth</em>, <em>11</em>(1), e41833. <a href="https://doi.org/10.2196/41833">https://doi.org/10.2196/41833</a>
+</div>
+<div id="ref-wyantMachineLearningModels2024" class="csl-entry" role="listitem">
+Wyant, K., Sant’Ana, S. J. K., Fronk, G., &amp; Curtin, J. J. (2024). Machine learning models for temporally precise lapse prediction in alcohol use disorder. <em>Psychopathology and Clinical Science</em>. <a href="https://doi.org/10.31234/osf.io/cgsf7">https://doi.org/10.31234/osf.io/cgsf7</a>
+</div>
+<div id="ref-xinExploringIntersectionalityStigma2023" class="csl-entry" role="listitem">
+Xin, Y., Schwarting, C. M., Wasef, M. R., &amp; Davis, A. K. (2023). Exploring the intersectionality of stigma and substance use help-seeking behaviours among lesbian, gay, bisexual, transgender, queer, questioning or otherwise gender or sexuality minority (<span>LGBTQ</span>+) individuals in the <span>United States</span>: <span>A</span> scoping review. <em>Global Public Health</em>, <em>18</em>(1), 2277854. <a href="https://doi.org/10.1080/17441692.2023.2277854">https://doi.org/10.1080/17441692.2023.2277854</a>
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>$0.25 per survey plus an additional $3.70 for completing at least 12 surveys in the first half of the month and an additional $3.70 for completing at least 12 surveys in the second half of the month (total range of $14.40 - $15.15)<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Participants were also compensated for providing other sensing data as part of the parent grant’s aims, including $10 per month for sharing cellular communication logs and text message content and up to $10 per month for the daily video check-in.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>We followed guidelines from the United States Health Resources and Services Administration and define urban as an area where the primary commuting flow is within a metropolitan core of 50,000 or more people (RUCA code = 1) and rural as anything not urban (RUCA codes 2-10). <span class="citation" data-cites="healthresourcesandservicesadministrationHowWeDefine">(<a href="#ref-healthresourcesandservicesadministrationHowWeDefine" role="doc-biblioref">Health Resources and Services Administration, n.d.</a>)</span><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>405 participants consented to participate in the study and provided at least one daily survey; however, 75 participants dropped out prior to completing the first personalized monthly survey and were therefore not considered fully enrolled in the study.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>If adherence fell below 33% (roughly 9 surveys in a 28-day period) for a prolonged period of time, participant study end dates were changed to match the start of this adherence drop.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>The best model configuration used 1:5 upsampling of the majority class and the following hyperparameter values: learning rate = .1, tree depth = 3, mtry = 50.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id = "quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+</body>
+
+</html>

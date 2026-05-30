@@ -1,0 +1,157 @@
+---
+title: "Shap evaluation"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true"))
+library(tidymodels)
+
+path_models <- format_path(str_c("risk2/models/combined"))
+path_shared <- format_path(str_c("risk2/data_processed/shared"))
+path_input <- format_path(str_c("risk2/chtc/combined"))
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/chtc/static_files/fun_chtc.R?raw=true")
+```
+
+
+### Read in test metrics from best model
+```{r}
+metrics_raw <- 
+  read_csv(here::here(path_models, "inner_metrics_1_x_5_day_v10_kfold_full_final.csv"),
+           show_col_types = FALSE) |> 
+  glimpse()
+```
+
+
+Pull out single row for best configuration
+```{r }
+metrics_avg <- metrics_raw |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, resample) |> 
+   summarize(roc_auc = median(roc_auc),
+             n_jobs = n(), .groups = "drop") |> 
+  relocate(n_jobs) |> 
+  arrange(desc(roc_auc)) |> 
+  ungroup()
+
+config_best <- metrics_avg |> 
+  slice(1) |> 
+  print()
+```
+
+### Read in training controls and data
+```{r}
+batch_names <- list.dirs(path_input, full.names = FALSE, recursive = FALSE)
+batch_names <- batch_names[str_detect(batch_names, "train") & 
+                           str_detect(batch_names, "kfold") &
+                           str_detect(batch_names, "v10") &
+                           str_detect(batch_names, config_best$algorithm) &
+                           str_detect(batch_names, "full_final")]
+  
+batch_name <- batch_names[1] # can source any batch given assumptions above
+path_batch <- here::here(path_input, batch_name)
+source(here::here(path_batch, "input", "training_controls.R"))
+# NOTE: training controls overwrites path_batch but it matches   
+path_batch <- here::here(path_input, batch_name)
+
+chunks <- str_split_fixed(data_trn, "\\.", n = Inf) # parse name from extensions
+if (length(chunks) == 2) {
+  fn <- str_c("data_trn.", chunks[[2]])
+} else {
+  fn <- str_c("data_trn.", chunks[[2]], ".", chunks[[3]])
+}
+
+
+# open based on file type
+if (str_detect(fn, "csv")) {
+  d <- read_csv(here::here(path_batch, "input", fn), show_col_types = FALSE) 
+} else {
+  d <- read_rds(here::here(path_batch, "input", fn))
+}
+  
+
+d <- format_data(d) |> 
+  arrange(label_num) |>
+  mutate(id_obs = 1:nrow(d)) 
+```
+
+Make recipe and splits
+```{r}
+splits <- d |> 
+    make_splits(cv_resample_type = "kfold", cv_resample = cv_resample, 
+                cv_outer_resample = NULL, cv_inner_resample = NULL, 
+                cv_group, cv_strat = cv_strat, the_seed = seed_splits)
+```
+
+
+### Fit and Get Interaction function
+```{r}
+get_fold_shap_interactions <- function(split_obj, id) {
+
+  # training data from rsample split
+  train_data <- rsample::analysis(split_obj)
+
+  y <- train_data$y
+  X <- train_data |> dplyr::select(-y)
+
+  # convert to matrix for xgboost
+  X_mat <- model.matrix(~ . - 1, data = X)
+
+  # fit model (use your real params here)
+  fit <- xgboost::xgboost(
+    data = X_mat,
+    label = y,
+    nrounds = 200,
+    max_depth = 3,
+    objective = "binary:logistic",
+    verbosity = 0
+  )
+
+  # SHAP interaction values
+  shap_int <- predict(fit, X_mat, predinteraction = TRUE)
+
+  p <- ncol(X_mat)
+  dim(shap_int) <- c(nrow(X_mat), p, p)
+
+  feature_names <- colnames(X_mat)
+
+  # pairwise mean absolute interaction
+  expand_grid(
+    feature1 = feature_names,
+    feature2 = feature_names
+  ) |>
+    filter(feature1 < feature2) |>
+    mutate(
+      mean_abs_interaction = map2_dbl(
+        feature1, feature2,
+        ~ mean(abs(shap_int[, .x, .y]))
+      ),
+      fold = id
+    )
+}
+```
+
+
+```{r}
+interaction_by_fold <- purrr::map2_dfr(
+  splits$splits,
+  splits$id,
+  get_fold_shap_interactions
+)
+```
+
+
+

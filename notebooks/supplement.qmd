@@ -297,10 +297,10 @@ You visited the place shown below, near [*address*], several times in the past m
 ### Figure S1: Feature Imporance by Demographic Subgroup
 
 ```{r}
-shap_levels <- pp_perf_tibble_shap_fairness |> 
+shap_levels <- shaps |> 
   group_by(variable_grp) |> 
-  summarise(mean = mean(mean_value)) |> 
-  arrange(mean) |> 
+  summarise(mean = mean(value)) |> 
+  arrange(desc(mean))|> 
   pull(variable_grp)
 
 pp_perf_tibble_shap_fairness |>
