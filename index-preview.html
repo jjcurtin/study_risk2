@@ -1518,7 +1518,7 @@ Figure&nbsp;2: The top panel presents a calibration plot of raw and Platt calibr
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>global_panel <span class="op">+</span> local_panel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" height="480" width="768">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" width="768" height="480">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
 <a href="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: "><img src="index_files/figure-html/notebooks-mak_figures-fig-3-output-1.png" id="fig-3" width="768" height="480" class="figure-img"></a>
@@ -1554,7 +1554,7 @@ Figure&nbsp;3
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  geom_smooth(method <span class="op">=</span> <span class="st">"gam"</span>, formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">5</span>, bs <span class="op">=</span> <span class="st">"cs"</span>), se <span class="op">=</span> FALSE) <span class="op">+</span></span>
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">4</span>) <span class="op">+</span></span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  labs(</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Top 30 SHAP Variable Relationships"</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> <span class="st">"Top 20 SHAP Variable Relationships"</span>,</span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
 <span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
 <span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
