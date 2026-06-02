@@ -1,0 +1,199 @@
+---
+title: "GAM demo for partial dependence plots"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+```{r}
+library(tidyverse)
+library(mgcv)
+library(patchwork)
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/chtc/static_files/fun_chtc.R?raw=true")
+
+path_models <- format_path(str_c("risk2/models/combined"))
+```
+
+
+### Data
+
+```{r}
+shaps <- read_rds(here::here(path_models, 
+                             "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+```
+
+
+## Get top 20 global shaps across sample
+```{r}
+(shaps_10 <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  arrange(desc(mean_value)) |> 
+  slice_head(n = 20) |> 
+   pull(variable_grp))
+```
+
+## Past Opioid Use
+
+### Original Plot
+
+```{r}
+shaps |>
+  filter(variable_grp == "Past opioid use, Diff (EMA)") |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
+  labs(
+    title = NULL,
+    x = "z-score raw feature score",
+    y = "Shapley value"
+  ) +
+  theme_classic() +
+  theme(
+    strip.text = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+
+### Fit GAM
+
+Source - https://asbates.rbind.io/2019/03/15/generalized-additive-models-part-2-mgcv/
+
+```{r}
+df <- shaps |>
+  filter(variable_grp == "Past opioid use, Diff (EMA)")
+
+past_use <- gam(value ~ s(rfvalue, k = 300),
+                    data = df,
+                    method = "REML")
+
+plot(past_use)
+```
+
+Check convergence and dimension of smoothing    
+
+Ideally:  
+
+- edf should not equal k
+- p-value should not be significant
+- k-index shoiuld be close to 1
+
+
+
+Default k is 10 - increase if above thresholds are not met
+
+```{r}
+gam.check(past_use)
+```
+
+
+### Add GAM to Plot
+
+Get predictions
+```{r}
+preds <- tibble(
+  rfvalue = seq(
+    min(df$rfvalue, na.rm = TRUE),
+    max(df$rfvalue, na.rm = TRUE),
+    length.out = 100
+  )
+)
+
+preds$fit <- predict(past_use, newdata = preds)
+```
+
+
+Add to plot
+```{r}
+(plot_1 <- df |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_line(data = preds, aes(x = rfvalue, y = fit), linewidth = 1, color = "blue") +
+  facet_wrap(~ variable_grp, scales = "free") +
+  labs(title = NULL, x = "z-score raw feature score", y = "Shapley value") +
+  theme_classic() +
+  theme(strip.text = element_text(size = 8),
+        plot.title = element_text(size = 14, face = "bold")))
+```
+
+
+## Urge
+```{r}
+df <- shaps |>
+  filter(variable_grp == "Urge, Raw (EMA)")
+
+urge <- gam(value ~ s(rfvalue, k = 10),
+                    data = df,
+                    method = "REML")
+
+plot(urge)
+
+gam.check(urge)
+
+preds <- tibble(
+  rfvalue = seq(
+    min(df$rfvalue, na.rm = TRUE),
+    max(df$rfvalue, na.rm = TRUE),
+    length.out = 100
+  )
+)
+
+preds$fit <- predict(urge, newdata = preds)
+
+(plot_2 <- df |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_line(data = preds, aes(x = rfvalue, y = fit), linewidth = 1, color = "blue") +
+  facet_wrap(~ variable_grp, scales = "free") +
+  labs(title = NULL, x = "z-score raw feature score", y = "Shapley value") +
+  theme_classic() +
+  theme(strip.text = element_text(size = 8),
+        plot.title = element_text(size = 14, face = "bold")))
+```
+
+
+```{r}
+urge <- gam(value ~ s(rfvalue, k = 300),
+                    data = df,
+                    method = "REML")
+
+plot(urge)
+
+gam.check(urge)
+
+preds <- tibble(
+  rfvalue = seq(
+    min(df$rfvalue, na.rm = TRUE),
+    max(df$rfvalue, na.rm = TRUE),
+    length.out = 100
+  )
+)
+
+preds$fit <- predict(urge, newdata = preds)
+
+(plot_2 <- df |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_line(data = preds, aes(x = rfvalue, y = fit), linewidth = 1, color = "blue") +
+  facet_wrap(~ variable_grp, scales = "free") +
+  labs(title = NULL, x = "z-score raw feature score", y = "Shapley value") +
+  theme_classic() +
+  theme(strip.text = element_text(size = 8),
+        plot.title = element_text(size = 14, face = "bold")))
+```
+
+
+
+

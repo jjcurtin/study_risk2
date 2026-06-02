@@ -1,0 +1,878 @@
+---
+title: "Supplemental Material"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+This file contains the supplemental materials for *Dynamic lapse risk prediction in a national sample of individuals with opioid use disorder using personal sensing and machine learning*. It includes all supplemental figures and tables.   
+
+
+```{r}
+#| include: false
+#| message: false
+#| warning: false
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressMessages(library(patchwork))
+suppressMessages(library(kableExtra, exclude = "group_rows"))
+
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+path_shared <- format_path(str_c("risk2/data_processed/shared"))
+path_models <- format_path(str_c("risk2/models/combined"))
+
+
+kfold_results <- read_csv(here::here(path_models, 
+                              "inner_metrics_6_x_5_day_v10_kfold_full.csv"),
+                   show_col_types = FALSE)
+
+
+pp_dem <- read_csv(here::here(path_models, 
+                              "pp_fairness_contrast_v10_full.csv"),
+                   show_col_types = FALSE)
+
+preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
+
+
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+
+preds_fairness <- read_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
+```
+
+
+## Protocol Deviations
+
+We published this study's protocol as a registered report (International Registered Report Identifier [IRRID]: DERR1-10.2196/29563) during the initial enrollment of pilot participants. The registered report can be found at [https://www.researchprotocols.org/2021/12/e29563/](https://www.researchprotocols.org/2021/12/e29563/). For transparency, we documented changes made to the registered report below: 
+
+### Sensing Data Streams  
+Our candidate models included features derived from a subset of intake self-report measures, daily surveys, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by (1) our group's personal sensing work with alcohol use disorder, (2) technological constraints, and (3) the desire to balance feature diversity for capturing lapse complexity and minimizing participant burden and computational cost. 
+
+1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
+    
+2. We discontinued collecting daily video check-ins about 6 months into the 2.5 year data collection due to technical issues and App usage data (beyond the required study tasks) were generally sparse and inconsistent across participants. 
+
+3. Self-report measures can substantially increase data collection burden and expand the feature space. Therefore, we opted to generally not include self-report measures. Intake and monthly surveys were lengthy (20–30 minutes) and, based on our work with alcohol use disorder, added no incremental predictive value beyond the dynamic sensing data. However, we did include a subset of key demographic variables reported at intake (gender, race/ethnicity, income, sexual orientation, and geographic location). We selected these variables based on evidence of influencing OUD treatment access and clinical outcomes or carrying general societal stigma to reduce model bias by preventing these effects being encoded into the model indirectly by proxy variables.
+
+### Resampling Method
+Our initial protocol proposed repeated cross-validation for model selection and a single held-out test set for evaluation. Although we nearly reached our recruitment goal (N = 451/480), the number of participants with usable data was substantially lower (N = 299). To maximize data use, we used nested cross-validation (6 repeats of 5-fold cross-validation on the outer loop and 2 repeats of 5-fold cross-validation on the inner loop). This resampling method still removes optimization bias by separating model selection and evaluation. Specifically, nested cross-validation embeds an inner cross-validation loop for model selection within an outer cross-validation loop for model evaluation. This approach makes more efficient use of data in that each observation contributes to model training and model evaluation during the cross-validation process. Moreover, final estimates are averaged over 30 test sets leading to less variance in the estimate compared to a single test set. 
+
+
+
+## Daily Survey
+
+This survey asks about your recent drug use, medication assisted treatment, mood, and daily experiences. Several questions ask about using drugs "for non-medical reasons" which means using drugs to feel intoxicated or high. It is possible to use a drug you are prescribed for non-medical reasons, for example, by taking more than prescribed.
+
+1. Have you used any opioids for non-medical reasons that you have not yet reported?
+
+    - No 
+    - Yes 
+
+    Please select the time(s) that you have not yet reported when you used opioids for non-medical reasons: [Display if Q1 is Yes]
+
+    [TIME PICKER, MULTI-SELECT]
+
+
+
+Thinking about the past 24 hours…
+
+2. Which of these drugs have you used for non-medical reasons? Select all that apply.
+
+    - Alcohol
+    - Cannabis (marijuana, pot, grass, hash, K2, spice, etc.)
+    - Stimulants (cocaine, meth, speed, ecstasy, molly, Adderall, etc.)
+    - Inhalants (nitrous, glue, petrol, paint thinner, etc.)
+    - Sedatives or sleeping pills (Valium, Serepax, Rohypnol, etc.)
+    - Hallucinogens (LSD, acid, mushrooms, PCP, special K, etc.)
+    - None of the above
+
+
+3. Did you take your daily medication for opioid use (e.g., Suboxone, Methadone, Buprenorphine, etc.). as prescribed?
+
+    - Yes
+    - No, I missed a dose
+    - No, I am using a monthly medication (e.g., Vivitrol)
+    - No, I am no longer prescribed medication for opioid use
+
+
+Thinking about the past 24 hours…
+
+4. Think about the worst pain you experienced. How painful was it?
+
+    - No pain 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+5. Think about the greatest urge you had to use opioids. How strong was it?
+
+    - No urge
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+6. Think about the riskiest situation you experienced (people, places, or things that interfere with your recovery). How risky was it?
+
+    - No risky situation
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+7. Think of the biggest hassle or most stressful event you experienced. How stressful was it?
+
+    - No hassle/stressful event
+    - Mildly
+    - Moderately 
+    - Considerably
+    - Extremely
+
+8. Think of the most pleasant or positive event you experienced. How pleasant was it?
+
+    - No pleasant/positive event
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+
+Thinking about the past 24 hours…
+
+9. How did you sleep?
+
+    - Very badly
+    - Badly
+    - Neutral
+    - Well
+    - Very well
+
+10. How depressed have you felt?
+
+    - Not at all
+    - Mildly
+    - Moderately
+    - Considerably
+    - Extremely
+
+11. How angry have you felt?
+
+    - Not at all
+    - Mildly
+    - Moderately 
+    - Considerably
+    - Extremely
+
+12. How anxious have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+13. How relaxed have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+14. How happy have you felt?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+Now thinking forward to the next week…
+
+15. How motivated are you to completely avoid using opioids for non-medical reasons?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+16. How confident are you in your ability to completely avoid using opioids for non-medical reasons?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+Thank you! You have now completed the daily update.
+
+
+## Monthly Geolocation Context Questions
+
+The next questions ask you about the places you have gone more than once or spent the night at in the past month.
+
+Our automated system has identified these places using the data you share with us. The system is not perfect; it may have identified places that you have not been. You will be able to tell us if the system has made an error.
+
+You visited the place shown below, near [*address*], several times in the past month. Recently, you visited this place on [*date*]. 
+
+[display on map]
+
+1. Which of the following best describes this place?
+
+    - My home [If selected, skip to end of survey]
+    - Someone else’s home
+    - A shelter, group home, hotel, or other temporary place I stayed [If selected, skip to end of survey] 
+    - A restaurant, business, public place, or other non-residential place  
+    - I do not recognize this location or was just passing by [If selected, skip to end of survey]
+
+2. What do you do at this place? Select all that apply.
+
+    – Work 
+    – Take classes 
+    – Religious or spiritual activities 
+    – Volunteer or do community service 
+    – Exercise or play sports 
+    – Spend time with friends 
+    – Spend time with family 
+    – Socialize with new people 
+    – Relax 
+    – Drink alcohol 
+    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group) 
+    - Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.) 
+    – Get physical health care 
+    – None of the above
+
+3. In general, how often is going to this place pleasant?
+
+    - Never 
+    - Rarely 
+    - Sometimes 
+    - Most of the time 
+    - Always
+
+4. In general, how often is going to this place unpleasant?
+
+    - Never 
+    - Rarely 
+    - Sometimes
+    - Most of the time 
+    - Always
+
+5. In general, how much does going to this place help your recovery from opioids?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+6. In general, how much does going to this place harm your recovery from opioids?
+
+    - Not at all 
+    - Mildly 
+    - Moderately 
+    - Considerably 
+    - Extremely
+
+
+
+## Supplemental Figures
+
+
+### Figure S1: Calibration Plots by Fairness Group
+
+Calibration by fairness group
+```{r}
+bin_width <- 0.1
+
+preds_all_logi <- preds_fairness |> 
+  mutate(bins = cut(prob_logi, breaks = seq(0, 1, bin_width)), 
+         lapse = if_else(label == "Lapse", 1, 0),
+         prob = "Platt calibrated")  
+
+preds_all_raw <- preds_fairness |> 
+  mutate(bins = cut(prob_raw, breaks = seq(0, 1, bin_width)), 
+         lapse = if_else(label == "Lapse", 1, 0),
+         prob = "Raw (uncalibrated)") 
+
+preds_plot <- preds_all_raw |> 
+  bind_rows(preds_all_logi) |> 
+  mutate(prob = factor(prob, levels = c("Raw (uncalibrated)", 
+                                        "Platt calibrated"))) |> 
+  pivot_longer(geography:orientation, names_to = "group", values_to = "subgroup") |> 
+  mutate(group = factor(group,
+                        levels = c("gender", "race", "income", "orientation", "geography"),
+                        labels = c("Gender", "Race", "Income", "Orientation", "Geography")),
+         subgroup = factor(subgroup, levels = c("not male", "male", 
+                                            "Hispanic and/or not white", "non-Hispanic White", 
+                                            "below poverty", "above poverty", 
+                                            "not heterosexual", "heterosexual",
+                                            "small town/rural", "urban/suburban"),
+                           labels = c("Not male", "Male", 
+                                            "Hispanic and/or not white", "Non-Hispanic White", 
+                                            "Below poverty", "Above poverty", 
+                                            "Not heterosexual", "Heterosexual",
+                                            "Small town/rural", "Urban/suburban"))) |>
+  group_by(bins, group, subgroup, prob)  |> 
+  summarize(mean_lapse = mean(lapse, na.rm = TRUE),
+            n = sum(!is.na(lapse)),
+            .groups = "drop") |> 
+  filter(n >= 10) |> 
+  select(-n) |> 
+  filter(!is.na(subgroup)) |> 
+  mutate(
+    bins = as.numeric(bins),
+    midpoints = bin_width/2 + bin_width * (bins - 1)
+  )  
+
+gender <- preds_plot |> 
+  filter(group == "Gender") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+race <- preds_plot |> 
+  filter(group == "Race") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+income <- preds_plot |> 
+  filter(group == "Income") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = "Observed Lapse Probability",
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+orientation <- preds_plot |> 
+  filter(group == "Orientation") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "none",
+        axis.ticks.x = element_blank(),
+        axis.text.x  = element_blank(),
+        axis.title.x = element_blank())
+
+geography <- preds_plot |> 
+  filter(group == "Geography") |> 
+  ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
+             color = prob, linetype = prob)) +
+  facet_grid(group~subgroup) +
+  geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
+  geom_line(linewidth = .7) +
+  labs(
+    x = "Predicted Lapse Probability (Bin Midpoint)",
+    y = NULL,
+    color = NULL,
+    linetype = NULL
+  ) +
+  # geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#240e31") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
+  scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
+  scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
+                     expand = c(0, 0)) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = c("#240e31", "#046B52")) +
+  scale_linetype_manual(values = c("solid", "twodash")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.key.size = unit(0.25, "cm"),
+        legend.position = "bottom")
+
+```
+
+```{r}
+#| fig-height: 10
+gender/race/income/orientation/geography
+```
+
+### Figure S2: Global Feature Importance by Fairness Group
+
+```{r}
+#| code-fold: true
+
+shaps_fairness <- shaps |>
+  right_join(preds_fairness, by = "id_obs")
+
+shap_levels <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  arrange(desc(mean_value)) |> 
+  slice_head(n = 30) |> 
+  arrange(mean_value) |> 
+  pull(variable_grp)
+
+
+
+global_race <- shaps_fairness |>
+  group_by(race, variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+   filter(variable_grp %in% shap_levels) |> 
+   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |> 
+  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
+  geom_bar(aes(fill = race), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~race) +
+  labs(y = "Mean(|Shapley Value|)",
+       x = NULL,
+       fill = NULL) +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+  
+
+
+
+n_obs <- shaps_fairness |> 
+  group_by(race) |> 
+  summarize(n_obs = n(), .groups = "drop")
+
+shaps_day_max <- shaps_fairness |>
+  group_by(id_obs) |>
+  slice_max(value) |> 
+  left_join(n_obs, by = "race") |> 
+  select(variable_grp, value, race, n_obs) |> 
+  group_by(race, variable_grp) |> 
+  summarise(
+  n = n(),
+  prop = n / first(n_obs)) |> 
+  ungroup() 
+
+
+local_race <- shaps_day_max |> 
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(mapping = aes(x = variable_grp, y = prop)) +
+  geom_bar(aes(fill = race), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~race) +
+  labs(y = "Proportion of days as top feature",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme(axis.text=element_text(size=9.5),
+        # axis.text.y = element_blank(),
+        # axis.ticks.y = element_blank(),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+```
+
+
+```{r}
+#| fig-width: 8
+#| fig-height: 10
+
+global_race / local_race
+```
+
+```{r}
+#| code-fold: true
+
+global_gender <- shaps_fairness |>
+  group_by(gender, variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+   filter(variable_grp %in% shap_levels) |> 
+   mutate(variable_grp = factor(variable_grp, levels = shap_levels),
+         gender = factor(gender, levels = c("not male", "male"))) |> 
+  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
+  geom_bar(aes(fill = gender), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~gender) +
+  labs(y = "Mean(|Shapley Value|)",
+       x = NULL,
+       fill = NULL) +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+  
+
+
+n_obs <- shaps_fairness |> 
+  group_by(gender) |> 
+  summarize(n_obs = n(), .groups = "drop")
+
+shaps_day_max <- shaps_fairness |>
+  group_by(id_obs) |>
+  slice_max(value) |> 
+  left_join(n_obs, by = "gender") |> 
+  select(variable_grp, value, gender, n_obs) |> 
+  group_by(gender, variable_grp) |> 
+  summarise(
+  n = n(),
+  prop = n / first(n_obs)) |> 
+  ungroup() 
+
+
+local_gender <- shaps_day_max |> 
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels),
+         gender = factor(gender, levels = c("not male", "male"))) |>
+  ggplot(mapping = aes(x = variable_grp, y = prop)) +
+  geom_bar(aes(fill = gender), 
+           stat = "identity", position = "dodge") +
+  facet_wrap(~gender) +
+  labs(y = "Proportion of days as top feature",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  scale_fill_manual(values = c("#046B52", "#240e31")) +
+  theme(axis.text=element_text(size=9.5),
+        # axis.text.y = element_blank(),
+        # axis.ticks.y = element_blank(),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "none") +
+  coord_flip()
+```
+
+
+```{r}
+#| fig-width: 8
+#| fig-height: 10
+
+global_gender / local_gender
+```
+
+
+
+### Figure S3: Global Feature Importance for all Feature Categories
+
+```{r}
+#| code-fold: true
+
+shap_levels_all <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(mean_value) |> 
+  pull(variable_grp)
+
+n_obs <- max(shaps$id_obs)
+
+shaps_day_max <- shaps |>
+  group_by(id_obs) |>
+  slice_max(value) |> 
+  group_by(variable_grp) |> 
+  summarise(n = n(),
+            prop = n/n_obs) |> 
+  ungroup() 
+
+
+global_panel_all <- shaps |>
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |> 
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels_all)) |> 
+  ggplot(mapping = aes(x = variable_grp, y = mean_value)) +
+  geom_bar(fill = "#240e31", 
+           stat = "identity", position = "dodge") +
+  labs(y = "Mean(|Shapley Value|)",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "right") +
+  coord_flip()
+
+
+local_panel_all <- shaps_day_max |> 
+  right_join(shaps |> ungroup() |> select(variable_grp) |> distinct(), 
+             by = "variable_grp") |> 
+  mutate(prop = if_else(is.na(prop), 0, prop)) |> 
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels_all)) |>
+  ggplot(mapping = aes(x = variable_grp, y = prop)) +
+  geom_bar(fill = "#046B52", 
+           stat = "identity", position = "dodge") +
+  labs(y = "Proportion of days as top feature",
+       x = NULL,
+       fill = NULL) +
+  theme_classic() +
+  theme(axis.text=element_text(size=9.5),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.key.size = unit(0.25, "cm"),
+        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+        legend.position = "right") +
+  coord_flip()
+```
+
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 10
+
+global_panel_all + local_panel_all
+```
+
+
+### Figure S4: Individual Shapley Plots for all Feature Categories
+
+```{r}
+#| label: fig-2
+#| fig-cap: "Feature importance partial dependence plots."
+#| message: false
+#| fig-width: 10
+#| fig-height: 14
+#| code-fold: true
+
+shap_levels <- shaps |> 
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(desc(mean_value)) |> 
+  pull(variable_grp)
+
+shaps|>
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(aes(x = rfvalue, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
+  labs(
+    title = "SHAP Variable Relationships",
+    x = "z-score raw feature score",
+    y = "Shapley value"
+  ) +
+  theme_classic() +
+  theme(
+    strip.text = element_text(size = 8),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+
+
+
+## Supplemental Tables
+
+### Table S1: Simple k-fold Performance by Statistical Algorithm
+
+We used 6 repeats of 5-fold cross-validation for preliminary testing. We report the median auroc for the best model configuration for each candidate statistical algorithm below.
+
+```{r}
+metrics_avg <- kfold_results |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, resample) |>  
+   summarize(roc_auc = median(roc_auc),
+             n_jobs = n(), .groups = "drop") |> 
+  relocate(n_jobs) |>  
+  arrange(desc(roc_auc)) |> 
+  ungroup()
+
+metrics_avg |> 
+  group_by(algorithm) |> 
+  slice(1) |> 
+  mutate(roc_auc = round(roc_auc, 3)) |> 
+  select(Algorithm = algorithm,
+         `Median auROC` = roc_auc) |> 
+  arrange(desc(`Median auROC`)) |> 
+  kbl() |> 
+  kable_classic()
+```
+
+
+### Table S2: Demographic Contrasts for all Models
+
+```{r}
+#| label: tbl-fairness
+#| tbl-cap: "Median difference in auROC, 95% Bayesian credible interval (CI), and posterior probability that that the auROC difference was smaller or larger than 0 for fairness contrasts."
+#| code-fold: true
+
+footnote_table <- "Median auROC differences less than 0 indicate the model, on average, performed worse for the disadvantaged group (not male, non-White and/or Hispanic, income below poverty line, small town/rural, not heterosexual) compared to the advantaged group (male, non-Hispanic White, income above poverty line, urban/suburban, heterosexual). Bayesian CI represents the range of values where there is a 95% probability that the true auROC difference lies within that range. Probability indicates the posterior probability that this difference is smaller or larger than 0 (i.e., the models are performing differently for fairness subgroups)."
+
+
+pp_sex <- pp_dem |> 
+  filter(contrast == "not male vs male") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(round(probability, 3))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(Median = median,
+         `Bayesian CI` = ci,
+         Probability = probability)
+
+pp_income <- pp_dem |> 
+  filter(contrast == "below poverty vs above poverty") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(1 - round(probability, 3))) |> 
+  select(contrast,median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_race <- pp_dem |> 
+  filter(contrast == "Hispanic and/or not white vs non-Hispanic White") |> 
+  mutate(contrast = "Hispanic and/or not White vs non-Hispanic White") |> 
+   mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_geography <- pp_dem |> 
+  filter(contrast == "small town/rural vs urban/suburban") |> 
+  mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+pp_orientation <- pp_dem |> 
+  filter(contrast == "not heterosexual vs heterosexual") |> 
+  mutate(ci = str_c("[", round(lower, 3), ", ", round(upper, 3), "]"),
+         median = as.character(round(median, 3)),
+         probability = as.character(sprintf("%.3f", probability))) |> 
+  select(contrast, median, ci, probability) |> 
+  rename(`Median` = median,
+         `Bayesian CI` = ci,
+         `Probability` = probability)
+
+
+
+pp_sex |> 
+  bind_rows(pp_income) |> 
+  bind_rows(pp_race) |> 
+  bind_rows(pp_orientation) |> 
+   bind_rows(pp_geography) |> 
+  kbl() |> 
+  kable_classic() |> 
+  kableExtra::add_footnote(label = footnote_table,
+                           notation = "none",
+                           escape = FALSE)
+```
+
+
+
+

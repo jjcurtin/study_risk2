@@ -267,39 +267,57 @@ global_panel + local_panel
 
 
 
-Individual Shapley plots (about 90 categories total)
+Top 20 Individual Shapley plots (about 90 categories total)
 ```{r}
 #| label: fig-4
-#| fig-cap: "Feature importance partial dependence plots."
+#| fig-cap: "Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value (z-scored) for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."
 #| message: false
 #| fig-width: 10
 #| fig-height: 14
 #| code-fold: true
 
-shap_levels <- shaps |> 
+shap_levels <- shaps |>
   group_by(variable_grp) |>
   summarize(mean_value = mean(abs(value)), .groups = "drop") |>
-  arrange(desc(mean_value)) |> 
-  slice_head(n = 20) |> 
+  arrange(desc(mean_value)) |>
+  slice_head(n = 20) |>
   pull(variable_grp)
+
+dem_vars <- c("Age (demographic)", "Geography (demographic)")
+rel <- "Religious, Diff (gps)"
 
 shaps|>
   filter(variable_grp %in% shap_levels) |>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
   ggplot(aes(x = rfvalue, y = value)) +
   geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 5, bs = "cs"), se = FALSE) +
+  geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, rel)),
+              method = "gam",
+              formula = y ~ s(x, k = 20),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
+              method = "gam",
+              formula = y ~ s(x, k = 4),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% rel),
+              method = "gam",
+              formula = y ~ s(x, k = 50),
+              method.args = list(method = "REML"),
+              se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
   labs(
-    title = "Top 30 SHAP Variable Relationships",
+    title = NULL,
     x = "z-score raw feature score",
     y = "Shapley value"
-  ) +
-  theme_classic() +
-  theme(
-    strip.text = element_text(size = 8),
-    plot.title = element_text(size = 14, face = "bold")
-  )
+  ) 
+ # theme_classic(base_size = 18) 
+
+# knitr::include_graphics(path = here::here("figures/shapley_local.png"), error = FALSE)
 ```
+
+
+
 
 
