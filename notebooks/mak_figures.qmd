@@ -41,7 +41,7 @@ pp_dem <- read_csv(here::here(path_models,
 
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
-shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds"))
 ```
 
 
@@ -284,16 +284,15 @@ shap_levels <- shaps |>
   pull(variable_grp)
 
 dem_vars <- c("Age (demographic)", "Geography (demographic)")
-rel <- "Religious, Diff (gps)"
 
 shaps|>
   filter(variable_grp %in% shap_levels) |>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
   ggplot(aes(x = rfvalue, y = value)) +
   geom_point(alpha = .3) +
-  geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, rel)),
+  geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars)),
               method = "gam",
-              formula = y ~ s(x, k = 20),
+              formula = y ~ s(x, k = 30),
               method.args = list(method = "REML"),
               se = FALSE) +
   geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
@@ -301,17 +300,13 @@ shaps|>
               formula = y ~ s(x, k = 4),
               method.args = list(method = "REML"),
               se = FALSE) +
-  geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% rel),
-              method = "gam",
-              formula = y ~ s(x, k = 50),
-              method.args = list(method = "REML"),
-              se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
   labs(
     title = NULL,
     x = "z-score raw feature score",
     y = "Shapley value"
-  ) 
+  ) +
+  theme_classic()
  # theme_classic(base_size = 18) 
 
 # knitr::include_graphics(path = here::here("figures/shapley_local.png"), error = FALSE)

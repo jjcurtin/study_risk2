@@ -45,11 +45,29 @@ pp_dem <- read_csv(here::here(path_models,
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 
-shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds")) |> 
+  mutate(variable_grp = replace_values(variable_grp,
+                                       "gender_male" ~ "Male (demographic)",
+                                       "gender_not.male" ~ "Not male (demographic)",
+                                       "label_day_Mon" ~ "Monday (label)",
+                                       "label_day_Tue" ~ "Tuesday (label)",
+                                       "label_day_Wed" ~ "Wednesday (label)",
+                                       "label_day_Thu" ~ "Thursday (label)",
+                                       "label_day_Fri" ~ "Friday (label)",
+                                       "label_day_Sat" ~ "Saturday (label)",
+                                       "label_day_Sun" ~ "Sunday (label)",
+                                       "employment_employed" ~ "Employed (demographic)",
+                                       "employment_not.employed.looking" ~ "Employed, looking (demographic)",
+                                       "employment_not.employed.not.looking" ~ "Employed, not looking (demographic)",
+                                       "orientation_heterosexual" ~ "Heterosexual (demographic)",
+                                       "orientation_not.heterosexual" ~ "Not heterosexual (demographic)",
+                                       "race_Hispanic.and.or.not.white" ~ "Hispanic and/or not White (demographic)",
+                                       "race_non.hispanic.white" ~ "Non-Hispanic White (demographic)"))
 
 preds_fairness <- read_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
 
-pp_perf_tibble_shap_fairness <- read_csv(here::here(path_models, "pp_perf_tibble_shap_fairness.csv"))
+pp_perf_tibble_shap_fairness <- read_csv(here::here(path_models, "pp_perf_tibble_shap_fairness.csv"),
+                                         show_col_types = FALSE)
 ```
 
 
@@ -294,58 +312,7 @@ You visited the place shown below, near [*address*], several times in the past m
 
 ## Supplemental Figures
 
-### Figure S1: Feature Imporance by Demographic Subgroup
-
-```{r}
-shap_levels <- shaps |> 
-  group_by(variable_grp) |> 
-  summarise(mean = mean(value)) |> 
-  arrange(desc(mean))|> 
-  pull(variable_grp)
-
-pp_perf_tibble_shap_fairness |>
-  mutate(model = as.character(model),
-         group = case_match(model,
-                               "male" ~ "Gender",
-                               "not male" ~ "Gender",
-                               "non-Hispanic White" ~ "Race",
-                               "Hispanic and/or not white" ~ "Race",
-                               "below poverty" ~ "Income",
-                               "above poverty" ~ "Income",
-                               "urban/suburban" ~ "Geography",
-                               "small town/rural" ~ "Geography",
-                               "heterosexual" ~ "Orientation",
-                               "not heterosexual" ~ "Orientation"),
-         fairness = if_else(model %in% c("not male", 
-                                         "Hispanic and/or not white",
-                                         "below poverty",
-                                         "small town/rural",
-                                         "not heterosexual"), 
-                            "Disadvantaged (not male, Hispanic and/or not White, <$25,000 income, rural, not heterosexual)",
-                            "Advantaged (male, non-Hispanic White, $25,000+ income, urban, heterosexual)"),
-         fairness = factor(fairness),
-         group = factor(group, levels = c("Gender", "Race",
-                                                "Income", "Orientation", "Geography")),
-         feature = factor(feature, levels = shap_levels)) |>  
- ggplot(aes(x = feature, y = pp_median, color = fairness, group = fairness)) +
-  geom_point(position = position_dodge(width = 0.5), size = 2) +
-  geom_errorbar(aes(ymin = pp_lower, ymax = pp_upper),
-                position = position_dodge(width = 0.5), width = 0) +
-  facet_wrap(~group) +
-  labs(x = NULL,
-       y = "Mean(|Shapley Value|)",
-       color = NULL) +
-  theme_classic() +
-  theme(legend.position = "bottom",
-        panel.border = element_rect(colour = "black", fill = NA, linewidth = 1)) +
-  scale_color_manual(values = c("#240e31", "#046B52")) +
-  coord_flip() +
-  guides(color = guide_legend(nrow = 2, byrow = TRUE))
-```
-
-
-
-### Figure S2: Feature Importance for all Feature Categories
+### Figure S1: Feature Importance for all Feature Categories
 
 ```{r}
 #| code-fold: true
@@ -416,14 +383,14 @@ global_panel_all + local_panel_all
 ```
 
 
-### Figure S3: Individual Shapley Plots for all Feature Categories
+### Figure S2: Individual Shapley Plots for all Feature Categories
 
 ```{r}
 #| label: fig-2
 #| fig-cap: "Feature importance partial dependence plots."
 #| message: false
 #| fig-width: 10
-#| fig-height: 14
+#| fig-height: 24
 #| code-fold: true
 
 shap_levels <- shaps |> 
@@ -432,15 +399,43 @@ shap_levels <- shaps |>
   arrange(desc(mean_value)) |> 
   pull(variable_grp)
 
+dem_vars <- c("Age (demographic)", "Geography (demographic)", "Income (demographic)", 
+              "Education (demographic)")
+one_hot_vars <- c("Male (demographic)",
+                  "Not male (demographic)",
+                  "Monday (label)",
+                  "Tuesday (label)",
+                  "Wednesday (label)",
+                  "Thursday (label)",
+                  "Friday (label)",
+                  "Saturday (label)",
+                  "Sunday (label)",
+                  "Employed (demographic)",
+                  "Employed, looking (demographic)",
+                  "Employed, not looking (demographic)",
+                  "Heterosexual (demographic)",
+                  "Not heterosexual (demographic)",
+                  "Hispanic and/or not White (demographic)",
+                  "Non-Hispanic White (demographic)")
+
 shaps|>
   filter(variable_grp %in% shap_levels) |>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
   ggplot(aes(x = rfvalue, y = value)) +
   geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
+  geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, one_hot_vars, "Cannabis use, Raw (EMA)")),
+              method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
+              method = "gam",
+              formula = y ~ s(x, k = 4),
+              method.args = list(method = "REML"),
+              se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
-    title = "SHAP Variable Relationships",
+    title = NULL,
     x = "z-score raw feature score",
     y = "Shapley value"
   ) +
