@@ -45,7 +45,7 @@ pp_dem <- read_csv(here::here(path_models,
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 
-shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds")) |> 
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds")) |> 
   mutate(variable_grp = replace_values(variable_grp,
                                        "gender_male" ~ "Male (demographic)",
                                        "gender_not.male" ~ "Not male (demographic)",
@@ -421,7 +421,7 @@ one_hot_vars <- c("Male (demographic)",
 shaps|>
   filter(variable_grp %in% shap_levels) |>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
+  ggplot(aes(x = rfvalue_raw, y = value)) +
   geom_point(alpha = .3) +
   geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, one_hot_vars, "Cannabis use, Raw (EMA)")),
               method = "gam",

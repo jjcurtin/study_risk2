@@ -7,7 +7,7 @@
 
     <meta name="author" content="Kendra Wyant">
     <meta name="author" content="John J. Curtin">
-    <meta name="dcterms.date" content="2026-05-30">
+    <meta name="dcterms.date" content="2026-06-08">
     <meta name="keywords" content="Substance use disorders, Precision mental health">
 
     <title>Using smartphone sensing and machine learning for personalized daily lapse risk prediction in a national sample of people with opioid use disorder</title>
@@ -195,10 +195,10 @@
 <meta name="citation_keywords" content="Substance use disorders,Precision mental health">
 <meta name="citation_author" content="Kendra Wyant">
 <meta name="citation_author" content="John J. Curtin">
-<meta name="citation_publication_date" content="2026-05-30">
-<meta name="citation_cover_date" content="2026-05-30">
+<meta name="citation_publication_date" content="2026-06-08">
+<meta name="citation_cover_date" content="2026-06-08">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-05-30">
+<meta name="citation_online_date" content="2026-06-08">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Drug Overdose Death Rates  National Institute on Drug Abuse (NIDA);,citation_abstract=The Centers for Disease Control and Prevention collects information on deaths involving many commonly used drugs The CDC’s reporting on deaths by overdose.;,citation_author=National Institute on Drug Abuse;,citation_publication_date=2023-06;,citation_cover_date=2023-06;,citation_year=2023;,citation_language=en-US;,citation_publisher=https://nida.nih.gov/research-topics/trends-statistics/overdose-death-rates;">
 <meta name="citation_reference" content="citation_title=Disparities in the Treatment of Substance Use Disorders: Does Where You Live Matter?;,citation_abstract=This study focused on (1) whether disparities in timely receipt of substance use services can be explained in part by the characteristics of the community in which the clients reside and (2) whether the effect of community characteristics on timely receipt of services was similar across racial/ethnic groups. The sample was composed of adults receiving publicly funded outpatient treatment in Washington State. Treatment data were linked to data from the US census. The outcome studied was “Initiation and Engagement” in treatment (IET), a measure noting timely receipt of services at the beginning of treatment. Community characteristics studied included community level economic disadvantage and concentration of American Indian, Latino, and Black residents in the community. Black and American Indian clients were less likely to initiate or engage in treatment compared to non-Latino white clients, and American Indian clients living in economically disadvantaged communities were at even greater risk of not initiating treatment. Community economic disadvantage and racial/ethnic makeup of the community were associated with treatment initiation, but not engagement, although they did not entirely explain the disparities found in IET.;,citation_author=Andrea Acevedo;,citation_author=Lee Panas;,citation_author=Deborah Garnick;,citation_author=Dolores Acevedo-Garcia;,citation_author=Jennifer Miles;,citation_author=Grant Ritter;,citation_author=Kevin Campbell;,citation_publication_date=2018-10;,citation_cover_date=2018-10;,citation_year=2018;,citation_issue=4;,citation_doi=10.1007/s11414-018-9586-y;,citation_issn=1556-3308;,citation_volume=45;,citation_language=en-US;,citation_journal_title=The Journal of Behavioral Health Services &amp;amp;amp; Research;">
@@ -558,7 +558,7 @@
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">May 30, 2026</p>
+              <p class="date">June 8, 2026</p>
             </div>
           </div>
           
@@ -1512,8 +1512,8 @@ Figure&nbsp;2: The top panel presents a calibration plot of raw and Platt calibr
 </section>
 <section id="feature-importance-1" class="level2">
 <h2 class="anchored" data-anchor-id="feature-importance-1">Feature Importance</h2>
-<p>We aggregated individual Shapley values across all participants and all observations to provide a relative rank ordering of the most important features. A traditional mean absolute Shapley value approach revealed the most important feature category (i.e., largest magnitude of change in log-odds) was differences in past opioid use. This feature category was over two-fold times more important than the next most important feature category, raw urge ratings. <a href="#fig-3" class="quarto-xref">Figure&nbsp;3</a> displays the top 20 (out of 186) feature categories, as defined by the 20 largest absolute mean Shapley values. In the supplement, we provide a full figure containing all possible feature categories.</p>
-<p>We used a second approach where we calculated the proportion of observations in which each feature category had the highest Shapley value (i.e., largest magnitude and prevalence). This approach revealed the most important feature category to be raw urge ratings, followed by raw abstinence confidence ratings. Differences in past opioid use was the third most important feature category, suggesting that while it has a strong relationship with lapse risk, it is not as prevalent across observations as other feature categories. Notably, in this approach several additional comparably important feature categories emerged, including differences in past pleasant experiences, differences in past stimulant use, and differences in time spent in helpful locations.</p>
+<p>We aggregated individual Shapley values across all participants and all observations to provide a relative rank ordering of the most important features. A traditional mean absolute Shapley value approach revealed the most important feature category (i.e., largest magnitude of change in log-odds) was differences in past opioid use. This feature category was over two-fold times more important than the next most important feature category, raw urge ratings. <a href="#fig-3" class="quarto-xref">Figure&nbsp;3</a> displays the top 20 (out of 88) feature categories, as defined by the 20 largest absolute mean Shapley values. In the supplement, we provide a full figure containing all possible feature categories.</p>
+<p>We used a second approach where we calculated the proportion of observations in which each feature category had the highest Shapley value (i.e., largest magnitude and prevalence). This approach revealed the most important feature category to be raw urge ratings, followed by raw abstinence confidence ratings. Differences in past opioid use was the third most important feature category, suggesting that while it has a strong relationship with lapse risk, it is not as prevalent across observations as other feature categories. Notably, in this approach several additional comparably important feature categories emerged, including differences in time spent in unpleasant locations, differences in past stimulant use, and differences in time spent in helpful locations.</p>
 <div class="quarto-embed-nb-cell" data-notebook="C:\Users\kpaquette2\study_risk2\notebooks\mak_figures.qmd" data-notebook-title="Make Figures" data-notebook-cellid="cell-fig-3">
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-fig-3" class="cell" data-fig-width="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>global_panel <span class="op">+</span> local_panel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1547,47 +1547,36 @@ Figure&nbsp;3
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  pull(variable_grp)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>dem_vars <span class="op">&lt;-</span> c(<span class="st">"Age (demographic)"</span>, <span class="st">"Geography (demographic)"</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>rel <span class="op">&lt;-</span> <span class="st">"Religious, Diff (gps)"</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue, y <span class="op">=</span> value)) <span class="op">+</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  geom_smooth(data <span class="op">=</span> <span class="op">~</span> dplyr::<span class="bu">filter</span>(.x, <span class="op">!</span>variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> c(dem_vars, rel)),</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>              method <span class="op">=</span> <span class="st">"gam"</span>,</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>              formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">20</span>),</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>              method.args <span class="op">=</span> <span class="bu">list</span>(method <span class="op">=</span> <span class="st">"REML"</span>),</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>              se <span class="op">=</span> FALSE) <span class="op">+</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  geom_smooth(data <span class="op">=</span> <span class="op">~</span> dplyr::<span class="bu">filter</span>(.x, variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> dem_vars),</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>              method <span class="op">=</span> <span class="st">"gam"</span>,</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>              formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">4</span>),</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>              method.args <span class="op">=</span> <span class="bu">list</span>(method <span class="op">=</span> <span class="st">"REML"</span>),</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>              se <span class="op">=</span> FALSE) <span class="op">+</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  geom_smooth(data <span class="op">=</span> <span class="op">~</span> dplyr::<span class="bu">filter</span>(.x, variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> rel),</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>              method <span class="op">=</span> <span class="st">"gam"</span>,</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>              formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">50</span>),</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>              method.args <span class="op">=</span> <span class="bu">list</span>(method <span class="op">=</span> <span class="st">"REML"</span>),</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>              se <span class="op">=</span> FALSE) <span class="op">+</span></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">4</span>) <span class="op">+</span></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  labs(</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    title <span class="op">=</span> NULL,</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="st">"z-score raw feature score"</span>,</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="st">"Shapley value"</span></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="op">+</span></span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  theme_classic()</span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a> <span class="co"># theme_classic(base_size = 18) </span></span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics(path = here::here("figures/shapley_local.png"), error = FALSE)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>shaps<span class="op">|&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="bu">filter</span>(variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> shap_levels) <span class="op">|&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  mutate(variable_grp <span class="op">=</span> factor(variable_grp, levels <span class="op">=</span> shap_levels)) <span class="op">|&gt;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> rfvalue_raw, y <span class="op">=</span> value)) <span class="op">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  geom_point(alpha <span class="op">=</span> <span class="fl">.3</span>) <span class="op">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  geom_smooth(data <span class="op">=</span> <span class="op">~</span> dplyr::<span class="bu">filter</span>(.x, <span class="op">!</span>variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> c(dem_vars)),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>              method <span class="op">=</span> <span class="st">"gam"</span>,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>              formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">30</span>),</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>              method.args <span class="op">=</span> <span class="bu">list</span>(method <span class="op">=</span> <span class="st">"REML"</span>),</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>              se <span class="op">=</span> FALSE) <span class="op">+</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  geom_smooth(data <span class="op">=</span> <span class="op">~</span> dplyr::<span class="bu">filter</span>(.x, variable_grp <span class="op">%</span><span class="kw">in</span><span class="op">%</span> dem_vars),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>              method <span class="op">=</span> <span class="st">"gam"</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>              formula <span class="op">=</span> y <span class="op">~</span> s(x, k <span class="op">=</span> <span class="dv">4</span>),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>              method.args <span class="op">=</span> <span class="bu">list</span>(method <span class="op">=</span> <span class="st">"REML"</span>),</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>              se <span class="op">=</span> FALSE) <span class="op">+</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  facet_wrap(<span class="op">~</span> variable_grp, scales <span class="op">=</span> <span class="st">"free"</span>, ncol <span class="op">=</span> <span class="dv">4</span>) <span class="op">+</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  labs(title <span class="op">=</span> NULL,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>       x <span class="op">=</span> <span class="st">"Raw feature score"</span>,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>       y <span class="op">=</span> <span class="st">"Shapley value"</span>) <span class="op">+</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  theme_classic()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value (z-scored) for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."><img src="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" width="960" height="1344" class="figure-img"></a>
+<a href="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."><img src="index_files/figure-html/notebooks-mak_figures-fig-4-output-1.png" width="960" height="1344" class="figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value (z-scored) for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models.
+Figure&nbsp;4: Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models.
 </figcaption>
 </figure>
 </div>
@@ -1619,7 +1608,7 @@ Figure&nbsp;4: Shapley-feature value partial dependence plots. The plots display
 <h2 class="anchored" data-anchor-id="feature-importance-2">Feature Importance</h2>
 <p>When using a standard mean absolute Shapley value approach to estimate average feature importance across observations, the most important feature was prior opioid use. This finding is consistent with the relapse‑prevention literature, which identifies lapse as an important precursor to relapse, and prior prediction research demonstrating that lapses predict future lapses <span class="citation" data-cites="wyantMachineLearningModels2024">(<a href="#ref-wyantMachineLearningModels2024" role="doc-biblioref">Wyant et al., 2024</a>)</span>. Notably, this feature had a mean absolute Shapley value that was over two-fold times higher than the next most important feature. However, when considering this model in the context of a recovery monitoring support system that provides daily insight into lapse risk, this finding may be misleading. Fewer than 2% of day-level observations contained a lapse, and the majority of participants did not lapse at all. Among those who did lapse, many only lapsed one time. Given that past use does not become a risk factor until after it has occurred, in most cases other features may represent more clinically meaningful targets for intervention.</p>
 <p>A more informative approach to characterize feature importance is to consider the proportion of observations in which a given feature had the highest Shapley value. This approach considers both the magnitude of a feature’s effect (in terms of log-odds change in the prediction) and its prevalence across observations. Using this approach, urge ratings and abstinence confidence emerged as the features most frequently influencing lapse risk predictions. This suggests that individuals may benefit more often from recovery recommendations focussed on reducing urges (e.g., urge surfing) and increasing abstinence confidence (e.g., reflecting on recent successes). Additionally, this approach showed that while some features have low average importance (across all individuals and observations), they can be highly important on certain days for certain individuals (e.g., self-reports of anger).</p>
-<p>Across both feature importance approaches, geolocation features emerged among the top subset of features. Specifically, location variance, time spent in helpful and harmful locations, and time spent at locations where religious activities are performed were among the top ten features. These findings suggest that although geolocation features may not provide unique signal for prediction, it may be worthwhile to still include them in the model to expand opportunities for intervention and provide precision-oriented recovery support.</p>
+<p>Across both feature importance approaches, geolocation features emerged among the top subset of features. Specifically, location variance, time spent in helpful and harmful locations, time spent in unpleasant locations, and time spent at locations where religious activities are performed were among the top ten features. These findings suggest that although geolocation features may not provide unique signal for prediction, it may be worthwhile to still include them in the model to expand opportunities for intervention and provide precision-oriented recovery support.</p>
 </section>
 <section id="additional-limitations-and-future-directions" class="level2">
 <h2 class="anchored" data-anchor-id="additional-limitations-and-future-directions">Additional Limitations and Future Directions</h2>

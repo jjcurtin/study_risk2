@@ -267,10 +267,10 @@ global_panel + local_panel
 
 
 
-Top 20 Individual Shapley plots (about 90 categories total)
+Top 20 Individual Shapley plots 
 ```{r}
 #| label: fig-4
-#| fig-cap: "Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value (z-scored) for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."
+#| fig-cap: "Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."
 #| message: false
 #| fig-width: 10
 #| fig-height: 14
@@ -288,7 +288,7 @@ dem_vars <- c("Age (demographic)", "Geography (demographic)")
 shaps|>
   filter(variable_grp %in% shap_levels) |>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
+  ggplot(aes(x = rfvalue_raw, y = value)) +
   geom_point(alpha = .3) +
   geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars)),
               method = "gam",
@@ -301,15 +301,10 @@ shaps|>
               method.args = list(method = "REML"),
               se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
-  labs(
-    title = NULL,
-    x = "z-score raw feature score",
-    y = "Shapley value"
-  ) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
   theme_classic()
- # theme_classic(base_size = 18) 
-
-# knitr::include_graphics(path = here::here("figures/shapley_local.png"), error = FALSE)
 ```
 
 
