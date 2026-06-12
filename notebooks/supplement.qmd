@@ -259,22 +259,23 @@ You visited the place shown below, near [*address*], several times in the past m
     - A restaurant, business, public place, or other non-residential place  
     - I do not recognize this location or was just passing by [If selected, skip to end of survey]
 
-2. What do you do at this place? Select all that apply.
+2. What do you do at this place? Select all that apply.  
 
-    – Work 
-    – Take classes 
-    – Religious or spiritual activities 
-    – Volunteer or do community service 
-    – Exercise or play sports 
-    – Spend time with friends 
-    – Spend time with family 
-    – Socialize with new people 
-    – Relax 
-    – Drink alcohol 
-    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group) 
-    - Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.) 
-    – Get physical health care 
-    – None of the above
+
+    – Work   
+    – Take classes  
+    – Religious or spiritual activities  
+    – Volunteer or do community service  
+    – Exercise or play sports  
+    – Spend time with friends  
+    – Spend time with family  
+    – Socialize with new people  
+    – Relax  
+    – Drink alcohol  
+    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group)  
+    – Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.)  
+    – Get physical health care  
+    – None of the above  
 
 3. In general, how often is going to this place pleasant?
 

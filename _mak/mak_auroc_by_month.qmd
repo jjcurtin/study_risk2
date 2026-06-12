@@ -1,0 +1,133 @@
+---
+title: "Calculate auROC by month on study"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+### Set Up Environment
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(tidymodels)
+options(conflicts.policy = "depends.ok")
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+path_data <- format_path("risk2/data_processed/shared")
+path_models <- format_path("risk2/models/combined")
+```
+
+
+### Data
+
+```{r}
+preds <- read_rds(here::here(path_models,
+                             "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds"))
+
+labels <- read_csv(here::here(path_data, "lapse_labels_24h_day_gps.csv"),
+                   show_col_types = FALSE)
+```
+
+### Create grouping variable 
+
+Month on study = 30 day increments
+
+
+```{r}
+labels <- labels |> 
+  group_by(subid) |> 
+  arrange(window_start) |> 
+  mutate(day = row_number(),
+         month = case_when(day <= 30 ~ 1,
+                           day > 30 & day <= 60 ~ 2,
+                           day > 60 & day <= 90 ~ 3,
+                           day > 90 & day <= 120 ~ 4,
+                           day > 120 & day <= 150 ~ 5,
+                           day > 150 & day <= 180 ~ 6,
+                           day > 180 & day <= 210 ~ 7,
+                           day > 210 & day <= 240 ~ 8,
+                           day > 240 & day <= 270 ~ 9,
+                           day > 270 & day <= 300 ~ 10,
+                           day > 300 & day <= 330 ~ 11,
+                           day > 330 ~ 12)) |> 
+  ungroup()
+
+janitor::tabyl(labels$month)
+labels |> janitor::tabyl(month, lapse)
+```
+
+
+Combine with preds
+```{r}
+labels <- labels |>
+  rename(label = lapse,
+         id_obs = label_num)  |> 
+  right_join(preds, by = c("id_obs", "label")) |> 
+  mutate(label = factor(label, levels = c("Lapse", "No lapse")))
+```
+
+
+
+### Calculate auROCs by month
+
+
+```{r}
+aurocs <- labels |>
+  nest(.by = c(outer_split_num, month), .key = "preds") |>
+  mutate(auroc = map(preds,
+                     \(preds) roc_auc(preds,
+                       truth = label,
+                       prob_raw))) |>
+  select(-preds) |>
+  unnest(auroc) |>
+  select(-c(.estimator, .metric)) |> 
+  rename(auroc = .estimate)
+```
+
+
+Out of 360 folds (12 * 30), 8 folds without lapse. Filter out missing estimates
+```{r}
+aurocs |> 
+  filter(is.na(auroc)) |> 
+  nrow()
+
+aurocs <- aurocs |> 
+  filter(!is.na(auroc)) |> 
+  glimpse()
+```
+
+Get median aurocs
+```{r}
+aurocs |> 
+  group_by(month) |> 
+  summarise(auroc = median(auroc))
+
+
+aurocs |> 
+  group_by(month) |> 
+  summarise(auroc = median(auroc)) |> 
+  ggplot(aes(x = month, y = auroc)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_y_continuous(limits = c(.5, 1)) +
+  scale_x_continuous(breaks = seq(1, 12, 1))
+
+# all data
+aurocs |> 
+  summarise(auroc = median(auroc))
+```
+
+
