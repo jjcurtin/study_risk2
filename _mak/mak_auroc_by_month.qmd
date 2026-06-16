@@ -1,5 +1,5 @@
 ---
-title: "Calculate auROC by month on study"
+title: "Calculate auROC by month in recovery"
 author: "Kendra Wyant"
 date: "`r lubridate::today()`"
 output: 
@@ -37,6 +37,9 @@ preds <- read_rds(here::here(path_models,
                              "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds"))
 
 labels <- read_csv(here::here(path_data, "lapse_labels_24h_day_gps.csv"),
+                   show_col_types = FALSE)
+
+screen <- read_csv(here::here(path_data, "survey_intake.csv"),
                    show_col_types = FALSE)
 ```
 

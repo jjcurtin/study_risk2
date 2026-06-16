@@ -267,7 +267,6 @@ global_panel + local_panel
 
 
 
-Top 20 Individual Shapley plots 
 ```{r}
 #| label: fig-4
 #| fig-cap: "Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."
