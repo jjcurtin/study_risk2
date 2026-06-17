@@ -68,6 +68,9 @@ preds_fairness <- read_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10
 
 pp_perf_tibble_shap_fairness <- read_csv(here::here(path_models, "pp_perf_tibble_shap_fairness.csv"),
                                          show_col_types = FALSE)
+
+perf_month <- read_csv(here::here(path_models, "test_auroc_month_in_recovery.csv"),
+                       show_col_types = FALSE)
 ```
 
 
@@ -78,7 +81,7 @@ We published this study's protocol as a registered report (International Registe
 ### Sensing Data Streams  
 Our candidate models included features derived from a subset of intake self-report measures, daily surveys, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by (1) our group's personal sensing work with alcohol use disorder, (2) technological constraints, and (3) the desire to balance feature diversity for capturing lapse complexity and minimizing participant burden and computational cost. 
 
-1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
+1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs of .91 and .71, respectively) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
     
 2. We discontinued collecting daily video check-ins about 6 months into the 2.5 year data collection due to technical issues and App usage data (beyond the required study tasks) were generally sparse and inconsistent across participants. 
 
@@ -313,7 +316,25 @@ You visited the place shown below, near [*address*], several times in the past m
 
 ## Supplemental Figures
 
-### Figure S1: Feature Importance for all Feature Categories
+### Figure S1: Model performance by month into recovery
+
+```{r}
+#| code-fold: true
+
+perf_month |> 
+  group_by(tri_year) |> 
+  summarise(auroc = median(auroc, na.rm = TRUE)) |> 
+  ggplot(aes(x = tri_year, y = auroc)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Month in recovery (binned in 3-month intervals)") +
+  theme_classic() +
+  scale_y_continuous(limits = c(.5, 1)) +
+  scale_x_continuous(breaks = seq(0, 18, 3))
+```
+
+
+### Figure S2: Feature Importance for all Feature Categories
 
 ```{r}
 #| code-fold: true
@@ -384,7 +405,7 @@ global_panel_all + local_panel_all
 ```
 
 
-### Figure S2: Individual Shapley Plots for all Feature Categories
+### Figure S3: Individual Shapley Plots for all Feature Categories
 
 ```{r}
 #| label: fig-2
@@ -393,6 +414,7 @@ global_panel_all + local_panel_all
 #| fig-width: 10
 #| fig-height: 24
 #| code-fold: true
+#| warning: false
 
 shap_levels <- shaps |> 
   group_by(variable_grp) |>
@@ -424,16 +446,16 @@ shaps|>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
   ggplot(aes(x = rfvalue_raw, y = value)) +
   geom_point(alpha = .3) +
-  geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, one_hot_vars, "Cannabis use, Raw (EMA)")),
-              method = "gam",
-              formula = y ~ s(x, k = 30),
-              method.args = list(method = "REML"),
-              se = FALSE) +
-  geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
-              method = "gam",
-              formula = y ~ s(x, k = 4),
-              method.args = list(method = "REML"),
-              se = FALSE) +
+  # geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, one_hot_vars, "Cannabis use, Raw (EMA)")),
+  #             method = "gam",
+  #             formula = y ~ s(x, k = 30),
+  #             method.args = list(method = "REML"),
+  #             se = FALSE) +
+  # geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
+  #             method = "gam",
+  #             formula = y ~ s(x, k = 4),
+  #             method.args = list(method = "REML"),
+  #             se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
     title = NULL,

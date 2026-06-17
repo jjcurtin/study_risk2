@@ -34,49 +34,65 @@ path_models <- format_path("risk2/models/combined")
 
 ```{r}
 preds <- read_rds(here::here(path_models,
-                             "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds"))
+                             "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds")) 
 
 labels <- read_csv(here::here(path_data, "lapse_labels_24h_day_gps.csv"),
                    show_col_types = FALSE)
 
-screen <- read_csv(here::here(path_data, "survey_intake.csv"),
-                   show_col_types = FALSE)
+dates <- read_csv(here::here(path_data, "recovery_dates.csv"),
+                   show_col_types = FALSE) |> 
+  # temp filter out 3 subids with duplicates (7 total) until Susan resolves
+  filter(!subid %in% c(1012, 1020, 1283)) |> 
+  select(subid, recovery_date = onboard_si_mat_2)
 ```
 
 ### Create grouping variable 
 
-Month on study = 30 day increments
+Month in recovery = 30 day increments
 
 
 ```{r}
 labels <- labels |> 
+  # temp filter out 7 subids until Susan resolves
+  filter(subid %in% dates$subid) |> 
+  left_join(dates, by = "subid") |> 
   group_by(subid) |> 
   arrange(window_start) |> 
-  mutate(day = row_number(),
-         month = case_when(day <= 30 ~ 1,
-                           day > 30 & day <= 60 ~ 2,
-                           day > 60 & day <= 90 ~ 3,
-                           day > 90 & day <= 120 ~ 4,
-                           day > 120 & day <= 150 ~ 5,
-                           day > 150 & day <= 180 ~ 6,
-                           day > 180 & day <= 210 ~ 7,
-                           day > 210 & day <= 240 ~ 8,
-                           day > 240 & day <= 270 ~ 9,
-                           day > 270 & day <= 300 ~ 10,
-                           day > 300 & day <= 330 ~ 11,
-                           day > 330 ~ 12)) |> 
-  ungroup()
+  mutate(recovery_days = as.numeric(date(window_start) - recovery_date),
+         month = case_when(recovery_days <= 30 ~ 1,
+                           recovery_days > 30 & recovery_days <= 60 ~ 2,
+                           recovery_days > 60 & recovery_days <= 90 ~ 3,
+                           recovery_days > 90 & recovery_days <= 120 ~ 4,
+                           recovery_days > 120 & recovery_days <= 150 ~ 5,
+                           recovery_days > 150 & recovery_days <= 180 ~ 6,
+                           recovery_days > 180 & recovery_days <= 210 ~ 7,
+                           recovery_days > 210 & recovery_days <= 240 ~ 8,
+                           recovery_days > 240 & recovery_days <= 270 ~ 9,
+                           recovery_days > 270 & recovery_days <= 300 ~ 10,
+                           recovery_days > 300 & recovery_days <= 330 ~ 11,
+                           recovery_days > 330 & recovery_days <= 360 ~ 12,
+                           recovery_days > 360 & recovery_days <= 390 ~ 13,
+                           recovery_days > 390 & recovery_days <= 420 ~ 14,
+                           recovery_days > 420 & recovery_days <= 450 ~ 15,
+                           recovery_days > 450 & recovery_days <= 480 ~ 16,
+                           recovery_days > 480 & recovery_days <= 510 ~ 17,
+                           recovery_days > 510 ~ 18)) |> 
+  ungroup() |>
+  rename(label = lapse,
+         id_obs = label_num) 
 
 janitor::tabyl(labels$month)
-labels |> janitor::tabyl(month, lapse)
+labels |> janitor::tabyl(month, label)
 ```
 
 
 Combine with preds
 ```{r}
-labels <- labels |>
-  rename(label = lapse,
-         id_obs = label_num)  |> 
+preds <- preds |> 
+  # tmp filter until Susan resolves duplicates
+  filter(id_obs %in% labels$id_obs)
+
+labels <- labels  |> 
   right_join(preds, by = c("id_obs", "label")) |> 
   mutate(label = factor(label, levels = c("Lapse", "No lapse")))
 ```
@@ -100,7 +116,7 @@ aurocs <- labels |>
 ```
 
 
-Out of 360 folds (12 * 30), 8 folds without lapse. Filter out missing estimates
+Out of 540 folds (18 * 30), 26 folds without lapse. Filter out missing estimates
 ```{r}
 aurocs |> 
   filter(is.na(auroc)) |> 
@@ -115,7 +131,8 @@ Get median aurocs
 ```{r}
 aurocs |> 
   group_by(month) |> 
-  summarise(auroc = median(auroc))
+  summarise(auroc = median(auroc)) |> 
+  print(n = Inf)
 
 
 aurocs |> 
@@ -126,11 +143,99 @@ aurocs |>
   geom_line() +
   theme_classic() +
   scale_y_continuous(limits = c(.5, 1)) +
-  scale_x_continuous(breaks = seq(1, 12, 1))
+  scale_x_continuous(breaks = seq(1, 24, 1))
+```
 
-# all data
+3 month segments
+```{r}
+labels <- labels |> 
+  mutate(tri_year = case_when(month <= 3 ~ 3, 
+                             month > 3 & month <= 6 ~ 6,
+                             month > 6 & month <= 9 ~ 9,
+                             month > 9 & month <= 12 ~ 12,
+                             month > 12 & month <= 15 ~ 15,
+                             month > 12 ~ 18))
+
+aurocs <- labels |>
+  nest(.by = c(outer_split_num, tri_year), .key = "preds") |>
+  mutate(auroc = map(preds,
+                     \(preds) roc_auc(preds,
+                       truth = label,
+                       prob_raw))) |>
+  select(-preds) |>
+  unnest(auroc) |>
+  select(-c(.estimator, .metric)) |> 
+  rename(auroc = .estimate)
+
 aurocs |> 
+  group_by(tri_year) |> 
+  summarise(auroc = median(auroc, na.rm = TRUE))
+
+aurocs |> 
+  group_by(tri_year) |> 
+  summarise(auroc = median(auroc, na.rm = TRUE)) |> 
+  ggplot(aes(x = tri_year, y = auroc)) +
+  geom_point() +
+  geom_line() +
+  theme_classic() +
+  scale_y_continuous(limits = c(.5, 1)) +
+  scale_x_continuous(breaks = seq(0, 18, 3))
+```
+
+
+Save aurocs
+```{r}
+aurocs |> 
+  group_by(tri_year) |> 
+  summarise(auroc = median(auroc, na.rm = TRUE)) |> 
+  write_csv(here::here(path_models, "test_auroc_month_in_recovery.csv"))
+```
+
+First year vs. 1+ years
+```{r}
+labels <- labels |> 
+  mutate(year = if_else(month <= 12, 1, 2))
+
+aurocs <- labels |>
+  nest(.by = c(outer_split_num, year), .key = "preds") |>
+  mutate(auroc = map(preds,
+                     \(preds) roc_auc(preds,
+                       truth = label,
+                       prob_raw))) |>
+  select(-preds) |>
+  unnest(auroc) |>
+  select(-c(.estimator, .metric)) |> 
+  rename(auroc = .estimate)
+
+aurocs |> 
+  group_by(year) |> 
   summarise(auroc = median(auroc))
 ```
+
+
+6 month segments
+```{r}
+labels <- labels |> 
+  mutate( bi_year = case_when(month <= 6 ~ 6, 
+                             month > 6 & month <= 12 ~ 12,
+                             month > 12 ~ 18))
+
+aurocs <- labels |>
+  nest(.by = c(outer_split_num, bi_year), .key = "preds") |>
+  mutate(auroc = map(preds,
+                     \(preds) roc_auc(preds,
+                       truth = label,
+                       prob_raw))) |>
+  select(-preds) |>
+  unnest(auroc) |>
+  select(-c(.estimator, .metric)) |> 
+  rename(auroc = .estimate)
+
+aurocs |> 
+  group_by(bi_year) |> 
+  summarise(auroc = median(auroc))
+```
+
+
 
 
