@@ -259,6 +259,7 @@ local_panel <- shaps_day_max |>
 
 ```{r}
 #| label: fig-3
+#| fig-cap: "Feature importance plots. The plots display magnitude of feature importance for the top 20 features, determined by the mean absolute Shapley value (left). Feature importance on the right depicts importance by the proportion of days (or observations) that each feature was most important (highest absolute Shapley value)."
 #| fig-width: 8
 
 global_panel + local_panel
