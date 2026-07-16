@@ -45,7 +45,32 @@ pp_dem <- read_csv(here::here(path_models,
 preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 
 
-shaps <- read_rds(here::here(path_models, "shapsgrp_v2_1_x_5_day_v10_kfold_full_final.rds"))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds")) |> 
+  mutate(variable_grp = replace_values(variable_grp,
+                                       "gender_male" ~ "Male (demographic)",
+                                       "gender_not.male" ~ "Not male (demographic)",
+                                       "label_day_Mon" ~ "Monday (label)",
+                                       "label_day_Tue" ~ "Tuesday (label)",
+                                       "label_day_Wed" ~ "Wednesday (label)",
+                                       "label_day_Thu" ~ "Thursday (label)",
+                                       "label_day_Fri" ~ "Friday (label)",
+                                       "label_day_Sat" ~ "Saturday (label)",
+                                       "label_day_Sun" ~ "Sunday (label)",
+                                       "employment_employed" ~ "Employed (demographic)",
+                                       "employment_not.employed.looking" ~ "Employed, looking (demographic)",
+                                       "employment_not.employed.not.looking" ~ "Employed, not looking (demographic)",
+                                       "orientation_heterosexual" ~ "Heterosexual (demographic)",
+                                       "orientation_not.heterosexual" ~ "Not heterosexual (demographic)",
+                                       "race_Hispanic.and.or.not.white" ~ "Hispanic and/or not White (demographic)",
+                                       "race_non.hispanic.white" ~ "Non-Hispanic White (demographic)"))
+
+preds_fairness <- read_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
+
+pp_perf_tibble_shap_fairness <- read_csv(here::here(path_models, "pp_perf_tibble_shap_fairness.csv"),
+                                         show_col_types = FALSE)
+
+perf_month <- read_csv(here::here(path_models, "test_auroc_month_in_recovery.csv"),
+                       show_col_types = FALSE)
 ```
 
 
@@ -56,7 +81,7 @@ We published this study's protocol as a registered report (International Registe
 ### Sensing Data Streams  
 Our candidate models included features derived from a subset of intake self-report measures, daily surveys, and geolocation sensing data (see Measures section). Consequently, we excluded cellular communication data, daily video check-ins, app usage data, and certain self-report measures. These decisions were informed by (1) our group's personal sensing work with alcohol use disorder, (2) technological constraints, and (3) the desire to balance feature diversity for capturing lapse complexity and minimizing participant burden and computational cost. 
 
-1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs .72-.91<!--confirm claire auroc-->) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
+1. In our alcohol use disorder research, daily surveys and geolocation sensing have shown moderate to excellent predictive signal (aurocs of .91 and .71, respectively) [@wyantMachineLearningModels2024; @wyantForecastingRiskAlcoholunderreview<!--Cite claire gps paper-->]. Cellular communication sensing, however, has fallen short of these thresholds (.68 auROC<!--cite meta paper-->). Moreover, Apple places strict restrictions on app access to communications, meaning inclusion of these features would result in a model that could only be deployed within an Android operating system. 
     
 2. We discontinued collecting daily video check-ins about 6 months into the 2.5 year data collection due to technical issues and App usage data (beyond the required study tasks) were generally sparse and inconsistent across participants. 
 
@@ -237,22 +262,23 @@ You visited the place shown below, near [*address*], several times in the past m
     - A restaurant, business, public place, or other non-residential place  
     - I do not recognize this location or was just passing by [If selected, skip to end of survey]
 
-2. What do you do at this place? Select all that apply.
+2. What do you do at this place? Select all that apply.  
 
-    – Work 
-    – Take classes 
-    – Religious or spiritual activities 
-    – Volunteer or do community service 
-    – Exercise or play sports 
-    – Spend time with friends 
-    – Spend time with family 
-    – Socialize with new people 
-    – Relax 
-    – Drink alcohol 
-    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group) 
-    - Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.) 
-    – Get physical health care 
-    – None of the above
+
+    – Work   
+    – Take classes  
+    – Religious or spiritual activities  
+    – Volunteer or do community service  
+    – Exercise or play sports  
+    – Spend time with friends  
+    – Spend time with family  
+    – Socialize with new people  
+    – Relax  
+    – Drink alcohol  
+    – Get mental health care (e.g., counseling, talk therapy, group therapy, support group)  
+    – Get medication for opioid treatment (e.g., Suboxone, Methadone, etc.)  
+    – Get physical health care  
+    – None of the above  
 
 3. In general, how often is going to this place pleasant?
 
@@ -290,8 +316,25 @@ You visited the place shown below, near [*address*], several times in the past m
 
 ## Supplemental Figures
 
+### Figure S1: Model performance by month into recovery
 
-### Figure S1: Global Feature Importance for all Feature Categories
+```{r}
+#| code-fold: true
+
+perf_month |> 
+  group_by(tri_year) |> 
+  summarise(auroc = median(auroc, na.rm = TRUE)) |> 
+  ggplot(aes(x = tri_year, y = auroc)) +
+  geom_point() +
+  geom_line() +
+  labs(x = "Month in recovery (binned in 3-month intervals)") +
+  theme_classic() +
+  scale_y_continuous(limits = c(.5, 1)) +
+  scale_x_continuous(breaks = seq(0, 18, 3))
+```
+
+
+### Figure S2: Feature Importance for all Feature Categories
 
 ```{r}
 #| code-fold: true
@@ -356,21 +399,22 @@ local_panel_all <- shaps_day_max |>
 ```{r}
 #| echo: false
 #| fig-width: 8
-#| fig-height: 20
+#| fig-height: 10
 
 global_panel_all + local_panel_all
 ```
 
 
-### Figure S2: Individual Shapley Plots for all Feature Categories
+### Figure S3: Individual Shapley Plots for all Feature Categories
 
 ```{r}
 #| label: fig-2
 #| fig-cap: "Feature importance partial dependence plots."
 #| message: false
 #| fig-width: 10
-#| fig-height: 50
+#| fig-height: 24
 #| code-fold: true
+#| warning: false
 
 shap_levels <- shaps |> 
   group_by(variable_grp) |>
@@ -378,15 +422,43 @@ shap_levels <- shaps |>
   arrange(desc(mean_value)) |> 
   pull(variable_grp)
 
+dem_vars <- c("Age (demographic)", "Geography (demographic)", "Income (demographic)", 
+              "Education (demographic)")
+one_hot_vars <- c("Male (demographic)",
+                  "Not male (demographic)",
+                  "Monday (label)",
+                  "Tuesday (label)",
+                  "Wednesday (label)",
+                  "Thursday (label)",
+                  "Friday (label)",
+                  "Saturday (label)",
+                  "Sunday (label)",
+                  "Employed (demographic)",
+                  "Employed, looking (demographic)",
+                  "Employed, not looking (demographic)",
+                  "Heterosexual (demographic)",
+                  "Not heterosexual (demographic)",
+                  "Hispanic and/or not White (demographic)",
+                  "Non-Hispanic White (demographic)")
+
 shaps|>
   filter(variable_grp %in% shap_levels) |>
   mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
-  ggplot(aes(x = rfvalue, y = value)) +
+  ggplot(aes(x = rfvalue_raw, y = value)) +
   geom_point(alpha = .3) +
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 10, bs = "cs"), se = FALSE) +
+  # geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars, one_hot_vars, "Cannabis use, Raw (EMA)")),
+  #             method = "gam",
+  #             formula = y ~ s(x, k = 30),
+  #             method.args = list(method = "REML"),
+  #             se = FALSE) +
+  # geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
+  #             method = "gam",
+  #             formula = y ~ s(x, k = 4),
+  #             method.args = list(method = "REML"),
+  #             se = FALSE) +
   facet_wrap(~ variable_grp, scales = "free", ncol = 5) +
   labs(
-    title = "SHAP Variable Relationships",
+    title = NULL,
     x = "z-score raw feature score",
     y = "Shapley value"
   ) +
