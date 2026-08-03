@@ -10,6 +10,7 @@ study <- "combined"
 window <- "day"
 lead <- 0
 version <- "v11"
+version_feats <- "v10"
 algorithm <- "xgboost2"
 batch <- "full_final"
 
@@ -28,7 +29,7 @@ resample <- "none"
 
 # DATA, SPLITS AND OUTCOME------
 feature_set <- c("all")
-data_trn <- str_c("features_", study, "_24h_", version, ".csv")
+data_trn <- str_c("features_", study, "_24h_", version_feats, ".csv")
 seed_splits <- 123
 
 ml_mode <- "classification"   # regression or classification
