@@ -9,8 +9,8 @@ source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true
 study <- "combined"
 window <- "day"
 lead <- 0
-version <- "v10"
-algorithm <- "xgboost"
+version <- "v11"
+algorithm <- "xgboost2"
 batch <- "full_final"
 
 
@@ -20,8 +20,10 @@ configs_per_job <- 10  # number of model configurations that will be fit/evaluat
 # RESAMPLING FOR OUTCOME------
 # note that ratio is under_ratio, which is used by downsampling as is
 # It is converted to  overratio (1/ratio) for up and smote
-resample <- c("up_1", "up_2", "up_3", "up_4", "up_5",
-              "down_1", "down_2", "down_3", "down_4", "down_5")
+#resample <- c("up_1", "up_2", "up_3", "up_4", "up_5",
+              #"down_1", "down_2", "down_3", "down_4", "down_5")
+
+resample <- "none"
 
 
 # DATA, SPLITS AND OUTCOME------
@@ -78,6 +80,13 @@ hp3_xgboost <- c(20, 30, 40, 50)  # mtry
 # trees = 500
 # early stopping = 20
 
+hp1_xgboost2 <- c(150, 300, 600, 1000, 1500) # trees
+hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
+hp3_xgboost2 <- c(20, 30, 40, 50) # mtry
+hp4_xgboost2 <- c(1, 2, 4, 8, 16, 32) # scale_pos_weight
+# no early stopping
+# learning rate (eta) set to .03
+
 hp1_rda <- seq(.1, 1, length.out = 10)  # frac_common_cov: Fraction of the Common Covariance Matrix (0-1; 1 = LDA, 0 = QDA)
 hp2_rda <- seq(.1, 1, length.out = 10) # frac_identity: Fraction of the Identity Matrix (0-1)
 
@@ -86,7 +95,7 @@ hp2_nnet <- seq(0, 0.1, length.out = 100) # penalty
 hp3_nnet <- seq(5, 30, length.out = 5) # hidden units
 
 # CHTC SPECIFIC CONTROLS------
-username <- "kpaquette2"
+username <- "p/punturieri"
 stage_data = FALSE
 max_idle <- 1000
 request_cpus <- 1
