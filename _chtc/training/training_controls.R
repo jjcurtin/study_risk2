@@ -12,10 +12,10 @@ lead <- 0
 version <- "v11"
 version_feats <- "v10"
 algorithm <- "xgboost2"
-batch <- "full_final"
+batch <- "full"
 
 
-configs_per_job <- 10  # number of model configurations that will be fit/evaluated within each CHTC
+configs_per_job <- 30  # number of model configurations that will be fit/evaluated within each CHTC
 
 
 # RESAMPLING FOR OUTCOME------
@@ -39,10 +39,10 @@ y_level_neg <- "No lapse"
 
 
 # CV SETTINGS------
-cv_resample_type <- "kfold" # can be boot, kfold, or nested
-cv_resample = "1_x_5" # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
-cv_inner_resample <- NULL # can also be a single number for bootstrapping (i.e., 100)
-cv_outer_resample <- NULL # outer resample will always be kfold
+cv_resample_type <- "nested" # can be boot, kfold, or nested
+cv_resample = NULL # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
+cv_inner_resample <- "1_x_5" # can also be a single number for bootstrapping (i.e., 100)
+cv_outer_resample <- "6_x_5" # outer resample will always be kfold
 cv_group <- "subid" # set to NULL if not grouping
 cv_strat <- TRUE # set to FALSE if not stratifying - If TRUE you must have a strat variable in your data
 # IMPORTANT - NEED TO REMOVE STRATIFY VARIABLE FROM DATA IN RECIPE - See Recipe below for example code
@@ -83,8 +83,8 @@ hp3_xgboost <- c(20, 30, 40, 50)  # mtry
 
 hp1_xgboost2 <- c(150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(20, 30, 40, 50) # mtry
-hp4_xgboost2 <- c(1, 2, 4, 8, 16, 32) # scale_pos_weight
+hp3_xgboost2 <- c(10, 20, 40, 60, 100) # mtry
+hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
 
