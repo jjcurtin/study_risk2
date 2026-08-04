@@ -244,7 +244,36 @@ results_all |>
   geom_histogram(bins = 10)
 ```
 
+Table by `outer_split_num`.
+```{r}
+metrics_avg <- results_all |> 
+  group_by(outer_split_num, hp1, hp2, hp3, hp4) |>  
+   summarize(roc_auc = median(roc_auc),
+             n_jobs = n(), .groups = "drop") |>  
+  ungroup() |> 
+  group_by(outer_split_num) |> 
+  arrange(desc(roc_auc)) |>
+  slice_head(n = 1)
+
+metrics_avg |>
+  group_by(outer_split_num)
+  select(outer_split_num, hp1)
+```
+
 ### Plot hyperparameters
+
+Plot HPs by `outer_split_num`.
+```{r}
+dhp4 <- results_all |> 
+  group_by(outer_split_num, hp1, hp2, hp3, hp4) |>  
+   summarize(roc_auc = median(roc_auc),
+             n_jobs = n(), .groups = "drop") |>  
+  group_by(hp4) |> 
+  summarize(roc_auc = median(roc_auc), .groups = "drop")
+
+
+plot(x = dhp4$hp4, y = dhp4$roc_auc)
+```
 
 ```{r}
 algorithms <- unique(metrics_avg$algorithm) 
