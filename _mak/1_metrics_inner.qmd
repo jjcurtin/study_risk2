@@ -14,7 +14,7 @@ params:
   window: "1day"
   lead: 0
   version: "v11"
-  cv: "kfold"
+  cv: "nested"
   algorithms: "all"   # "all" or name of specific algorithm
   model: "full" # "full" or ablation model
 editor_options: 
@@ -55,8 +55,9 @@ Packages for script
 #| warning: false
 
 library(tidyverse)
+library(patchwork)
 
-devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/fun_eda.R?raw=true")
+source("https://github.com/jjcurtin/lab_support/blob/main/fun_eda.R?raw=true")
 theme_set(theme_classic()) 
 ```
 
@@ -135,12 +136,12 @@ for (batch_name in batch_names) {
     message(n_results_batch, " results files detected.  Correct!")
   }
   
-  # Check col count
-  if (!(ncol(results_batch) == 17)) {
-    stop(ncol(results_batch), " columns != 17")
-  } else {
-    message(ncol(results_batch), " columns detected.  Correct!\n")
-  }
+  # Check col count - CP commented out
+  # if (!(ncol(results_batch) == 17)) {
+  #   stop(ncol(results_batch), " columns != 17")
+  # } else {
+  #   message(ncol(results_batch), " columns detected.  Correct!\n")
+  # }
 
 
   # Add batch to all metrics
@@ -183,7 +184,7 @@ Save raw metrics file
 ```{r}
 results_all %>% 
   # arrange(split_num, outer_split_num, inner_split_num, algorithm, resample
-  write_csv(here::here(path_models, str_c("inner_metrics_1_x_5_day", 
+  write_csv(here::here(path_models, str_c("inner_metrics_6_x_5_1_x_5_day", 
                                            "_", version, "_", 
                                             cv, "_", model, ".csv")))
 
@@ -196,7 +197,7 @@ Inner loop performance of best config.
 This median performance for each configuration over inner x outer folds (e.g., 300 folds for 1x10 inner and 3x10 outer). It is what we would get (essentially) if we just did simple k-fold but with LOTs of folds
 
 ```{r}
-metrics_avg <- results_all %>% 
+metrics_avg_inner <- results_all %>% 
   group_by(algorithm, feature_set, hp1, hp2, hp3, hp4, resample) %>% 
    summarize(roc_auc = median(roc_auc),
              n_jobs = n(), .groups = "drop") %>% 
@@ -204,24 +205,24 @@ metrics_avg <- results_all %>%
   arrange(desc(roc_auc)) |> 
   ungroup()
 
-metrics_avg |> 
+metrics_avg_inner |> 
   group_by(algorithm) |> 
   slice(1) |> 
   arrange(desc(roc_auc)) |> 
   print_kbl()
 
-metrics_avg |> 
+metrics_avg_inner |> 
   slice(1:50) |> 
   print_kbl()
 
-best_config <- metrics_avg |> 
+best_config <- metrics_avg_inner |> 
   slice(1) |> 
   print()
 ```
 
 Look at hyperparameters across 50 best configs.
 ```{r}
-metrics_avg |>
+metrics_avg_inner |>
   slice(1:50) |> 
   select(hp1, hp2, hp3, hp4) |> 
   pivot_longer(everything(),
@@ -244,36 +245,150 @@ results_all |>
   geom_histogram(bins = 10)
 ```
 
-Table by `outer_split_num`.
+### Median metrics across inner folds for model configurations
+
+Outer loop performance by best config.
 ```{r}
-metrics_avg <- results_all |> 
-  group_by(outer_split_num, hp1, hp2, hp3, hp4) |>  
+metrics_avg_outer <- results_all |> 
+  group_by(outer_split_num, algorithm, feature_set, hp1, hp2, hp3, hp4) |>  
    summarize(roc_auc = median(roc_auc),
-             n_jobs = n(), .groups = "drop") |>  
-  ungroup() |> 
+             n_jobs = n(), .groups = "drop")  
+
+metrics_avg_outer |> 
   group_by(outer_split_num) |> 
   arrange(desc(roc_auc)) |>
   slice_head(n = 1)
-
-metrics_avg |>
-  group_by(outer_split_num)
-  select(outer_split_num, hp1)
 ```
 
 ### Plot hyperparameters
 
-Plot HPs by `outer_split_num`.
 ```{r}
-dhp4 <- results_all |> 
-  group_by(outer_split_num, hp1, hp2, hp3, hp4) |>  
-   summarize(roc_auc = median(roc_auc),
-             n_jobs = n(), .groups = "drop") |>  
-  group_by(hp4) |> 
-  summarize(roc_auc = median(roc_auc), .groups = "drop")
+algorithms <- unique(metrics_avg_outer$algorithm) 
+feature_sets <- unique(metrics_avg_outer$feature_set)
 
 
-plot(x = dhp4$hp4, y = dhp4$roc_auc)
+for (k in algorithms) {
+  
+  results_k <- metrics_avg_outer |>  
+    filter(algorithm == k)
+  
+  for (i in feature_sets) {
+  
+    results_i <- results_k |>  
+      filter(feature_set == i)
+    
+    # XGBoost2
+    if (k == "xgboost2") {
+      
+      # hp1 (trees)
+      plot_title <- str_c("XGBoost2 hp1 (trees) for ", i, " feature set")
+      
+      results_hp1 <- results_i |>
+        group_by(hp1) |> 
+        summarize(roc_auc = median(roc_auc), .groups = "drop")
+      
+      
+      plot_hp1 <- results_hp1 |>  
+        ggplot(mapping = aes(x = hp1, 
+                         y = roc_auc)) +
+        geom_point() +
+        labs(title = plot_title, x = "trees", y = "ROC AUC") +
+        ylim(.91,.94)
+      
+      table_hp1 <- results_hp1 |> 
+        pull(hp1) |> 
+        janitor::tabyl() |>
+        rename(hp1 = 1) |> 
+        gt::gt()
+      
+      print(wrap_table(table_hp1,
+                 panel = "full",
+                 space = "fixed") + plot_hp1)
+      
+      # hp2 (tree_depth)
+      plot_title <- str_c("XGBoost2 hp2 (tree_depth) for ", i, " feature set")
+      
+      results_hp2 <- results_i |>
+        group_by(hp2) |> 
+        summarize(roc_auc = median(roc_auc), .groups = "drop")
+      
+      
+      plot_hp2 <- results_hp2 |>  
+        ggplot(mapping = aes(x = hp2, 
+                         y = roc_auc)) +
+        geom_point() +
+        labs(title = plot_title, x = "trees", y = "ROC AUC") +
+        ylim(.91,.94)
+      
+      table_hp2 <- results_hp2 |> 
+        pull(hp2) |> 
+        janitor::tabyl() |> 
+        rename(hp2 = 1) |>
+        gt::gt()
+      
+      print(wrap_table(table_hp2,
+                 panel = "full",
+                 space = "fixed") + plot_hp2)
+      
+      # hp3 (mtry)
+      plot_title <- str_c("XGBoost2 hp3 (mtry) for ", i, " feature set")
+      
+      results_hp3 <- results_i |>
+        group_by(hp3) |> 
+        summarize(roc_auc = median(roc_auc), .groups = "drop")
+      
+      
+      plot_hp3 <- results_hp3 |>  
+        ggplot(mapping = aes(x = hp3, 
+                         y = roc_auc)) +
+        geom_point() +
+        labs(title = plot_title, x = "trees", y = "ROC AUC") +
+        ylim(.91,.94)
+      
+      table_hp3 <- results_hp3 |> 
+        pull(hp3) |> 
+        janitor::tabyl() |> 
+        rename(hp3 = 1) |>
+        gt::gt()
+      
+      print(wrap_table(table_hp3,
+                 panel = "full",
+                 space = "fixed") + plot_hp3)
+      
+      # hp4 (scale_pos_weight)
+      plot_title <- str_c("XGBoost2 hp4 (scale_pos_weight) for ", i, " feature set")
+      
+      results_hp4 <- results_i |>
+        group_by(hp4) |> 
+        summarize(roc_auc = median(roc_auc), .groups = "drop")
+      
+      
+      plot_hp4 <- results_hp4 |>  
+        ggplot(mapping = aes(x = hp4, 
+                         y = roc_auc)) +
+        geom_point() +
+        labs(title = plot_title, x = "trees", y = "ROC AUC") +
+        ylim(.91,.94)
+      
+      table_hp4 <- results_hp4 |> 
+        pull(hp4) |> 
+        janitor::tabyl() |> 
+        rename(hp4 = 1) |>
+        gt::gt()
+      
+      print(wrap_table(table_hp4,
+                 panel = "full",
+                 space = "fixed") + plot_hp4)
+       
+    }  
+    
+
+   
+  }
+}
 ```
+
+OLD
 
 ```{r}
 algorithms <- unique(metrics_avg$algorithm) 
