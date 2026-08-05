@@ -9,7 +9,7 @@ source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true
 study <- "combined"
 window <- "day"
 lead <- 0
-version <- "v11"
+version <- "v12"
 version_feats <- "v10"
 algorithm <- "xgboost2"
 batch <- "full"
@@ -81,9 +81,9 @@ hp3_xgboost <- c(20, 30, 40, 50)  # mtry
 # trees = 500
 # early stopping = 20
 
-hp1_xgboost2 <- c(150, 300, 600, 1000, 1500) # trees
+hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(10, 20, 40, 60, 100) # mtry
+hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
