@@ -13,7 +13,7 @@ params:
   study: "combined"
   window: "1day"
   lead: 0
-  version: "v11"
+  version: "v12"
   cv: "nested"
   algorithms: "all"   # "all" or name of specific algorithm
   model: "full" # "full" or ablation model
@@ -283,102 +283,111 @@ for (k in algorithms) {
       # hp1 (trees)
       plot_title <- str_c("XGBoost2 hp1 (trees) for ", i, " feature set")
       
-      results_hp1 <- results_i |>
+      plot_hp1 <- results_i |>
         group_by(hp1) |> 
-        summarize(roc_auc = median(roc_auc), .groups = "drop")
-      
-      
-      plot_hp1 <- results_hp1 |>  
+        summarize(roc_auc = median(roc_auc), .groups = "drop") |>   
         ggplot(mapping = aes(x = hp1, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "trees", y = "ROC AUC") +
-        ylim(.91,.94)
+        labs(title = plot_title, x = "trees", y = "ROC AUC") #+
+        #ylim(.92,.94)
       
-      table_hp1 <- results_hp1 |> 
+      table_hp1 <- results_i |>
+        group_by(outer_split_num) |> 
+        arrange(desc(roc_auc)) |>
+        slice_head(n = 1) |> 
         pull(hp1) |> 
-        janitor::tabyl() |>
+        janitor::tabyl() |> 
         rename(hp1 = 1) |> 
         gt::gt()
       
-      print(wrap_table(table_hp1,
+      hp1_obj <- wrap_table(table_hp1,
                  panel = "full",
-                 space = "fixed") + plot_hp1)
+                 space = "fixed") + plot_hp1
+      
+      print(hp1_obj)
       
       # hp2 (tree_depth)
       plot_title <- str_c("XGBoost2 hp2 (tree_depth) for ", i, " feature set")
       
-      results_hp2 <- results_i |>
+      
+      plot_hp2 <- results_i |>
         group_by(hp2) |> 
-        summarize(roc_auc = median(roc_auc), .groups = "drop")
-      
-      
-      plot_hp2 <- results_hp2 |>  
+        summarize(roc_auc = median(roc_auc), .groups = "drop") |>  
         ggplot(mapping = aes(x = hp2, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "trees", y = "ROC AUC") +
-        ylim(.91,.94)
+        labs(title = plot_title, x = "tree_depth", y = "ROC AUC") #+
+        #ylim(.92,.94)
       
-      table_hp2 <- results_hp2 |> 
+      table_hp2 <- results_i |>
+        group_by(outer_split_num) |> 
+        arrange(desc(roc_auc)) |>
+        slice_head(n = 1) |> 
         pull(hp2) |> 
         janitor::tabyl() |> 
         rename(hp2 = 1) |>
         gt::gt()
       
-      print(wrap_table(table_hp2,
+      hp2_obj <- wrap_table(table_hp2,
                  panel = "full",
-                 space = "fixed") + plot_hp2)
+                 space = "fixed") + plot_hp2
+      
+      print(hp2_obj)
       
       # hp3 (mtry)
       plot_title <- str_c("XGBoost2 hp3 (mtry) for ", i, " feature set")
       
-      results_hp3 <- results_i |>
+      plot_hp3 <- results_i |>
         group_by(hp3) |> 
-        summarize(roc_auc = median(roc_auc), .groups = "drop")
-      
-      
-      plot_hp3 <- results_hp3 |>  
+        summarize(roc_auc = median(roc_auc), .groups = "drop") |>   
         ggplot(mapping = aes(x = hp3, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "trees", y = "ROC AUC") +
-        ylim(.91,.94)
+        labs(title = plot_title, x = "mtry", y = "ROC AUC") #+
+        #ylim(.92,.94)
       
-      table_hp3 <- results_hp3 |> 
+      table_hp3 <- results_i |>
+        group_by(outer_split_num) |> 
+        arrange(desc(roc_auc)) |>
+        slice_head(n = 1) |>  
         pull(hp3) |> 
         janitor::tabyl() |> 
         rename(hp3 = 1) |>
         gt::gt()
       
-      print(wrap_table(table_hp3,
+      hp3_obj <- wrap_table(table_hp3,
                  panel = "full",
-                 space = "fixed") + plot_hp3)
+                 space = "fixed") + plot_hp3
+      
+      print(hp3_obj)
       
       # hp4 (scale_pos_weight)
       plot_title <- str_c("XGBoost2 hp4 (scale_pos_weight) for ", i, " feature set")
       
-      results_hp4 <- results_i |>
+      plot_hp4 <- results_i |>
         group_by(hp4) |> 
-        summarize(roc_auc = median(roc_auc), .groups = "drop")
-      
-      
-      plot_hp4 <- results_hp4 |>  
+        summarize(roc_auc = median(roc_auc), .groups = "drop") |> 
         ggplot(mapping = aes(x = hp4, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "trees", y = "ROC AUC") +
-        ylim(.91,.94)
+        labs(title = plot_title, x = "scale_pos_weight", y = "ROC AUC") #+
+        #ylim(.92,.94)
       
-      table_hp4 <- results_hp4 |> 
+      table_hp4 <- results_i |>
+        group_by(outer_split_num) |> 
+        arrange(desc(roc_auc)) |>
+        slice_head(n = 1) |>  
         pull(hp4) |> 
         janitor::tabyl() |> 
         rename(hp4 = 1) |>
         gt::gt()
       
-      print(wrap_table(table_hp4,
+      hp4_obj <- wrap_table(table_hp4,
                  panel = "full",
-                 space = "fixed") + plot_hp4)
+                 space = "fixed") + plot_hp4
+      
+      print(hp4_obj)
        
     }  
     
@@ -386,6 +395,14 @@ for (k in algorithms) {
    
   }
 }
+```
+
+```{r}
+(wrap_table(table_hp1) + plot_hp1 +
+  wrap_table(table_hp2) + plot_hp2 +
+  wrap_table(table_hp3) + plot_hp3 +
+  wrap_table(table_hp4) + plot_hp4) +
+plot_layout(ncol = 4, widths = c(1, 2, 1, 2))
 ```
 
 OLD
