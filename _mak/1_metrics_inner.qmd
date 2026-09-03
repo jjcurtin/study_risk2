@@ -16,7 +16,7 @@ params:
   version: "v12"
   cv: "nested"
   algorithms: "all"   # "all" or name of specific algorithm
-  model: "full" # "full" or ablation model
+  model: "ablate_both" # "full" or ablation model
 editor_options: 
   chunk_output_type: console
 ---
@@ -183,7 +183,7 @@ Save raw metrics file
 
 ```{r}
 results_all %>% 
-  # arrange(split_num, outer_split_num, inner_split_num, algorithm, resample
+  #arrange(split_num, outer_split_num, inner_split_num, algorithm, resample
   write_csv(here::here(path_models, str_c("inner_metrics_6_x_5_1_x_5_day", 
                                            "_", version, "_", 
                                             cv, "_", model, ".csv")))
@@ -289,8 +289,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp1, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "trees", y = "ROC AUC") #+
+        labs(title = plot_title, x = "trees", y = "ROC AUC") +
         #ylim(.92,.94)
+        ylim(.52,.59)
       
       table_hp1 <- results_i |>
         group_by(outer_split_num) |> 
@@ -317,8 +318,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp2, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "tree_depth", y = "ROC AUC") #+
+        labs(title = plot_title, x = "tree_depth", y = "ROC AUC") +
         #ylim(.92,.94)
+        ylim(.52,.59)
       
       table_hp2 <- results_i |>
         group_by(outer_split_num) |> 
@@ -344,8 +346,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp3, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "mtry", y = "ROC AUC") #+
+        labs(title = plot_title, x = "mtry", y = "ROC AUC") +
         #ylim(.92,.94)
+        ylim(.52,.59)
       
       table_hp3 <- results_i |>
         group_by(outer_split_num) |> 
@@ -371,8 +374,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp4, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "scale_pos_weight", y = "ROC AUC") #+
+        labs(title = plot_title, x = "scale_pos_weight", y = "ROC AUC") +
         #ylim(.92,.94)
+        ylim(.52,.59)
       
       table_hp4 <- results_i |>
         group_by(outer_split_num) |> 
