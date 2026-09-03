@@ -28,7 +28,7 @@ resample <- "none"
 
 
 # DATA, SPLITS AND OUTCOME------
-feature_set <- c("all")
+feature_set <- c("full", "ablate_ema", "ablate_gps", "ablate_both")
 data_trn <- str_c("features_", study, "_24h_", version_feats, ".csv")
 seed_splits <- 123
 
@@ -176,7 +176,7 @@ build_recipe <- function(d, config) {
 
 if (feature_set == "ablate_ema") {
   # filter out difference scores
-  d <- d |>
+  rec <- rec |>
     step_rm(ends_with("_response")) |>
     step_rm(contains("ratecount."))
     # select(-c(p24.l0.rratecount.count.lapse:urge.p168.l0.dmin_response))
@@ -184,7 +184,7 @@ if (feature_set == "ablate_ema") {
 
 if (feature_set == "ablate_gps") {
   # filter out difference scores
-  d <- d |>
+  rec <- rec |>
     step_rm(contains("_duration")) |>
     step_rm(contains("var_"))
     # select(-c(p24.l0.rratesum_duration.socialize_new_people.yes:p168.dvar_location))
@@ -193,7 +193,7 @@ if (feature_set == "ablate_gps") {
 
 if (feature_set == "ablate_both") {
   # filter out difference scores
-  d <- d |>
+  rec <- rec |>
     step_rm(contains("_duration")) |>
     step_rm(contains("var_")) |>
     step_rm(ends_with("_response")) |>
