@@ -148,6 +148,33 @@ build_recipe <- function(d, config) {
       step_rm(strat) # remove strat variable
   }
 
+if (feature_set == "ablate_ema") {
+  # filter out difference scores
+  d <- d |>
+    step_rm(ends_with("_response")) |>
+    step_rm(contains("ratecount."))
+    # select(-c(p24.l0.rratecount.count.lapse:urge.p168.l0.dmin_response))
+}
+
+if (feature_set == "ablate_gps") {
+  # filter out difference scores
+  d <- d |>
+    step_rm(contains("_duration")) |>
+    step_rm(contains("var_"))
+    # select(-c(p24.l0.rratesum_duration.socialize_new_people.yes:p168.dvar_location))
+}
+
+
+if (feature_set == "ablate_both") {
+  # filter out difference scores
+  d <- d |>
+    step_rm(contains("_duration")) |>
+    step_rm(contains("var_")) |>
+    step_rm(ends_with("_response")) |>
+    step_rm(contains("ratecount."))
+   #  select(-c(p24.l0.rratecount.count.lapse:p168.dvar_location))
+}
+
   rec <- rec |>
     step_zv(all_predictors()) |>
     step_impute_median(all_numeric_predictors()) |>
