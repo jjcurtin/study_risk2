@@ -122,7 +122,7 @@ hp2_nnet <- seq(0, 0.1, length.out = 100) # penalty
 hp3_nnet <- seq(5, 30, length.out = 5) # hidden units
 
 # CHTC SPECIFIC CONTROLS------
-username <- "p/punturieri"
+username <- "k/kpaquette2"
 stage_data = FALSE
 max_idle <- 1000
 request_cpus <- 1
