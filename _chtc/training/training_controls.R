@@ -70,7 +70,6 @@ hp2_glmnet_out <- 200 # length of penalty grid
 
 hp1_knn <- seq(5, 255, length.out = 26) # neighbors (must be integer)
 
-
 hp1_rf <- c(5, 10, 20, 50, 75) # mtry (p/3 for reg or square root of p for class)
 hp2_rf <- c(2, 10, 20, 50) # min_n
 hp3_rf <- 1500 # trees (10 x's number of predictors)
@@ -81,13 +80,11 @@ hp3_xgboost <- c(20, 30, 40, 50)  # mtry
 # trees = 500
 # early stopping = 20
 
-# change mtry to be within an if statement
-
 ## Create four separate sets of hyperparameters based on model configuration
 ## full
 hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
+#hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
@@ -95,7 +92,7 @@ hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 ## ablate_gps
 hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
+#hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
@@ -103,7 +100,7 @@ hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 ## ablate_ema
 hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
+#hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
@@ -111,10 +108,31 @@ hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 ## ablate_both
 hp1_xgboost2 <- c(50, 75, 150, 300, 600, 1000) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
+#hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
+
+## mtry for xgboost2
+if (algorithm == "xgboost2") {
+
+  if (feature_set == "full") {
+    hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
+  }
+
+  if (feature_set == "ablate_gps") {
+    hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
+  }
+
+  if (feature_set == "ablate_ema") {
+    hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
+  }
+
+  if (feature_set == "ablate_both") {
+    hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
+  }
+
+}
 
 hp1_rda <- seq(.1, 1, length.out = 10)  # frac_common_cov: Fraction of the Common Covariance Matrix (0-1; 1 = LDA, 0 = QDA)
 hp2_rda <- seq(.1, 1, length.out = 10) # frac_identity: Fraction of the Identity Matrix (0-1)
