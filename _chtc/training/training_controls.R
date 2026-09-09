@@ -12,7 +12,7 @@ lead <- 0
 version <- "v13"
 version_feats <- "v10"
 algorithm <- "xgboost2"
-batch <- "full"
+batch <- "ablate_gps"
 
 
 configs_per_job <- 30  # number of model configurations that will be fit/evaluated within each CHTC
@@ -28,7 +28,9 @@ resample <- "none"
 
 
 # DATA, SPLITS AND OUTCOME------
-feature_set <- c("full", "ablate_ema", "ablate_gps", "ablate_both")
+feature_set <- c("ablate_gps") # MAKE SURE TO UPDATE THIS
+## list of feature sets: full, ablate_ema, ablate_gps, ablate_both
+## remove the ones from feature_set which are not currently being generated
 data_trn <- str_c("features_", study, "_24h_", version_feats, ".csv")
 seed_splits <- 123
 
@@ -80,38 +82,56 @@ hp3_xgboost <- c(20, 30, 40, 50)  # mtry
 # trees = 500
 # early stopping = 20
 
-## Create four separate sets of hyperparameters based on model configuration
-## full
-hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
-hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-#hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
-hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
-# no early stopping
-# learning rate (eta) set to .03
+# xgboost2 mtry selection based on feature_set
+if ("xgboost2" %in% algorithm) {
 
-## ablate_gps
-hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
-hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-#hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
-hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
-# no early stopping
-# learning rate (eta) set to .03
+  if (feature_set == "full") {
 
-## ablate_ema
-hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
-hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-#hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
-hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
-# no early stopping
-# learning rate (eta) set to .03
+    hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
+    hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
+    hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
+    hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
+    # no early stopping
+    # learning rate (eta) set to .03
 
-## ablate_both
-hp1_xgboost2 <- c(50, 75, 150, 300, 600, 1000) # trees
-hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-#hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
-hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
-# no early stopping
-# learning rate (eta) set to .03
+  }
+
+  if (feature_set == "ablate_gps") {
+
+    hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
+    hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
+    hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
+    hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
+    # no early stopping
+    # learning rate (eta) set to .03
+
+  }
+
+  if (feature_set == "ablate_ema") {
+
+    hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
+    hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
+    hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
+    hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
+    # no early stopping
+    # learning rate (eta) set to .03
+
+  }
+
+  if (feature_set == "ablate_both") {
+
+    ## ablate_both
+    hp1_xgboost2 <- c(50, 75, 150, 300, 600, 1000) # trees
+    hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
+    hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
+    hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
+    # no early stopping
+    # learning rate (eta) set to .03
+
+  }
+
+}
+
 
 hp1_rda <- seq(.1, 1, length.out = 10)  # frac_common_cov: Fraction of the Common Covariance Matrix (0-1; 1 = LDA, 0 = QDA)
 hp2_rda <- seq(.1, 1, length.out = 10) # frac_identity: Fraction of the Identity Matrix (0-1)
@@ -156,28 +176,6 @@ build_recipe <- function(d, config) {
   # get relevant info from job (algorithm, feature_set, resample, under_ratio)
   algorithm <- config$algorithm
   feature_set <- config$feature_set
-
-  ## mtry for xgboost2
-  if (algorithm == "xgboost2") {
-
-    if (feature_set == "full") {
-      hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
-    }
-
-    if (feature_set == "ablate_gps") {
-      hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
-    }
-
-    if (feature_set == "ablate_ema") {
-      hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
-    }
-
-    if (feature_set == "ablate_both") {
-      hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
-    }
-
-  }
-
 
   if (config$resample == "none") {
     resample <- config$resample
