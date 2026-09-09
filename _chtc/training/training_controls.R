@@ -113,27 +113,6 @@ hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
 
-## mtry for xgboost2
-if (algorithm == "xgboost2") {
-
-  if (feature_set == "full") {
-    hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
-  }
-
-  if (feature_set == "ablate_gps") {
-    hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
-  }
-
-  if (feature_set == "ablate_ema") {
-    hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
-  }
-
-  if (feature_set == "ablate_both") {
-    hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
-  }
-
-}
-
 hp1_rda <- seq(.1, 1, length.out = 10)  # frac_common_cov: Fraction of the Common Covariance Matrix (0-1; 1 = LDA, 0 = QDA)
 hp2_rda <- seq(.1, 1, length.out = 10) # frac_identity: Fraction of the Identity Matrix (0-1)
 
@@ -177,6 +156,28 @@ build_recipe <- function(d, config) {
   # get relevant info from job (algorithm, feature_set, resample, under_ratio)
   algorithm <- config$algorithm
   feature_set <- config$feature_set
+
+  ## mtry for xgboost2
+  if (algorithm == "xgboost2") {
+
+    if (feature_set == "full") {
+      hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
+    }
+
+    if (feature_set == "ablate_gps") {
+      hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
+    }
+
+    if (feature_set == "ablate_ema") {
+      hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
+    }
+
+    if (feature_set == "ablate_both") {
+      hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
+    }
+
+  }
+
 
   if (config$resample == "none") {
     resample <- config$resample
