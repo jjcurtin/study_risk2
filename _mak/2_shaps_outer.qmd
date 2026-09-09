@@ -14,7 +14,7 @@ params:
   study: "combined"
   window: "1day"
   lead: 0
-  version: "v10"
+  version: "v12"
   cv: "nested"
   model: "full"
 editor_options: 
@@ -153,7 +153,7 @@ fit_predict_eval <- function(split_num, splits, configs_best,
 metrics_raw <- 
   read_csv(here::here(path_models, str_c("inner_metrics_6_x_5_1_x_5_day", 
                                    "_", version, "_", cv, "_", model, ".csv")), 
-           col_types = "iiiiccdddcdddddddi") |> 
+           col_types = "iiiiccdddddcddddddddd") |> 
   glimpse()
 ```
 
@@ -163,8 +163,8 @@ metrics_raw <-
 Average metrics for each configuration across inner folds for each outer fold (XGBOOST only)
 ```{r best_model_1}
 metrics_avg <- metrics_raw |> 
-  filter(algorithm == "xgboost") |> 
-  group_by(algorithm, feature_set, hp1, hp2, hp3, resample, outer_split_num) |> 
+  filter(algorithm == "xgboost2") |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, hp4, resample, outer_split_num) |> 
    summarize(across(c(accuracy, bal_accuracy, roc_auc, sens, spec, ppv, npv),
                      median),
               n_jobs = n(), .groups = "drop") |> 
@@ -207,7 +207,7 @@ ASSUMPTIONS:
 
 Map over all outer splits to get predicted probabilities and SHAPs from held out outer folds.  Then save predicted probs and SHAPs
 
-NOTE: Delete `outer_metrics_*` or this code chunk won't run!
+
 ```{r}
 # can source any training control given assumptions above
 batch_names <- list.dirs(path_input, full.names = FALSE, recursive = FALSE)
@@ -219,7 +219,7 @@ batch_names <- batch_names[str_detect(batch_names, "train") &
 batch_name <- batch_names[1] # can source any batch given assumptions above
 path_batch <- here::here(path_input, batch_name)
 source(here::here(path_batch, "input", "training_controls.R"))
-source(here::here(path_batch, "input", "fun_chtc.R"))
+
 # NOTE: training controls overwrites path_batch but it matches   
   
 chunks <- str_split_fixed(data_trn, "\\.", n = Inf) # parse name from extensions
