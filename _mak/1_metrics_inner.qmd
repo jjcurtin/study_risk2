@@ -23,6 +23,8 @@ editor_options:
 
 ### Code Status
 
+> have 180 in training control files but haven't run
+
 In use for both kfold and nested cv, including use of batches
 
 This script aggregates all results/metrics for a batch or batches of jobs that train all model configurations for a specific outcome/label window.
@@ -266,9 +268,10 @@ metrics_avg_outer |>
 algorithms <- unique(metrics_avg_outer$algorithm) 
 feature_sets <- unique(metrics_avg_outer$feature_set)
 
+# set ylim
 
 for (k in algorithms) {
-  
+
   results_k <- metrics_avg_outer |>  
     filter(algorithm == k)
   
@@ -289,9 +292,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp1, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "trees", y = "ROC AUC") +
+        labs(title = plot_title, x = "trees", y = "ROC AUC") 
         #ylim(.92,.94)
-        ylim(.52,.59)
+       #ylim(.52,.59)
       
       table_hp1 <- results_i |>
         group_by(outer_split_num) |> 
@@ -318,9 +321,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp2, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "tree_depth", y = "ROC AUC") +
+        labs(title = plot_title, x = "tree_depth", y = "ROC AUC") 
         #ylim(.92,.94)
-        ylim(.52,.59)
+        #ylim(.52,.59)
       
       table_hp2 <- results_i |>
         group_by(outer_split_num) |> 
@@ -346,9 +349,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp3, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "mtry", y = "ROC AUC") +
+        labs(title = plot_title, x = "mtry", y = "ROC AUC") 
         #ylim(.92,.94)
-        ylim(.52,.59)
+        #ylim(.52,.59)
       
       table_hp3 <- results_i |>
         group_by(outer_split_num) |> 
@@ -374,9 +377,9 @@ for (k in algorithms) {
         ggplot(mapping = aes(x = hp4, 
                          y = roc_auc)) +
         geom_point() +
-        labs(title = plot_title, x = "scale_pos_weight", y = "ROC AUC") +
+        labs(title = plot_title, x = "scale_pos_weight", y = "ROC AUC")
         #ylim(.92,.94)
-        ylim(.52,.59)
+        #ylim(.52,.59)
       
       table_hp4 <- results_i |>
         group_by(outer_split_num) |> 

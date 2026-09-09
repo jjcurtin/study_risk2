@@ -9,7 +9,7 @@ source("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true
 study <- "combined"
 window <- "day"
 lead <- 0
-version <- "v12"
+version <- "v13"
 version_feats <- "v10"
 algorithm <- "xgboost2"
 batch <- "full"
@@ -81,8 +81,10 @@ hp3_xgboost <- c(20, 30, 40, 50)  # mtry
 # trees = 500
 # early stopping = 20
 
+# change mtry to be within an if statement
+
 ## Create four separate sets of hyperparameters based on model configuration
-## full -- CP run again
+## full
 hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
 hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
@@ -90,26 +92,26 @@ hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
 
-## ablate_gps -- CP run again, confirm feature set size before rerunning
+## ablate_gps
 hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
+hp3_xgboost2 <- c(30, 60, 90, 120, 150) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
 
-## ablate_ema -- KW running
+## ablate_ema
 hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry
+hp3_xgboost2 <- c(10, 20, 30, 60, 90, 120, 150) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
 
-## ablate_both -- CP run again, confirm feat set size
-hp1_xgboost2 <- c(75, 150, 300, 600, 1000, 1500) # trees
+## ablate_both
+hp1_xgboost2 <- c(50, 75, 150, 300, 600, 1000) # trees
 hp2_xgboost2 <- c(1, 2, 3, 4, 5) # tree_depth
-hp3_xgboost2 <- c(30, 60, 90, 120, 150, 180) # mtry 2 4 6 8? confirm definitively
+hp3_xgboost2 <- c(2, 4, 6, 8) # mtry
 hp4_xgboost2 <- c(1, 2, 4, 8, 16) # scale_pos_weight, originally had 32
 # no early stopping
 # learning rate (eta) set to .03
