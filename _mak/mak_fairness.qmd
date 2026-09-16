@@ -35,8 +35,8 @@ path_models <- format_path(str_c("risk2/models/combined"))
 ### Load model predictions
 
 ```{r}
-preds <- read_rds(here::here(path_models, "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds"))
-preds_final <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
+preds <- read_rds(here::here(path_models, "outer_preds_6_x_5_1_x_5_day_v13_nested_full.rds"))
+# preds_final <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 ### Load fairness features
@@ -66,20 +66,20 @@ feat_preds <- labels |>
 # nrow(preds) # should be nrow(labels) * 6 (number of outer repeats)
 # nrow(feat_preds) # should be same as nrow(preds)
 
-feat_preds_final <- labels |> 
-  select(id_obs = label_num,
-         label = lapse,
-         subid) |>
-  right_join(preds_final, by = c("id_obs", "label")) |> 
-  mutate(label = factor(label, levels = c("Lapse", "No lapse"))) |> 
-  left_join(dem, by = "subid")
+# feat_preds_final <- labels |> 
+#   select(id_obs = label_num,
+#          label = lapse,
+#          subid) |>
+#   right_join(preds_final, by = c("id_obs", "label")) |> 
+#   mutate(label = factor(label, levels = c("Lapse", "No lapse"))) |> 
+#   left_join(dem, by = "subid")
 
 # nrow(labels)
 # nrow(preds_final) # should be same as nrow(labels)
 # nrow(feat_preds_final) # should be same as nrow(preds_final)
 
-feat_preds_final |> 
-  write_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
+# feat_preds_final |> 
+#   write_rds(here::here(path_models, "fairness_preds_1_x_5_day_v10_kfold_full_final.rds"))
 ```
 
 
@@ -138,5 +138,5 @@ auroc_dem <- get_auroc_by_dem(df = feat_preds, var = "gender") |>
 Save auroc_dem
 ```{r}
 auroc_dem |> 
-  write_csv(here::here(path_models, "fairness_auroc_6_x_5_1_x_5_nested_v10_full.csv"))  
+  write_csv(here::here(path_models, "fairness_auroc_6_x_5_1_x_5_nested_v13_full.csv"))  
 ```

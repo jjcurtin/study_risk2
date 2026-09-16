@@ -27,13 +27,13 @@ path_models <- format_path(str_c("risk2/models/combined"))
 
 ```{r}
 test_metrics_full <- read_csv(here::here(path_models, 
-                                    "test_auroc_6_x_5_1_x_5_day_v10_nested_full.csv"), 
+                                    "test_auroc_6_x_5_1_x_5_day_v13_nested_full.csv"), 
                               show_col_types = FALSE) |> 
   select(split_num = outer_split_num, "full" = roc_auc) |> 
   arrange(split_num)
 
 test_metrics_ablate_both <- read_csv(here::here(path_models, 
-                                    "test_auroc_6_x_5_1_x_5_day_v10_nested_ablate_both.csv"), 
+                                    "test_auroc_6_x_5_1_x_5_day_v13_nested_ablate_both.csv"), 
                               show_col_types = FALSE) |> 
   select(split_num = outer_split_num, "ablated daily survey and geolocation" = roc_auc) |> 
   arrange(split_num)
@@ -94,10 +94,10 @@ pp_perf_tibble <- pp_tidy |>
   arrange(model) 
 
 pp_perf_tibble |> 
-  write_csv(here::here(path_models, "pp_perf_tibble_v10.csv"))
+  write_csv(here::here(path_models, "pp_perf_tibble_v13.csv"))
 
 pp_tidy |> 
-  write_csv(here::here(path_models, "posteriors_v10.csv"))
+  write_csv(here::here(path_models, "posteriors_v13.csv"))
 
 pp_perf_tibble
 ```
@@ -132,7 +132,7 @@ ci_ablate <- ci_ablate |>
   left_join(ci_median, by = c("contrast")) 
 
 ci_ablate |>
-  write_csv(here::here(path_models, "contrast_ablate_v10.csv"))
+  write_csv(here::here(path_models, "contrast_ablate_v13.csv"))
 
 ci_ablate
 ```
