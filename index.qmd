@@ -42,7 +42,7 @@ path_models <- "S:/risk2/models/combined"
 pp_perf <- read_csv(here::here(path_models, "pp_perf_tibble_v13.csv"),
                     show_col_types = FALSE) 
 
-probs <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
+probs <- read_rds(here::here(path_models, "preds_1_x_5_day_v13_kfold_full_final.rds"))
 ```
 
 # Introduction
