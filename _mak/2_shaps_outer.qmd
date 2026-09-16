@@ -750,7 +750,7 @@ shaps_out_grp <- shaps_out |>
             rfvalue = mean(rfvalue))
   
 shaps_out_grp |>
-  write_rds(here::here(path_models, "outer_shapsgrp_6_x_5_1_x_5_day_v10_nested_full.rds"))
+  write_rds(here::here(path_models, "outer_shapsgrp_6_x_5_1_x_5_day_v12_nested_full.rds"))
 ```
 
 Global shapley value by split
@@ -760,6 +760,6 @@ shaps_out_grp_global <- shaps_out_grp |>
   summarize(mean_value = mean(abs(value)), .groups = "drop")
 
 shaps_out_grp_global |>
-  write_rds(here::here(path_models, "outer_shapsgrp_global_6_x_5_1_x_5_day_v10_nested_full.rds"))
+  write_rds(here::here(path_models, "outer_shapsgrp_global_6_x_5_1_x_5_day_v12_nested_full.rds"))
 ```
 

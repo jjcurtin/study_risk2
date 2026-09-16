@@ -13,10 +13,10 @@ params:
   study: "combined"
   window: "1day"
   lead: 0
-  version: "v12"
+  version: "v13"
   cv: "nested"
   algorithms: "all"   # "all" or name of specific algorithm
-  model: "ablate_both" # "full" or ablation model
+  model: "full" # "full" or ablation model
 editor_options: 
   chunk_output_type: console
 ---
