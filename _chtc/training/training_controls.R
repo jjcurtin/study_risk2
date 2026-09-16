@@ -12,7 +12,7 @@ lead <- 0
 version <- "v13"
 version_feats <- "v10"
 algorithm <- "xgboost2"
-batch <- "ablate_gps"
+batch <- "full_final"
 
 
 configs_per_job <- 30  # number of model configurations that will be fit/evaluated within each CHTC
@@ -28,7 +28,7 @@ resample <- "none"
 
 
 # DATA, SPLITS AND OUTCOME------
-feature_set <- c("ablate_gps") # MAKE SURE TO UPDATE THIS
+feature_set <- c("full") # MAKE SURE TO UPDATE THIS
 ## list of feature sets: full, ablate_ema, ablate_gps, ablate_both
 ## remove the ones from feature_set which are not currently being generated
 data_trn <- str_c("features_", study, "_24h_", version_feats, ".csv")
@@ -41,10 +41,10 @@ y_level_neg <- "No lapse"
 
 
 # CV SETTINGS------
-cv_resample_type <- "nested" # can be boot, kfold, or nested
-cv_resample = NULL # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
-cv_inner_resample <- "1_x_5" # can also be a single number for bootstrapping (i.e., 100)
-cv_outer_resample <- "6_x_5" # outer resample will always be kfold
+cv_resample_type <- "kfold" # can be boot, kfold, or nested
+cv_resample = "1_x_5" # can be repeats_x_folds (e.g., 1_x_10, 10_x_10) or number of bootstraps (e.g., 100)
+cv_inner_resample <- NULL # can also be a single number for bootstrapping (i.e., 100)
+cv_outer_resample <- NULL # outer resample will always be kfold
 cv_group <- "subid" # set to NULL if not grouping
 cv_strat <- TRUE # set to FALSE if not stratifying - If TRUE you must have a strat variable in your data
 # IMPORTANT - NEED TO REMOVE STRATIFY VARIABLE FROM DATA IN RECIPE - See Recipe below for example code

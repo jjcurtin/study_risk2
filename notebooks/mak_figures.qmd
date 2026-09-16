@@ -32,16 +32,16 @@ path_models <- format_path(str_c("risk2/models/combined"))
 
 
 pp_all <- read_csv(here::here(path_models, 
-                              "pp_perf_tibble_v10.csv"),
+                              "pp_perf_tibble_v13.csv"),
                    show_col_types = FALSE) 
 
 pp_dem <- read_csv(here::here(path_models, 
-                              "pp_fairness_v10_full.csv"),
+                              "pp_fairness_v13_full.csv"),
                    show_col_types = FALSE)
 
-preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
+preds <- read_rds(here::here(path_models, "preds_1_x_5_day_v13_kfold_full_final.rds"))
 
-shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds"))
+shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v13_kfold_full_final_raw.rds"))
 ```
 
 
@@ -53,6 +53,7 @@ shaps <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_fin
 #| fig-cap: "Posterior probabilities for area under the receiver operating curve (auROC) by demographic subgroup. auROC ranges from .5 (chance performance) to 1 (perfect performance). Subgroups advantaged in access to substance use treatment and outcomes (male, non-Hispanic White, greater than $25,000 annual income, urban location, and heterosexual) are depicted in dark purple. Subgroups disadvantaged in access to substance use treatment and outcomes (not male, Hispanic and/or not White, less than $25,000 annual income, rural location, and not heterosexual) are depicted in green. Overall model performance across groups is depicted as the dashed grey line."
 #| message: false
 #| code-fold: true
+#| warning: false
 
 pp_dem |>
   mutate(group = case_match(model,
@@ -134,7 +135,7 @@ rug_data_logi <- preds_all_logi |>
 #| fig-height: 8
 
 cal <- preds_all_raw |> 
-  bind_rows(preds_all_logi) |> 
+  bind_rows(preds_all_logi) |>
   mutate(prob = factor(prob, levels = c("Raw (uncalibrated)", 
                                         "Platt calibrated"))) |> 
   group_by(bins,  prob)  |> 

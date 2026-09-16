@@ -34,7 +34,7 @@ path_models <- format_path("risk2/models/combined")
 
 ```{r}
 preds <- read_rds(here::here(path_models,
-                             "outer_preds_6_x_5_1_x_5_day_v10_nested_full.rds")) 
+                             "outer_preds_6_x_5_1_x_5_day_v13_nested_full.rds")) 
 
 labels <- read_csv(here::here(path_data, "lapse_labels_24h_day_gps.csv"),
                    show_col_types = FALSE)
