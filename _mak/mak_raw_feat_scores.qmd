@@ -1,0 +1,926 @@
+---
+title: "Make Figures"
+author: "Kendra Wyant"
+date: "`r lubridate::today()`"
+output: 
+  html_document:
+    toc: true 
+    toc_depth: 4
+format:
+  html:
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Temporary script to explore options for partial dependence plots
+
+```{r}
+#| message: false
+#| warning: false
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressMessages(library(patchwork))
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/chtc/static_files/fun_chtc.R?raw=true")
+
+path_models <- format_path(str_c("risk2/models/combined"))
+path_shared <- format_path(str_c("risk2/data_processed/shared"))
+path_chtc <- format_path(str_c("risk2/chtc/combined/train_xgboost_kfold_1_x_5_v10_full_final/input"))
+
+# ungrouped shaps
+shaps <- read_rds(here::here(path_models, "shaps_1_x_5_day_v10_kfold_full_final.rds")) |> 
+  glimpse()
+
+# training controls
+source(here::here(path_chtc, "training_controls.R"))
+```
+
+
+### Transform Z-score back to raw value for each individual features
+
+
+Read in raw features 
+```{r}
+feat <- read_csv(here::here(path_shared, "features_combined_24h_v10.csv"),
+                 show_col_types = FALSE) 
+```
+
+Reproduce 1x5 splits from final model.
+```{r}
+feat <- format_data(feat) |> 
+  arrange(label_num) |>
+  mutate(id_obs = 1:nrow(feat)) 
+
+splits <- feat |> 
+    make_splits(cv_resample_type = "kfold", cv_resample = cv_resample, 
+                cv_outer_resample = NULL, cv_inner_resample = NULL, 
+                cv_group, cv_strat = cv_strat, the_seed = seed_splits)
+```
+
+
+Run recipe and calculate mean and SD for each variable in each split
+```{r}
+get_mean_sd <- function(split_num, splits, config_best, rec){
+  
+  d_in <- training(splits$splits[[split_num]]) |> 
+    select(-id_obs)  # not used for training; only needed in d_out to tag for later joins 
+  
+  d_out <- testing(splits$splits[[split_num]]) 
+  
+  rec <- build_recipe(d = d_in, config = config_best)
+
+  rec_prepped <- rec |> 
+    prep(training = d_in)
+
+  feat_in <- rec_prepped |> 
+    bake(new_data = NULL) |> 
+    select(-y)
+  
+  # Calculate mean and SD for every feat in training
+  feat_in <- feat_in |> 
+    summarise(across(where(is.numeric),
+                     list(mean = ~mean(.x, na.rm = TRUE),
+                          sd = ~sd(.x, na.rm = TRUE)))) |> 
+    pivot_longer(everything(),
+                 names_to = c("variable", ".value"),
+                 names_pattern = "(.+)_(mean|sd)$")
+  
+  # save values with id_obs in test
+   feat_in |> 
+     mutate(split_num = split_num)
+}
+```
+
+Get config best for making recipe
+```{r}
+(config_best <- 
+  read_csv(here::here(path_models, "inner_metrics_1_x_5_day_v10_kfold_full_final.csv"),
+           show_col_types = FALSE) |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, resample) |> 
+   summarize(roc_auc = median(roc_auc),
+             n_jobs = n(), .groups = "drop") |> 
+  relocate(n_jobs) |> 
+  arrange(desc(roc_auc)) |> 
+  slice(1) |> 
+  ungroup())
+```
+
+Overwrite training controls build_recipe function without z-scoring or bring to fence
+```{r}
+build_recipe <- function(d, config) {
+  # d: (training) dataset from which to build recipe
+  # config: single-row config-specific tibble
+
+  # get relevant info from job (algorithm, feature_set, resample, under_ratio)
+  algorithm <- config$algorithm
+  feature_set <- config$feature_set
+
+  if (config$resample == "none") {
+    resample <- config$resample
+  } else {
+    resample <- str_split(config$resample, "_")[[1]][1]
+    ratio <- as.numeric(str_split(config$resample, "_")[[1]][2])
+  }
+
+  # Set recipe steps generalizable to all model configurations
+  rec <- recipe(y ~ ., data = d)  |>
+    step_rm(label_num, subid)
+
+  if(cv_strat) {
+    rec <- rec |>
+      step_rm(strat) # remove strat variable
+  }
+
+  rec <- rec |>
+    step_zv(all_predictors()) |>
+    step_impute_median(all_numeric_predictors()) |>
+    step_impute_mode(all_nominal_predictors()) |>
+    step_dummy(all_nominal_predictors(), one_hot = TRUE) |>
+    # step_normalize(all_predictors()) |>
+    # bring to fence outliers with Z scores > |5|
+    # step_mutate_at(all_predictors(), fn = ~ pmax(pmin(., 5), -5)) |>
+    step_nzv(all_predictors())
+
+  return(rec)
+}
+```
+
+
+
+Get means and sds for splits
+```{r}
+d <- 1:length(splits$splits) |> 
+  map(\(split_num) get_mean_sd(split_num, splits, config_best, rec)) |> 
+  list_rbind()
+```
+
+Get test id_obs from splits and add split num to shapley
+```{r}
+split_id_obs <- map_dfr(seq_along(splits$splits),
+                        \(i) {
+                          testing(splits$splits[[i]]) |>
+                            distinct(id_obs) |>
+                            mutate(split = i)
+                          })
+
+shaps <- shaps |> 
+  left_join(split_id_obs, by = "id_obs")
+```
+
+
+Join means and sds to shapleys   
+- note: mean_value = the mean raw feature value of that feature across the training data (not used by us)
+```{r}
+shaps <- shaps |> 
+  left_join(d, by = c("variable", "split" = "split_num")) |> 
+  glimpse()
+```
+
+
+Calculate raw feature score
+```{r}
+shaps_raw <- shaps |> 
+  ungroup() |> 
+  mutate(rfvalue_raw = rfvalue*sd + mean) |> 
+  glimpse()
+
+# save out
+# shaps_raw |>
+#   write_rds(here::here(path_models, "shaps_1_x_5_day_v10_kfold_full_final_raw.rds"))
+```
+
+
+### Regroup and plot
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+shaps_grp <- shaps_raw |>
+  ungroup() |> 
+  mutate(variable_grp = if_else(str_detect(variable, ".lapse") & 
+                                  str_detect(variable, "l0.r"),
+                                "Past opioid use, Raw (EMA)",
+                                variable),
+         variable_grp = if_else(str_detect(variable_grp, "urge.") & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Urge, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pain") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Pain, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "risk.p")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Risky situation, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "hassle") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Stressful event, Raw (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.p")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Pleasant event, Raw (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "sleep")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Sleep, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "happy") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Happy, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "angry")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Angry, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "anxious")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Anxious, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "relaxed") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Relaxed, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "depressed")& 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Depressed, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "motivation")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Abstinence motivation, Raw (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "confidence") & 
+                                  (str_detect(variable_grp, "l0.r") | 
+                                  str_detect(variable_grp, "rvar_")),
+                                "Abstinence confidence, Raw (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "count.ema") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Completed surveys, Raw (other)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "missed_dose") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Missed MOUD, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_alcohol")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Alcohol use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_cannabis")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Cannabis use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_stimulant")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Stimulant use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_sedative")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Sedative use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_inhalant")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Inhalant use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_halluc")  & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Hallucinogen use, Raw (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "age"),
+                                "Age (demographic)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "education"),
+                                "Education (demographic)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "income"), 
+                                "Income (demographic)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "var_location") & 
+                                 str_detect(variable_grp, "rvar_"),
+                                "Location variance, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "evening_out") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Evening out, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Moderately")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Considerably")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Extremely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Mildly")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Not at all")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Moderately")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Considerably")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Extremely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Mildly")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Helpful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Not at all")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Harmful locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Unpleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Pleasant locations, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "work") & 
+                                  (str_detect(variable_grp, "l0.r") | 
+                                  str_detect(variable_grp, "rvar_")), 
+                                "Work, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "physical_health_care")  & 
+                                  (str_detect(variable_grp, "l0.r") | 
+                                  str_detect(variable_grp, "rvar_")), 
+                                "Physical health care, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "take_classes")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Classes, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "moud")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "MOUD, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "mental_health") & 
+                                  (str_detect(variable_grp, "l0.r") | 
+                                  str_detect(variable_grp, "rvar_")), 
+                                "Mental health care, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "volunteer")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Volunteer, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "time_with_family")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Time with family, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "relax") & 
+                                  str_detect(variable_grp, "l0.r"),
+                                "Relax, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "religious") & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Religious, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "time_with_friends") & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Time with friends, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "socialize")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Socialize with new people, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drink_alchol")  & 
+                                  str_detect(variable_grp, "l0.r"), 
+                                "Drink alcohol, Raw (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "geography"),
+                                "Geography (demographic)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, ".lapse") & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Past opioid use, Diff (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "urge.")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Urge, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pain") & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Pain, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "risk.p")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Risky situation, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "hassle")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Stressful event, Diff (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.p")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Pleasant event, Diff (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "sleep")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Sleep, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "happy")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Happy, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "angry")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Angry, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "anxious")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Anxious, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "relaxed") & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Relaxed, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "depressed") & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Depressed, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "motivation")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Abstinence motivation, Diff (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "confidence")  & 
+                                 str_detect(variable_grp, "l0.d"),
+                                "Abstinence confidence, Diff (EMA)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "count.ema")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Completed surveys, Diff (other)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "missed_dose")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Missed MOUD, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_alcohol")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Alcohol use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_cannabis")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Cannabis use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_stimulant")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Stimulant use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_sedative")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Sedative use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_inhalant")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Inhalant use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drug_halluc")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Hallucinogen use, Diff (EMA)", 
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "var_location")  & 
+                                  str_detect(variable_grp, "dvar_"),
+                                "Location variance, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "evening_out")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Evening out, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Moderately")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Considerably")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Extremely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Mildly")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "harm.Not at all")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Moderately")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Considerably")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Extremely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Mildly")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Helpful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "help.Not at all")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Harmful locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Unpleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Most of the time")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Always")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.Sometimes")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Never")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "unpleasant.Rarely")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Pleasant locations, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "work")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Work, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "physical_health_care")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Physical health care, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "take_classes")  & 
+                                 str_detect(variable_grp, "l0.d"), 
+                                "Classes, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "moud")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "MOUD, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "mental_health")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Mental health care, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "volunteer")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Volunteer, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "time_with_family")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Time with family, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "relax")  & 
+                                  str_detect(variable_grp, "l0.d"),
+                                "Relax, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "religious")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Religious, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "time_with_friends")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Time with friends, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "socialize")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Socialize with new people, Diff (gps)",
+                                variable_grp),
+         variable_grp = if_else(str_detect(variable_grp, "drink_alchol")  & 
+                                  str_detect(variable_grp, "l0.d"), 
+                                "Drink alcohol, Diff (gps)",
+                                variable_grp)) |> 
+  group_by(id_obs, variable_grp) |> 
+  summarize(value = sum(value),
+            rfvalue_z = mean(rfvalue),
+            rfvalue_raw = mean(rfvalue_raw))
+  
+# shaps_grp |>
+#   write_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds"))
+```
+
+```{r}
+#| echo: false
+
+shaps_grp <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds"))
+```
+
+
+
+```{r}
+#| label: fig-4
+#| fig-cap: "Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."
+#| message: false
+#| fig-width: 10
+#| fig-height: 14
+#| code-fold: true
+
+shap_levels <- shaps_grp |>
+  group_by(variable_grp) |>
+  summarize(mean_value = mean(abs(value)), .groups = "drop") |>
+  arrange(desc(mean_value)) |>
+  slice_head(n = 20) |>
+  pull(variable_grp)
+
+dem_vars <- c("Age (demographic)", "Geography (demographic)")
+
+shaps_grp |>
+  filter(variable_grp %in% shap_levels) |>
+  mutate(variable_grp = factor(variable_grp, levels = shap_levels)) |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(data = ~ dplyr::filter(.x, !variable_grp %in% c(dem_vars)),
+              method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  geom_smooth(data = ~ dplyr::filter(.x, variable_grp %in% dem_vars),
+              method = "gam",
+              formula = y ~ s(x, k = 4),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  facet_wrap(~ variable_grp, scales = "free", ncol = 4) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+ # theme_classic(base_size = 18) 
+
+# knitr::include_graphics(path = here::here("figures/shapley_local.png"), error = FALSE)
+```
+
+### Look at separate feature plots
+
+#### Raw Urge
+
+All have same pattern 
+
+```{r}
+shaps_raw |>
+  filter(variable == "urge.p168.l0.rmax_response") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "urge.p168.l0.rmin_response") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "urge.p168.l0.rmedian_response") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "urge.p0.l0.rrecent_response") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+```
+
+
+
+
+#### Diff Religious Places
+
+Note: only diff features in model suggesting this was relatively infrequent in our sample. 
+```{r}
+shaps_raw |>
+  filter(variable == "p24.l0.dratesum_duration.religious.yes") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "p168.l0.dratesum_duration.religious.yes") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+```
+
+
+#### Raw Helpful Locations
+
+Extremely helpful
+
+```{r}
+shaps_raw |>
+  filter(variable == "p168.l0.rratesum_duration.help.Extremely") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "p24.l0.rratesum_duration.help.Extremely") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+```
+
+Not at all helpful (currently grouped in harmful locations - not sure why negative relationship with lapse)
+
+```{r}
+shaps_raw |>
+  filter(variable == "p168.l0.rratesum_duration.help.Not at all") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "p24.l0.rratesum_duration.help.Not at all") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+```
+
+#### Raw Harmful Locations
+
+Raw extremely AND considerably harmful not in model  
+
+Moderately
+
+```{r}
+shaps_raw |>
+  filter(variable == "p168.l0.rratesum_duration.harm.Moderately") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+```
+
+Not at all harmful (currently grouped in helpful locations)
+
+```{r}
+shaps_raw |>
+  filter(variable == "p168.l0.rratesum_duration.harm.Not at all") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+shaps_raw |>
+  filter(variable == "p24.l0.rratesum_duration.harm.Not at all") |>
+  ggplot(aes(x = rfvalue_raw, y = value)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "gam",
+              formula = y ~ s(x, k = 30),
+              method.args = list(method = "REML"),
+              se = FALSE) +
+  labs(title = NULL,
+       x = "Raw feature score",
+       y = "Shapley value") +
+  theme_classic()
+
+```
+
+
+
+
