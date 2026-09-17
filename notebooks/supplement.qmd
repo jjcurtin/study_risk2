@@ -34,7 +34,7 @@ path_models <- format_path(str_c("risk2/models/combined"))
 
 
 kfold_results <- read_csv(here::here(path_models, 
-                              "inner_metrics_6_x_5_day_v13_kfold_full_final.csv"),
+                              "inner_metrics_6_x_5_day_v10_kfold_full.csv"),
                    show_col_types = FALSE)
 
 
