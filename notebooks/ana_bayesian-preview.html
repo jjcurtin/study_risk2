@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
     <meta name="author" content="Kendra Wyant">
-    <meta name="dcterms.date" content="2026-03-05">
+    <meta name="dcterms.date" content="2026-09-16">
 
     <title>Model evaluation</title>
     <style>
@@ -221,7 +221,7 @@ transform: translateY(-100%);
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">March 5, 2026</p>
+              <p class="date">September 16, 2026</p>
             </div>
           </div>
           
@@ -262,13 +262,13 @@ transform: translateY(-100%);
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>test_metrics_full <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;test_auroc_6_x_5_1_x_5_day_v10_nested_full.csv&quot;</span>), </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;test_auroc_6_x_5_1_x_5_day_v13_nested_full.csv&quot;</span>), </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">split_num =</span> outer_split_num, <span class="st">&quot;full&quot;</span> <span class="ot">=</span> roc_auc) <span class="sc">|&gt;</span> </span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(split_num)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>test_metrics_ablate_both <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;test_auroc_6_x_5_1_x_5_day_v10_nested_ablate_both.csv&quot;</span>), </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;test_auroc_6_x_5_1_x_5_day_v13_nested_ablate_both.csv&quot;</span>), </span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                              <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">split_num =</span> outer_split_num, <span class="st">&quot;ablated daily survey and geolocation&quot;</span> <span class="ot">=</span> roc_auc) <span class="sc">|&gt;</span> </span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(split_num)</span>
@@ -297,10 +297,10 @@ transform: translateY(-100%);
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 30
 Columns: 6
-$ full                                   &lt;dbl&gt; 0.9230050, 0.9213850, 0.9078228…
-$ `ablated daily survey and geolocation` &lt;dbl&gt; 0.6081222, 0.3882430, 0.4349535…
-$ `ablated daily survey`                 &lt;dbl&gt; 0.6096729, 0.5275498, 0.5979393…
-$ `ablated geolocation`                  &lt;dbl&gt; 0.9169196, 0.9170817, 0.9235670…
+$ full                                   &lt;dbl&gt; 0.9480083, 0.9478921, 0.9449652…
+$ `ablated daily survey and geolocation` &lt;dbl&gt; 0.6164700, 0.4036166, 0.3736844…
+$ `ablated daily survey`                 &lt;dbl&gt; 0.6017056, 0.5712301, 0.5670546…
+$ `ablated geolocation`                  &lt;dbl&gt; 0.9445866, 0.9442630, 0.9472079…
 $ fold_num                               &lt;int&gt; 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1…
 $ repeat_num                             &lt;dbl&gt; 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3…</code></pre>
 </div>
@@ -324,8 +324,8 @@ $ repeat_num                             &lt;dbl&gt; 1, 1, 1, 1, 1, 2, 2, 2, 2, 
 <pre><code>
 SAMPLING FOR MODEL &#39;continuous&#39; NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 8.6e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.86 seconds.
+Chain 1: Gradient evaluation took 8.1e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.81 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -342,15 +342,15 @@ Chain 1: Iteration: 4800 / 6000 [ 80%]  (Sampling)
 Chain 1: Iteration: 5400 / 6000 [ 90%]  (Sampling)
 Chain 1: Iteration: 6000 / 6000 [100%]  (Sampling)
 Chain 1: 
-Chain 1:  Elapsed Time: 3.529 seconds (Warm-up)
-Chain 1:                4.077 seconds (Sampling)
-Chain 1:                7.606 seconds (Total)
+Chain 1:  Elapsed Time: 3.194 seconds (Warm-up)
+Chain 1:                2.648 seconds (Sampling)
+Chain 1:                5.842 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL &#39;continuous&#39; NOW (CHAIN 2).
 Chain 2: 
-Chain 2: Gradient evaluation took 2.8e-05 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.28 seconds.
+Chain 2: Gradient evaluation took 2.6e-05 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.26 seconds.
 Chain 2: Adjust your expectations accordingly!
 Chain 2: 
 Chain 2: 
@@ -367,15 +367,15 @@ Chain 2: Iteration: 4800 / 6000 [ 80%]  (Sampling)
 Chain 2: Iteration: 5400 / 6000 [ 90%]  (Sampling)
 Chain 2: Iteration: 6000 / 6000 [100%]  (Sampling)
 Chain 2: 
-Chain 2:  Elapsed Time: 2.792 seconds (Warm-up)
-Chain 2:                2.58 seconds (Sampling)
-Chain 2:                5.372 seconds (Total)
+Chain 2:  Elapsed Time: 2.739 seconds (Warm-up)
+Chain 2:                2.011 seconds (Sampling)
+Chain 2:                4.75 seconds (Total)
 Chain 2: 
 
 SAMPLING FOR MODEL &#39;continuous&#39; NOW (CHAIN 3).
 Chain 3: 
-Chain 3: Gradient evaluation took 2.5e-05 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.25 seconds.
+Chain 3: Gradient evaluation took 2.4e-05 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.24 seconds.
 Chain 3: Adjust your expectations accordingly!
 Chain 3: 
 Chain 3: 
@@ -392,15 +392,15 @@ Chain 3: Iteration: 4800 / 6000 [ 80%]  (Sampling)
 Chain 3: Iteration: 5400 / 6000 [ 90%]  (Sampling)
 Chain 3: Iteration: 6000 / 6000 [100%]  (Sampling)
 Chain 3: 
-Chain 3:  Elapsed Time: 2.925 seconds (Warm-up)
-Chain 3:                2.247 seconds (Sampling)
-Chain 3:                5.172 seconds (Total)
+Chain 3:  Elapsed Time: 3.001 seconds (Warm-up)
+Chain 3:                2.677 seconds (Sampling)
+Chain 3:                5.678 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL &#39;continuous&#39; NOW (CHAIN 4).
 Chain 4: 
-Chain 4: Gradient evaluation took 2.3e-05 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
+Chain 4: Gradient evaluation took 2.7e-05 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.27 seconds.
 Chain 4: Adjust your expectations accordingly!
 Chain 4: 
 Chain 4: 
@@ -417,9 +417,9 @@ Chain 4: Iteration: 4800 / 6000 [ 80%]  (Sampling)
 Chain 4: Iteration: 5400 / 6000 [ 90%]  (Sampling)
 Chain 4: Iteration: 6000 / 6000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 3.167 seconds (Warm-up)
-Chain 4:                3.087 seconds (Sampling)
-Chain 4:                6.254 seconds (Total)
+Chain 4:  Elapsed Time: 2.562 seconds (Warm-up)
+Chain 4:                2.606 seconds (Sampling)
+Chain 4:                5.168 seconds (Total)
 Chain 4: </code></pre>
 </div>
 </div></div>
@@ -437,20 +437,20 @@ Chain 4: </code></pre>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(model) </span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>pp_perf_tibble <span class="sc">|&gt;</span> </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;pp_perf_tibble_v10.csv&quot;</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;pp_perf_tibble_v13.csv&quot;</span>))</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>pp_tidy <span class="sc">|&gt;</span> </span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;posteriors_v10.csv&quot;</span>))</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;posteriors_v13.csv&quot;</span>))</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>pp_perf_tibble</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 4
   model                                pp_median pp_lower pp_upper
   &lt;fct&gt;                                    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-1 full                                     0.914    0.904    0.923
-2 ablated daily survey                     0.620    0.591    0.648
-3 ablated geolocation                      0.916    0.906    0.925
-4 ablated daily survey and geolocation     0.551    0.519    0.581</code></pre>
+1 full                                     0.943    0.934    0.950
+2 ablated daily survey                     0.627    0.592    0.660
+3 ablated geolocation                      0.942    0.933    0.949
+4 ablated daily survey and geolocation     0.550    0.514    0.585</code></pre>
 </div>
 </div></div>
 </section>
@@ -482,16 +482,16 @@ Chain 4: </code></pre>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ci_median, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;contrast&quot;</span>)) </span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>ci_ablate <span class="sc">|&gt;</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;contrast_ablate_v10.csv&quot;</span>))</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(path_models, <span class="st">&quot;contrast_ablate_v13.csv&quot;</span>))</span>
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>ci_ablate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 10
-  contrast      probability     mean   lower   upper  size pract_neg pract_equiv
-  &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-1 full vs. abl…       1      0.294    0.271  0.317       0        NA          NA
-2 full vs. abl…       0.350 -0.00220 -0.0115 0.00718     0        NA          NA
-3 full vs. abl…       1      0.363    0.339  0.388       0        NA          NA
+  contrast      probability    mean    lower   upper  size pract_neg pract_equiv
+  &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 full vs. abl…       1     3.16e-1  0.290   0.343       0        NA          NA
+2 full vs. abl…       0.588 9.49e-4 -0.00617 0.00804     0        NA          NA
+3 full vs. abl…       1     3.93e-1  0.366   0.420       0        NA          NA
 # ℹ 2 more variables: pract_pos &lt;dbl&gt;, median &lt;dbl&gt;</code></pre>
 </div>
 </div></div>
