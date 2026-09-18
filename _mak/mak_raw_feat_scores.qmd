@@ -28,10 +28,10 @@ devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/chtc/sta
 
 path_models <- format_path(str_c("risk2/models/combined"))
 path_shared <- format_path(str_c("risk2/data_processed/shared"))
-path_chtc <- format_path(str_c("risk2/chtc/combined/train_xgboost_kfold_1_x_5_v10_full_final/input"))
+path_chtc <- format_path(str_c("risk2/chtc/combined/train_xgboost2_kfold_1_x_5_v13_full_final/input"))
 
 # ungrouped shaps
-shaps <- read_rds(here::here(path_models, "shaps_1_x_5_day_v10_kfold_full_final.rds")) |> 
+shaps <- read_rds(here::here(path_models, "shaps_1_x_5_day_v13_kfold_full_final.rds")) |> 
   glimpse()
 
 # training controls
@@ -97,9 +97,9 @@ get_mean_sd <- function(split_num, splits, config_best, rec){
 Get config best for making recipe
 ```{r}
 (config_best <- 
-  read_csv(here::here(path_models, "inner_metrics_1_x_5_day_v10_kfold_full_final.csv"),
+  read_csv(here::here(path_models, "inner_metrics_1_x_5_day_v13_kfold_full_final.csv"),
            show_col_types = FALSE) |> 
-  group_by(algorithm, feature_set, hp1, hp2, hp3, resample) |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, hp4,  resample) |> 
    summarize(roc_auc = median(roc_auc),
              n_jobs = n(), .groups = "drop") |> 
   relocate(n_jobs) |> 
@@ -188,8 +188,8 @@ shaps_raw <- shaps |>
   glimpse()
 
 # save out
-# shaps_raw |>
-#   write_rds(here::here(path_models, "shaps_1_x_5_day_v10_kfold_full_final_raw.rds"))
+shaps_raw |>
+  write_rds(here::here(path_models, "shaps_1_x_5_day_v13_kfold_full_final_raw.rds"))
 ```
 
 
@@ -198,7 +198,6 @@ shaps_raw <- shaps |>
 ```{r}
 #| eval: false
 #| code-fold: true
-
 shaps_grp <- shaps_raw |>
   ungroup() |> 
   mutate(variable_grp = if_else(str_detect(variable, ".lapse") & 
@@ -213,7 +212,7 @@ shaps_grp <- shaps_raw |>
                                   str_detect(variable_grp, "l0.r"),
                                 "Pain, Raw (EMA)", 
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "risk.p")  & 
+         variable_grp = if_else(str_detect(variable_grp, "risk")  & 
                                   str_detect(variable_grp, "l0.r"),
                                 "Risky situation, Raw (EMA)", 
                                 variable_grp),
@@ -221,7 +220,7 @@ shaps_grp <- shaps_raw |>
                                   str_detect(variable_grp, "l0.r"),
                                 "Stressful event, Raw (EMA)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "pleasant.p")  & 
+         variable_grp = if_else(str_detect(variable_grp, "pleasant")  & 
                                   str_detect(variable_grp, "l0.r"),
                                 "Pleasant event, Raw (EMA)",
                                 variable_grp),
@@ -293,12 +292,24 @@ shaps_grp <- shaps_raw |>
          variable_grp = if_else(str_detect(variable_grp, "age"),
                                 "Age (demographic)",
                                 variable_grp),
+         # variable_grp = if_else(str_detect(variable_grp, "gender"), 
+         #                        "Gender (demographic)",
+         #                        variable_grp),
+         # variable_grp = if_else(str_detect(variable_grp, "race"), 
+         #                        "Race (demographic)", 
+         #                        variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "education"),
                                 "Education (demographic)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "income"), 
                                 "Income (demographic)", 
                                 variable_grp),
+         # variable_grp = if_else(str_detect(variable_grp, "employment"), 
+         #                        "Employment (demographic)", 
+         #                        variable_grp),
+         # variable_grp = if_else(str_detect(variable_grp, "orientation"), 
+         #                        "Orientation (demographic)", 
+         #                        variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "var_location") & 
                                  str_detect(variable_grp, "rvar_"),
                                 "Location variance, Raw (gps)",
@@ -453,7 +464,7 @@ shaps_grp <- shaps_raw |>
                                   str_detect(variable_grp, "l0.d"),
                                 "Pain, Diff (EMA)", 
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "risk.p")  & 
+         variable_grp = if_else(str_detect(variable_grp, "risk")  & 
                                   str_detect(variable_grp, "l0.d"),
                                 "Risky situation, Diff (EMA)", 
                                 variable_grp),
@@ -461,7 +472,7 @@ shaps_grp <- shaps_raw |>
                                   str_detect(variable_grp, "l0.d"),
                                 "Stressful event, Diff (EMA)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "pleasant.p")  & 
+         variable_grp = if_else(str_detect(variable_grp, "pleasant")  & 
                                   str_detect(variable_grp, "l0.d"),
                                 "Pleasant event, Diff (EMA)",
                                 variable_grp),
@@ -670,14 +681,14 @@ shaps_grp <- shaps_raw |>
             rfvalue_z = mean(rfvalue),
             rfvalue_raw = mean(rfvalue_raw))
   
-# shaps_grp |>
-#   write_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds"))
+shaps_grp |>
+  write_rds(here::here(path_models, "shapsgrp_1_x_5_day_v13_kfold_full_final_raw.rds"))
 ```
 
 ```{r}
 #| echo: false
 
-shaps_grp <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final_raw.rds"))
+shaps_grp <- read_rds(here::here(path_models, "shapsgrp_1_x_5_day_v13_kfold_full_final_raw.rds"))
 ```
 
 

@@ -11,9 +11,9 @@ format:
     embed-resources: true
 params:
   study: "combined"
-  version: "v10"
+  version: "v13"
   cv: "kfold"
-  algorithm: "xgboost"
+  algorithm: "xgboost2"
   model: "full_final" # all or raw - UPDATE FILTER IF FITTING RAW
 editor_options: 
   chunk_output_type: console
@@ -146,7 +146,7 @@ fit_predict_eval <- function(split_num, splits, config_best, rec){
                    label = d_out$y) |> 
                 mutate(split_num = split_num)
   
-  if (config_best$algorithm == "xgboost") {
+  if (config_best$algorithm == "xgboost2") {
     xgb_model <-  extract_fit_engine(model_best)
     xgb_model$feature_names <- gsub("`", "", xgb_model$feature_names)
     
@@ -173,7 +173,7 @@ fit_predict_eval <- function(split_num, splits, config_best, rec){
 ### Read in test metrics from best model
 ```{r}
 metrics_raw <- 
-  read_csv(here::here(path_models, "inner_metrics_1_x_5_day_v10_kfold_full_final.csv"),
+  read_csv(here::here(path_models, "inner_metrics_1_x_5_day_v13_kfold_full_final.csv"),
            show_col_types = FALSE) |> 
   glimpse()
 ```
@@ -182,7 +182,7 @@ metrics_raw <-
 Pull out single row for best configuration
 ```{r }
 metrics_avg <- metrics_raw |> 
-  group_by(algorithm, feature_set, hp1, hp2, hp3, resample) |> 
+  group_by(algorithm, feature_set, hp1, hp2, hp3, hp4, resample) |> 
    summarize(roc_auc = median(roc_auc),
              n_jobs = n(), .groups = "drop") |> 
   relocate(n_jobs) |> 
@@ -247,9 +247,9 @@ all <- 1:length(splits$splits) |>
 probs_out <- all |> 
     map(\(l) pluck(l, "probs_out")) |> 
     list_rbind() |> 
-    write_rds(here::here(path_models, "preds_1_x_5_day_v10_kfold_full_final.rds"))
+    write_rds(here::here(path_models, "preds_1_x_5_day_v13_kfold_full_final.rds"))
 
-if(algorithm == "xgboost") {
+if(algorithm == "xgboost2") {
   shaps_out <- all |> 
       map(\(l) pluck(l, "shaps_out")) |>
       list_rbind() |> 
@@ -259,7 +259,7 @@ if(algorithm == "xgboost") {
                 # rfvalue is same across repeats but want included 
                 rfvalue =  mean(rfvalue),  
                 mean_value = mean(mean_value))  |> 
-      write_rds(here::here(path_models, "shaps_1_x_5_day_v10_kfold_full_final.rds"))
+      write_rds(here::here(path_models, "shaps_1_x_5_day_v13_kfold_full_final.rds"))
 }
 ```
 
@@ -768,7 +768,7 @@ shaps_out_grp <- shaps_out |>
             rfvalue = mean(rfvalue))
   
 shaps_out_grp |>
-  write_rds(here::here(path_models, "shapsgrp_1_x_5_day_v10_kfold_full_final.rds"))
+  write_rds(here::here(path_models, "shapsgrp_1_x_5_day_v13_kfold_full_final.rds"))
 ```
 
 Version 2 separates past day and past week
