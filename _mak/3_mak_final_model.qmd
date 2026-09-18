@@ -287,7 +287,7 @@ Group Shaps
 ```{r}
 shaps_out_grp <- shaps_out |>
   ungroup() |> 
-  mutate(variable_grp = if_else(str_detect(variable, ".lapse") & 
+ mutate(variable_grp = if_else(str_detect(variable, ".lapse") & 
                                   str_detect(variable, "l0.r"),
                                 "Past opioid use, Raw (EMA)",
                                 variable),
@@ -299,7 +299,7 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.r"),
                                 "Pain, Raw (EMA)", 
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "risk")  & 
+         variable_grp = if_else(str_detect(variable_grp, "risk.p")  & 
                                   str_detect(variable_grp, "l0.r"),
                                 "Risky situation, Raw (EMA)", 
                                 variable_grp),
@@ -307,7 +307,7 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.r"),
                                 "Stressful event, Raw (EMA)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "pleasant")  & 
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.p")  & 
                                   str_detect(variable_grp, "l0.r"),
                                 "Pleasant event, Raw (EMA)",
                                 variable_grp),
@@ -379,24 +379,12 @@ shaps_out_grp <- shaps_out |>
          variable_grp = if_else(str_detect(variable_grp, "age"),
                                 "Age (demographic)",
                                 variable_grp),
-         # variable_grp = if_else(str_detect(variable_grp, "gender"), 
-         #                        "Gender (demographic)",
-         #                        variable_grp),
-         # variable_grp = if_else(str_detect(variable_grp, "race"), 
-         #                        "Race (demographic)", 
-         #                        variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "education"),
                                 "Education (demographic)",
                                 variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "income"), 
                                 "Income (demographic)", 
                                 variable_grp),
-         # variable_grp = if_else(str_detect(variable_grp, "employment"), 
-         #                        "Employment (demographic)", 
-         #                        variable_grp),
-         # variable_grp = if_else(str_detect(variable_grp, "orientation"), 
-         #                        "Orientation (demographic)", 
-         #                        variable_grp),
          variable_grp = if_else(str_detect(variable_grp, "var_location") & 
                                  str_detect(variable_grp, "rvar_"),
                                 "Location variance, Raw (gps)",
@@ -551,7 +539,7 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.d"),
                                 "Pain, Diff (EMA)", 
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "risk")  & 
+         variable_grp = if_else(str_detect(variable_grp, "risk.p")  & 
                                   str_detect(variable_grp, "l0.d"),
                                 "Risky situation, Diff (EMA)", 
                                 variable_grp),
@@ -559,7 +547,7 @@ shaps_out_grp <- shaps_out |>
                                   str_detect(variable_grp, "l0.d"),
                                 "Stressful event, Diff (EMA)",
                                 variable_grp),
-         variable_grp = if_else(str_detect(variable_grp, "pleasant")  & 
+         variable_grp = if_else(str_detect(variable_grp, "pleasant.p")  & 
                                   str_detect(variable_grp, "l0.d"),
                                 "Pleasant event, Diff (EMA)",
                                 variable_grp),
