@@ -103,10 +103,10 @@ guides(color = guide_legend(nrow = 2, byrow = TRUE))
 
 bin_width = 0.10
 
-preds_all_logi <- preds |> 
-  mutate(bins = cut(prob_logi, breaks = seq(0, 1, bin_width)), 
-         lapse = if_else(label == "Lapse", 1, 0),
-         prob = "Platt calibrated")  
+# preds_all_logi <- preds |> 
+#   mutate(bins = cut(prob_logi, breaks = seq(0, 1, bin_width)), 
+#          lapse = if_else(label == "Lapse", 1, 0),
+#          prob = "Platt calibrated")  
 
 preds_all_raw <- preds |> 
   mutate(bins = cut(prob_raw, breaks = seq(0, 1, bin_width)), 
@@ -119,23 +119,23 @@ rug_data_raw <- preds_all_raw |>
     rug_center = bin_width/2 + bin_width * (bins - 1),
     rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
   )
-rug_data_logi <- preds_all_logi |> 
-  mutate(
-    bins = as.numeric(bins),
-    rug_center = bin_width/2 + bin_width * (bins - 1),
-    rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
-  )
+# rug_data_logi <- preds_all_logi |> 
+#   mutate(
+#     bins = as.numeric(bins),
+#     rug_center = bin_width/2 + bin_width * (bins - 1),
+#     rug_x = rug_center + runif(n(), -bin_width/2, bin_width/2)
+#   )
 ```
 
 
 ```{r}
 #| label: fig-2
-#| fig-cap: "The top panel presents a calibration plot of raw and Platt calibrated risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. Raw probabilities are depicted as the dark purple line. Platt calibrated probabilities are depicted as the green dashed line. The rug plots along the x-axes depict the observation frequency in each bin for the raw (bottom) and Platt calibrated (top) probabilities. The bottom left and right panel presents histograms of raw (uncalibrated) and Platt calibrated risk probability distributions, respectively, separately by true lapse outcome."
-#| fig-width: 7
-#| fig-height: 8
+#| fig-cap: "The left panel presents a calibration plot of raw risk probabilities. Predicted probabilities (x-axis) are binned into deciles. Observed lapse probability (y-axis) represents the proportion of actual lapses observed in each bin. The dashed diagonal represents perfect calibration. Points below the line indicate overestimation and points above the line indicate underestimation. The rug plots along the x-axis depicts the observation frequency in each bin for the raw probabilities. The right panel presents histograms of raw risk probability distributions separately by true lapse outcome."
+#| fig-width: 8
+#| fig-height: 4
 
 cal <- preds_all_raw |> 
-  bind_rows(preds_all_logi) |>
+  # bind_rows(preds_all_logi) |>
   mutate(prob = factor(prob, levels = c("Raw (uncalibrated)", 
                                         "Platt calibrated"))) |> 
   group_by(bins,  prob)  |> 
@@ -151,7 +151,7 @@ cal <- preds_all_raw |>
   ggplot(aes(x = midpoints, y = mean_lapse, group = prob,
              color = prob, linetype = prob)) +
   geom_abline(slope = 1, intercept = 0, linetype = "longdash", color = "gray80") +
-  geom_line(linewidth = .7) +
+  geom_line(linewidth = .8) +
   labs(
     x = "Predicted Lapse Probability (Bin Midpoint)",
     y = "Observed Lapse Probability",
@@ -160,8 +160,8 @@ cal <- preds_all_raw |>
   ) +
   geom_rug(data = rug_data_raw, aes(x = rug_x, y = NULL), sides = "b", alpha = 0.3,
            inherit.aes = FALSE, color = "#240e31") +
-  geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
-           inherit.aes = FALSE, color = "#046B52") +
+  # geom_rug(data = rug_data_logi, aes(x = rug_x, y = NULL), sides = "t", alpha = 0.3,
+  #          inherit.aes = FALSE, color = "#046B52") +
   scale_x_continuous(breaks = seq(0, 1, bin_width), limits = c(0, 1)) +
   scale_y_continuous(limits = c(-0.08, 1), breaks = seq(0,1, bin_width),
                      expand = c(0, 0)) +
@@ -172,25 +172,21 @@ cal <- preds_all_raw |>
   theme(axis.text=element_text(size=9.5),
         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
         legend.key.size = unit(0.25, "cm"),
-        legend.position = "bottom") 
+        legend.position = "none") 
 
 
 hist <- preds |> 
-  pivot_longer(cols = c(prob_raw, prob_logi), names_to = "prob_type", values_to = "prob") |>
-  mutate(prob_type = factor(prob_type, levels = c("prob_raw", "prob_logi"),
-                                labels = c("Raw (uncalibrated)", "Platt calibration"))) |> 
   ggplot() +
-  geom_histogram(aes(x = prob, fill = prob_type), color = "white", bins = 40) +
-  facet_grid(label ~ prob_type, scales = "free_y") +
+  geom_histogram(aes(x = prob_raw), color = "white", fill = "#240e31", bins = 40) +
+  facet_wrap(~label, ncol = 1, scales = "free_y") +
   labs(x = "Probabilties",
        y = NULL) +
-  scale_fill_manual(values = c("#240e31", "#046B52")) +
   theme_classic() +
   theme(axis.text=element_text(size=9.5),
         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
         legend.position = "none")
 
-cal / hist
+cal + hist
 ```
 
 
@@ -259,7 +255,7 @@ local_panel <- shaps_day_max |>
 
 
 ```{r}
-#| label: fig-3
+#| label: fig-3a
 #| fig-cap: "Feature importance plots. The plots display magnitude of feature importance for the top 20 features, determined by the mean absolute Shapley value (left). Feature importance on the right depicts importance by the proportion of days (or observations) that each feature was most important (highest absolute Shapley value)."
 #| fig-width: 8
 
@@ -270,7 +266,7 @@ global_panel + local_panel
 
 
 ```{r}
-#| label: fig-4
+#| label: fig-4a
 #| fig-cap: "Shapley-feature value partial dependence plots. The plots display the relationship between the Shapley value and mean raw feature value for the top 20 important features. The blue lines represent the estimated smooth functions from generalized additive models."
 #| message: false
 #| fig-width: 10

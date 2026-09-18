@@ -397,8 +397,8 @@ local_panel_all <- shaps_day_max |>
 
 ```{r}
 #| echo: false
-#| fig-width: 8
-#| fig-height: 10
+#| fig-width: 10
+#| fig-height: 12
 
 global_panel_all + local_panel_all
 ```
