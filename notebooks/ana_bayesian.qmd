@@ -136,3 +136,24 @@ ci_ablate |>
 
 ci_ablate
 ```
+
+CP add comparison between GPS only and demographics only.
+```{r}
+ci_gps <- pp |>
+  contrast_models(list("ablated daily survey"),
+                  list("ablated daily survey and geolocation")) |>
+  summary(size = 0) |> 
+  mutate(contrast = factor(contrast,
+                           levels = c("ablated daily survey vs ablated daily survey and geolocation"),
+                           labels = c("ablated daily survey vs ablated daily survey and geolocation"))) |> 
+  arrange(contrast)
+
+ci_median_gps <- pp |>
+  contrast_models(list("ablated daily survey"),
+                  list("ablated daily survey and geolocation")) |>
+  group_by(contrast) |>
+  summarize(median = quantile(difference, .5))
+
+ci_gps <- ci_gps |>
+  left_join(ci_median_gps, by = c("contrast")) 
+```
