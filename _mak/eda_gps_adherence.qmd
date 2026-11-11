@@ -20,7 +20,9 @@ library(tidyverse)
 library(lubridate)
 library(patchwork)
 
-devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+# devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+# temp fix for github error
+source(here::here("../lab_support/format_path.R"))
 
 theme_set(theme_classic())
 options(dplyr.print_max=Inf)
@@ -30,16 +32,25 @@ path_shared <- format_path("risk2/data_processed/shared")
 
 ## Read in data
 
-```{r}
-#| code-fold: true
+STARTS WITH GPS SAMPLE AND TRUNCATED END DATES BASED ON EMA
 
-study_dates <- read_csv(here::here(path_shared, "study_end_ad_ema.csv"), 
-                show_col_types = FALSE)
+
+N = 296 (same as study_risk2)
+
+```{r}
+
+study_dates <- read_csv(here::here(path_shared, "study_dates_gps.csv"), 
+                show_col_types = FALSE) |> 
+  rename(study_end_ad_ema = study_end_ad) |> 
+  glimpse()
 
 gps <- read_csv(here::here(path_shared, "gps_counts.csv"),
                 show_col_types = FALSE) |> 
   rename(study_start = onboarding) |> 
-  filter(subid %in% study_dates$subid)
+  filter(subid %in% study_dates$subid) |> 
+  glimpse()
+
+length(unique(gps$subid))
 ```
 
 
@@ -47,7 +58,7 @@ gps <- read_csv(here::here(path_shared, "gps_counts.csv"),
 
 Create days on study tibble
 
-- End 28 days before study end date
+- End 28 days before study end date (because looking at rolling compliance averages over 28 days)
 
 - Get all study days for each subid
 
@@ -59,41 +70,65 @@ get_study_days <- function(the_subid, dates) {
     pull(study_start)
   study_end <- dates |>
     filter(subid == the_subid) |>
-    pull(study_end_ad)
+    pull(study_end_ad_ema)
   if(study_end - study_start > 28) {
     study_days <- tibble(subid = the_subid,
                        study_day = seq(study_start,
-                                       study_end - days(28,
+                                       study_end - days(28),
                                        by = "day"))
     return(study_days)
   }
 }
 
 sub_days <- study_dates$subid |>
-  map_dfr(~get_study_days(.x, study_dates))
+  map_dfr(~get_study_days(.x, study_dates)) |> 
+  glimpse()
 
 ```
 
-316 subids
+Still N = 296 
 ```{r}
 length(unique(sub_days$subid))
 ```
 
 
-Add 28-day periods with 0 EMAs back in
+Add counts to study days
 ```{r}
 gps <- gps |>
   rename(study_day = date) |> 
   right_join(sub_days, by = c("subid", "study_day")) |>
   mutate(n = if_else(is.na(n), 0, n)) |>
-  arrange(subid, study_day)
+  arrange(subid, study_day) |> 
+  glimpse()
 ```
 
-Determine cut point for gps points per day
+Tail of distribution of gps points per day
 ```{r}
 janitor::tabyl(gps$n) |> 
   head(n = 100)
+
+hist(subset(gps$n, gps$n < 1000))
 ```
+
+
+3 SUBIDS HAVE 0 GPS POINTS RETAINED WHEN LAST 28 DAYS ON STUDY FILTERED OUT
+```{r}
+gps |> filter(n > 0) |> select(subid) |>  distinct() |> nrow()
+```
+
+- 1088 gps data started 5/28/22 (within 22 days of EMA adjusted end date)
+- 1258 gps data started 3/30/23 (within 10 days of EMA adjusted end date)
+- 1366 gps data started 7/12/23 (within 23 days of EMA adjusted end date)
+
+```{r}
+subs <- gps |> filter(!subid %in% subset(gps, n > 0)$subid) |> pull(subid) |>  unique()
+
+study_dates |> 
+  filter(subid %in% subs) |> 
+  mutate(days_on_study = study_end_ad_ema - study_start)
+```
+
+
 
 
 Calculate number of days with at least 1 gps point over next 28 days for each subid and study_day in sub_days
@@ -125,58 +160,18 @@ Add day number indicator
 gps_count <- gps_count |>
   group_by(subid) |>
   mutate(day_num = row_number()) |>
-  ungroup()
-```
-
-### Starting sample
-
-```{r}
-#| code-fold: true
-
-get_labels <- function(the_subid, dates) {
-  
-  study_start <- dates |>  
-    filter(subid == the_subid) |>  
-    pull(study_start)
-  
-  study_end <- dates |>  
-    filter(subid == the_subid) |> 
-    pull(study_end_ad)
-  
-  if (study_end == study_start) {
-      study_days <- tibble(subid = the_subid, 
-                         study_day = seq(study_start, study_end, 
-                                         by = "day")) 
-  } 
-  
-  if (study_end != study_start) {
-      study_days <- tibble(subid = the_subid, 
-                         study_day = seq(study_start, study_end - days(1), 
-                                         by = "day"))
-    }
-  
-  return(study_days)
-}
-```
-
-- 313 subids with gps data
-- 85727 labels
-```{r}
-length(unique(gps_count$subid))
-
-gps |> filter(!subid %in% gps_count$subid)
-
-unique(gps_count$subid) |> 
-  map_dfr(~get_labels(.x, study_dates)) |> 
-  nrow()
+  ungroup() |> 
+  glimpse()
 ```
 
 ### Update study end dates
 
 Add new study end column that will be updated
+
+STARTS WITH TRUNCATED EMA END DATE
 ```{r}
 study_dates <- study_dates |> 
-  mutate(study_end_gps = study_end_ad)
+  mutate(study_end_ad_gps = study_end_ad_ema)
 ```
 
 
@@ -203,7 +198,7 @@ for (sub in unique(gps_count$subid)) {
                       
       if(prop_g_33 < .75) {
         study_dates <- study_dates |> 
-          mutate(study_end_gps = if_else(subid == sub, study_days[i], study_end_gps))
+          mutate(study_end_ad_gps = if_else(subid == sub, study_days[i], study_end_ad_gps))
         break
       }
     }
@@ -212,36 +207,74 @@ for (sub in unique(gps_count$subid)) {
 ```
 
 
-313 subids have updated study_end dates
+293 subids have updated study_end dates
 ```{r}
 study_dates |> 
-  filter(study_end_ad != study_end_gps) |> 
+  filter(study_end_ad_ema != study_end_ad_gps) |> 
   glimpse()
 ```
 
 
-278 have at least 28 days on study
+265 have at least 28 days on study with new end date
 ```{r}
 study_dates <- study_dates  |> 
-  mutate(on_study = as.numeric(study_end_gps - study_start)) |> 
+  mutate(on_study = as.numeric(study_end_ad_gps - study_start)) |> 
   filter(on_study >= 28) 
 
 nrow(study_dates)
 ```
 
 
-66271 labels
+79493 labels (compared to 82,156 labels in study_risk2)
+
+```{r}
+#| code-fold: true
+
+get_labels <- function(the_subid, dates) {
+  
+  study_start <- dates |>  
+    filter(subid == the_subid) |>  
+    pull(study_start)
+  
+  study_end <- dates |>  
+    filter(subid == the_subid) |> 
+    pull(study_end_ad_ema)
+  
+  if (study_end == study_start) {
+      study_days <- tibble(subid = the_subid, 
+                         study_day = seq(study_start, study_end, 
+                                         by = "day")) 
+  } 
+  
+  if (study_end != study_start) {
+      study_days <- tibble(subid = the_subid, 
+                         study_day = seq(study_start, study_end - days(1), 
+                                         by = "day"))
+    }
+  
+  return(study_days)
+}
+```
+
+
 ```{r}
 unique(study_dates$subid) |> 
-  map_dfr(~get_labels(.x, study_dates |> 
-                        mutate(study_end_ad = study_end_gps))) |> 
+  map_dfr(~get_labels(.x, study_dates)) |> 
   nrow()
+```
+
+
+save out study dates
+```{r}
+study_dates |> 
+  write_csv(here::here(path_shared, "study_dates_gps_ad.csv"))
 ```
 
 
 
 
-<!-- ## Heat map GPS plot data -->
+
+<!--## Heat map GPS plot data--> 
 
 <!-- Days in a week with more than 2 GPS points -->
 <!-- ```{r} -->
@@ -745,52 +778,52 @@ unique(study_dates$subid) |>
 <!-- ``` -->
 
 
-<!-- ### Plot next 28-day adherence -->
+### Plot next 28-day adherence
 
-<!-- ```{r} -->
-<!-- #| fig-width: 10 -->
-<!-- #| warning: false -->
+```{r}
+#| fig-width: 10
+#| warning: false
 
-<!-- subids <- unique(gps_count$subid)  -->
+subids <- unique(gps_count$subid)
 
-<!-- # split into groups of 10 plotting -->
-<!-- subid_groups <- split(subids, ceiling(seq_along(subids) / 10)) -->
+# split into groups of 10 plotting
+subid_groups <- split(subids, ceiling(seq_along(subids) / 10))
 
-<!-- map(subid_groups, function(ids) { -->
-<!--   plot_1 <- gps_count |> -->
-<!--     filter(subid %in% ids) |> -->
-<!--     ggplot(aes(x = day_num, y = adherence, -->
-<!--                group = subid, color = factor(subid))) + -->
-<!--     geom_line() + -->
-<!--     scale_x_continuous(breaks = seq(0, 364, 28), limits = c(0, 372)) + -->
-<!--     scale_y_continuous(breaks = c(.25, .5, .75, 1.0), limits = c(0, 1)) + -->
-<!--     labs(color = NULL) + -->
-<!--     geom_hline(aes(yintercept = .50), linetype = "dashed") + -->
-<!--     geom_hline(aes(yintercept = .33), linetype = "dotted") + -->
-<!--     theme_classic() -->
+map(subid_groups, function(ids) {
+  plot_1 <- gps_count |>
+    filter(subid %in% ids) |>
+    ggplot(aes(x = day_num, y = adherence,
+               group = subid, color = factor(subid))) +
+    geom_line() +
+    scale_x_continuous(breaks = seq(0, 364, 28), limits = c(0, 372)) +
+    scale_y_continuous(breaks = c(.25, .5, .75, 1.0), limits = c(0, 1)) +
+    labs(color = NULL) +
+    geom_hline(aes(yintercept = .50), linetype = "dashed") +
+    geom_hline(aes(yintercept = .33), linetype = "dotted") +
+    theme_classic()
 
-<!--   plot_2 <- gps_heat_count |> -->
-<!--     filter(subid %in% ids) |> -->
-<!--     mutate(subid = factor(subid, levels = rev(ids))) |> -->
-<!--     ggplot(aes(x = week, y = subid, fill = n)) + -->
-<!--     geom_tile() + -->
-<!--     scale_fill_viridis_c(option = "C", -->
-<!--                          name = NULL, -->
-<!--                          na.value = "white") + -->
-<!--     scale_x_continuous( -->
-<!--       breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, -->
-<!--                  60, 64), -->
-<!--       limits = c(-1, 65), -->
-<!--       expand = c(0, 0) -->
-<!--     ) + -->
-<!--     labs(x = "Week number", y = "subid") + -->
-<!--     theme_minimal() + -->
-<!--     theme(panel.grid = element_blank()) + -->
-<!--     geom_vline(xintercept = 4) + -->
-<!--     geom_vline(xintercept = 52) + -->
-<!--     theme(legend.position = "bottom") -->
+  # plot_2 <- gps_heat_count |>
+  #   filter(subid %in% ids) |>
+  #   mutate(subid = factor(subid, levels = rev(ids))) |>
+  #   ggplot(aes(x = week, y = subid, fill = n)) +
+  #   geom_tile() +
+  #   scale_fill_viridis_c(option = "C",
+  #                        name = NULL,
+  #                        na.value = "white") +
+  #   scale_x_continuous(
+  #     breaks = c(1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56,
+  #                60, 64),
+  #     limits = c(-1, 65),
+  #     expand = c(0, 0)
+  #   ) +
+  #   labs(x = "Week number", y = "subid") +
+  #   theme_minimal() +
+  #   theme(panel.grid = element_blank()) +
+  #   geom_vline(xintercept = 4) +
+  #   geom_vline(xintercept = 52) +
+  #   theme(legend.position = "bottom")
 
-<!--   plot_1 + plot_2 -->
-<!-- }) -->
-<!-- ``` -->
+  plot_1 
+})
+```
 
