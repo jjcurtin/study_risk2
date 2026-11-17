@@ -1,0 +1,120 @@
+---
+title: "GPS EDA"
+author: "Claire Punturieri"
+date: "`r lubridate::today()`"
+format: 
+  html:
+    toc: true 
+    toc_depth: 4
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Setup
+```{r}
+#| include: false
+
+options(conflicts.policy = "depends.ok")
+library(tidyverse) 
+library(lubridate)
+library(skimr)
+library(ggplot2)
+library(patchwork)
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+theme_set(theme_classic())
+options(dplyr.print_max=Inf)
+
+path_shared <- format_path("risk2/data_processed/shared")
+```
+
+## Load in data
+
+```{r}
+recovery_dates <- read_csv(here::here(path_shared, "recovery_dates.csv"), 
+                show_col_types = FALSE) |> 
+  select(-ResponseID) |>
+  rename(moud_date = onboard_si_mat_2)
+
+study_dates <- read_csv(here::here(path_shared, "study_dates_gps.csv"), 
+                show_col_types = FALSE) |> 
+  select(subid, study_start) |> 
+  left_join(recovery_dates, by = "subid")
+
+sample_char <- read_csv(here::here(path_shared, "survey_intake.csv"), 
+                show_col_types = FALSE) |> 
+  select(subid, med) |> 
+  left_join(study_dates, by = "subid") |> 
+  mutate(med = case_when(
+  str_detect(med, "daily") ~ "daily",
+  str_detect(med, "monthly") ~ "monthly",
+  str_detect(med, "not taking") ~ "none"
+)) |> 
+  mutate(days_recover = as.numeric(study_start - moud_date))
+
+gps_context <- read_csv(here::here(path_shared, "gps_context.csv"), 
+                show_col_types = FALSE) |> 
+  mutate(context_id = 1:n(),
+         help = factor(help,
+                       levels = c("Extremely", "Considerably", "Moderately", "Mildly", "Not at all"),
+                       ordered = TRUE),
+         harm = factor(harm,
+                       levels = c("Extremely", "Considerably", "Moderately", "Mildly", "Not at all"),
+                       ordered = TRUE),
+         pleasant = factor(pleasant,
+                       levels = c("Always", "Most of the time", "Sometimes", "Rarely", "Never"),
+                       ordered = TRUE),
+         unpleasant = factor(unpleasant,
+                       levels = c("Always", "Most of the time", "Sometimes", "Rarely", "Never"),
+                       ordered = TRUE))
+  
+# ples unples
+  # "Always", "Most of the time", "Sometimes", "Rarely", "Never"
+  
+# help harm
+  # "Extremely", "Considerably", "Moderately", "Mildly", "Not at all"
+```
+
+## Characteristics of the sample
+
+What meds?
+```{r}
+janitor::tabyl(sample_char$med)
+```
+
+Length of time in recovery
+```{r}
+skim((sample_char$days_recover))
+
+sample_char |> 
+  mutate(greater_3mo = if_else(days_recover >= 90, "yes", "no")) |> 
+  janitor::tabyl(greater_3mo)
+```
+
+## Correlation
+
+```{r}
+cor(as.numeric(gps_context$help), as.numeric(gps_context$harm), method = "spearman", use = "complete.obs")
+```
+
+```{r}
+cor(as.numeric(gps_context$pleasant), as.numeric(gps_context$unpleasant), method = "spearman", use = "complete.obs")
+```
+
+```{r}
+gps_context |> 
+  drop_na() |> 
+  ggplot(aes(help, harm)) +
+  geom_count() +
+  scale_size_area()
+```
+
+```{r}
+gps_context |> 
+  drop_na() |> 
+  ggplot(aes(pleasant, unpleasant)) +
+  geom_count() +
+  scale_size_area()
+```

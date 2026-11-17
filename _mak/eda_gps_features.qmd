@@ -1,0 +1,143 @@
+---
+title: "GPS EDA"
+author: "Claire Punturieri"
+date: "`r lubridate::today()`"
+format: 
+  html:
+    toc: true 
+    toc_depth: 4
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Setup
+```{r}
+#| include: false
+
+options(conflicts.policy = "depends.ok")
+library(tidyverse) 
+library(lubridate)
+library(skimr)
+library(patchwork)
+
+devtools::source_url("https://github.com/jjcurtin/lab_support/blob/main/format_path.R?raw=true")
+
+theme_set(theme_classic())
+options(dplyr.print_max=Inf)
+
+path_shared_risk <- format_path("risk/data_processed/shared")
+path_shared_risk2 <- format_path("risk2/data_processed/shared")
+```
+
+## Read in data
+
+```{r}
+gps_feats_risk <- read_csv(here::here(path_shared_risk, "features_gps_day_24h.csv"), 
+                show_col_types = FALSE)
+
+gps_feats_risk2 <- read_csv(here::here(path_shared_risk2, "features_gps_24h_v4.csv"), 
+                show_col_types = FALSE)
+```
+
+## EDA
+
+Verify percentage of lapses looks reasonable.
+```{r}
+gps_feats_risk |> 
+  janitor::tabyl(lapse)
+
+gps_feats_risk2 |> 
+  janitor::tabyl(lapse)
+```
+
+Overview across all categories.
+```{r}
+gps_feats_risk |>  
+  skimr::skim_without_charts() |> 
+  select(skim_variable, n_missing, complete_rate, numeric.p0, numeric.p50, 
+         numeric.p100) |>
+  filter(!skim_variable == "subid" & !skim_variable == "label_num") |> 
+  arrange(desc(numeric.p100), skim_variable)
+
+gps_feats_risk2 |>  
+  skimr::skim_without_charts() |> 
+  select(skim_variable, n_missing, complete_rate, numeric.p0, numeric.p50, 
+         numeric.p100) |>
+  filter(!skim_variable == "subid" & !skim_variable == "label_num") |> 
+  arrange(desc(numeric.p100), skim_variable)
+```
+
+
+```{r}
+gps_feats_risk |>
+  skimr::skim_without_charts() |> 
+  select(skim_variable, numeric.p0, numeric.p100, numeric.sd, complete_rate)
+
+gps_feats_risk2 |>
+  skimr::skim_without_charts() |> 
+  select(skim_variable, numeric.p0, numeric.p100, numeric.sd, complete_rate)
+```
+
+Check raw scores (numeric.p0 should = 0).
+```{r}
+gps_feats_risk |>  
+  skimr::skim_without_charts() |> 
+  select(skim_variable, n_missing, complete_rate, numeric.p0, numeric.p50, 
+         numeric.p100) |>
+  filter(!skim_variable == "subid" & !skim_variable == "label_num") |>
+  filter(grepl("rrate|rvar", skim_variable)) |> 
+  arrange(desc(numeric.p0), skim_variable)
+
+gps_feats_risk2 |>  
+  skimr::skim_without_charts() |> 
+  select(skim_variable, n_missing, complete_rate, numeric.p0, numeric.p50, 
+         numeric.p100) |>
+  filter(!skim_variable == "subid" & !skim_variable == "label_num") |>
+  filter(grepl("rrate|rvar", skim_variable)) |> 
+  arrange(desc(numeric.p0), skim_variable)
+```
+
+Check difference scores (numeric.p0 can be less than 0)
+```{r}
+gps_feats_risk |>  
+  skimr::skim_without_charts() |> 
+  select(skim_variable, n_missing, complete_rate, numeric.p0, numeric.p50, 
+         numeric.p100) |>
+  filter(!skim_variable == "subid" & !skim_variable == "label_num") |>
+  filter(grepl("drate|dvar", skim_variable)) |> 
+  arrange(desc(numeric.p0), skim_variable)
+
+gps_feats_risk2 |>  
+  skimr::skim_without_charts() |> 
+  select(skim_variable, n_missing, complete_rate, numeric.p0, numeric.p50, 
+         numeric.p100) |>
+  filter(!skim_variable == "subid" & !skim_variable == "label_num") |>
+  filter(grepl("drate|dvar", skim_variable)) |> 
+  arrange(desc(numeric.p0), skim_variable)
+```
+
+```{r}
+gps_feats_risk |> 
+  select(-subid, -dttm_label, -lapse) |>
+  summarise(across(where(is.numeric), ~ sum(.x > 1, na.rm = TRUE))) |> 
+    pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "n_above_1"
+  ) |> 
+  view()
+
+
+gps_feats_risk2 |> 
+  select(-subid, -dttm_label, -lapse) |>
+  summarise(across(where(is.numeric), ~ sum(.x > 1, na.rm = TRUE))) |> 
+    pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "n_above_1"
+  ) |> 
+  view()
+```
+
+
