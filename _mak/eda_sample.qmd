@@ -118,3 +118,40 @@ gps_context |>
   geom_count() +
   scale_size_area()
 ```
+
+
+```{r}
+# percentage of observations for each pleasant x unpleasant combination
+# (rows missing pleasant or unpleasant are excluded)
+gps_context |>
+  drop_na(pleasant, unpleasant) |>
+  count(pleasant, unpleasant) |>
+  mutate(pct = round(n / sum(n) * 100, 1)) |>
+  arrange(desc(pct))
+
+# same percentages as a pleasant (rows) x unpleasant (columns) table
+gps_context |>
+  drop_na(pleasant, unpleasant) |>
+  count(pleasant, unpleasant) |>
+  mutate(pct = round(n / sum(n) * 100, 1)) |>
+  select(-n) |>
+  pivot_wider(names_from = unpleasant, values_from = pct, values_fill = 0)
+```
+
+```{r}
+# percentage of observations for each help x harm combination
+# (rows missing help or harm are excluded)
+gps_context |>
+  drop_na(help, harm) |>
+  count(help, harm) |>
+  mutate(pct = round(n / sum(n) * 100, 1)) |>
+  arrange(desc(pct))
+
+# same percentages as a help (rows) x harm (columns) table
+gps_context |>
+  drop_na(help, harm) |>
+  count(help, harm) |>
+  mutate(pct = round(n / sum(n) * 100, 1)) |>
+  select(-n) |>
+  pivot_wider(names_from = harm, values_from = pct, values_fill = 0)
+```
